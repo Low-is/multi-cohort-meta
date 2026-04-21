@@ -1,4 +1,12 @@
 library(jsonlite)
+library(GEOquery)
+library(Biobase)
+library(limma)
+library(data.table)
+library(AnnotationDbi)
+library(org.Hs.eg.db)
+
+# Loading functions
 source("meta/functions/expr_mtx.R")
 
 # -------------------------
