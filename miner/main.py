@@ -76,6 +76,8 @@ def main():
     with open(JSON_PATH, "w") as f:
         json.dump(gse_named, f, indent=2)
 
+    print(f"✔️ Exported {len(gse_named)} studies to R JSON")
+
     # -----------------------
     # SUMMARY
     # -----------------------
