@@ -34,14 +34,14 @@ def main():
     # =========================
     # DNA SEARCHES
     # =========================
-    archive_dna_ids = set(run_search(config["archive_search_dna"], config["email"]))
-    recent_dna_ids  = set(run_search(config["weekly_search_dna"], config["email"]))
+    archive_dna_ids = set(run_search(config["dna_archive_search"], config["email"]))
+    recent_dna_ids  = set(run_search(config["dna_weekly_search"], config["email"]))
 
     # =========================
     # RNA SEARCHES
     # =========================
-    archive_rna_ids = set(run_search(config["archive_search_rna"], config["email"]))
-    recent_rna_ids  = set(run_search(config["weekly_search_rna"], config["email"]))
+    archive_rna_ids = set(run_search(config["rna_archive_search"], config["email"]))
+    recent_rna_ids  = set(run_search(config["rna_weekly_search"], config["email"]))
 
     # =========================
     # COMBINE ALL STUDIES
