@@ -14,7 +14,6 @@ REPORT_PATH = "outputs/weekly_report.csv"
 # SAVE REPORT (ALL DATA + STATUS)
 # -----------------------
 def save_report(rows):
-    import os
     os.makedirs(os.path.dirname(REPORT_PATH), exist_ok=True)
 
     with open(REPORT_PATH, "w", newline="") as f:
@@ -78,10 +77,13 @@ def main():
     save_report(rows)
 
     # =========================
-    # SPLIT DNA vs RNA (FINAL SETS)
+    # BUILD TRUE DNA / RNA SETS FROM FULL ARCHIVE
     # =========================
-    dna_all = archive_dna_ids.union(recent_dna_ids)
-    rna_all = archive_rna_ids.union(recent_rna_ids)
+    dna_detected = archive_dna_ids.union(recent_dna_ids)
+    rna_detected = archive_rna_ids.union(recent_rna_ids)
+
+    dna_all = full_archive.intersection(dna_detected)
+    rna_all = full_archive.intersection(rna_detected)
 
     # -----------------------
     # EXPORT JSON FOR R (NAMED LISTS)
