@@ -1,4 +1,5 @@
 library(jsonlite)
+source("meta/functions/expr_mtx.R")
 
 # -------------------------
 # LOAD STUDY LISTS
