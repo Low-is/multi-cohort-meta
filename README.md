@@ -19,9 +19,9 @@ source venv/Scripts/activate # Git Bash command
 pip install -r miner/requirements.txt
 ```
 
-## Run Literature Search Pipeline
+## Install R packages
 ```
 # Bash
 
-python main.py
+Rscript meta/setup.R
 ```
