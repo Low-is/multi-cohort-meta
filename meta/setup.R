@@ -2,6 +2,7 @@
 # SETUP SCRIPT FOR MULTI-COHORT META ANALYSIS PIPELINE
 # (Run ONCE after cloning repo)
 # =========================================================
+options(repos = c(CRAN = "https://cloud.r-project.org"))
 
 # -----------------------
 # 1. Install renv if missing
