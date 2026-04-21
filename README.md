@@ -3,10 +3,10 @@ A Python-based pipeline for automated discovery of gene expression studies from 
 
 ## Clone Repo
 ```
-# Bash
+# Bash  
 
-git clone https://github.com/Low-is/biomedical-literature-miner.git
-cd biomedical-literature-miner
+git clone https://github.com/Low-is/multi-cohort-meta.git
+cd multi-cohort-meta
 ```
 
 ## Create Python venv
@@ -15,13 +15,9 @@ cd biomedical-literature-miner
 
 python -m venv venv
 source venv/Scripts/activate # Git Bash command
-```
 
-## Install Dependencies
-```
-# Bash
-
-pip install -r requirements.txt
+# Install dependencies
+pip install -r miner/requirements.txt
 ```
 
 ## Run Literature Search Pipeline
