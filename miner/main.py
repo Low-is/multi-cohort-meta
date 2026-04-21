@@ -1,5 +1,6 @@
 # orchestrates workflow
-
+import json
+import os
 import yaml
 import csv
 from src.search import run_search
@@ -63,6 +64,17 @@ def main():
         ))
 
     save_report(rows)
+    
+    # -----------------------
+    # EXPORT STEP FOR META-ANALYSIS
+    # -----------------------
+    gse_named = {gse: gse for gse in full_archive}
+    
+    JSON_PATH = "outputs/gse_ids.json"
+    os.makedirs(os.path.dirname(JSON_PATH), exist_ok=True)
+
+    with open(JSON_PATH, "w") as f:
+        json.dump(gse_named, f, indent=2)
 
     # -----------------------
     # SUMMARY
