@@ -1,0 +1,20 @@
+email: "randolphl@uthscsa.edu"
+
+archive_search:
+  database: gds
+  retmax: 500  
+  query: >
+    (bronchopulmonary dysplasia OR BPD) AND
+    (RNA-seq OR RNAseq OR "Expression profiling by array" OR "Expression profiling by high throughput sequencing" OR microarray OR "gene expression profiling") AND
+    Homo sapiens[Organism] AND
+    (neonate OR newborn OR infant OR preterm OR premature OR "extremely low gestational age")
+
+weekly_search:
+  database: gds
+  retmax: 500
+  reldate: 730
+  query: >
+    (bronchopulmonary dysplasia OR BPD) AND
+    (RNA-seq OR RNAseq OR  "Expression profiling by array" OR "Expression profiling by high throughput sequencing" OR microarray OR "gene expression profiling") AND
+    Homo sapiens[Organism] AND
+    (neonate OR newborn OR infant OR preterm OR premature OR "extremely low gestational age")
