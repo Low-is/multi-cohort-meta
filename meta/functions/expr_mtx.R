@@ -242,6 +242,36 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
   
   #### For RNA-Seq data sets #### 
   if (!is.null(RNA) && RNA == TRUE) {
+
+    # Helper Function
+        clean_dt_sub <- function(dt_sub) {
+          
+          # ---- detect gene column safely ----
+          gene_col <- colnames(dt_sub)[1]
+          
+          if (!gene_col %in% c("gene", "Gene", "Geneid", "GENEID")) {
+            # assume first column is gene if unknown format
+            gene_col <- colnames(dt_sub)[1]
+          }
+          
+          data.table::setnames(dt_sub, gene_col, "gene")
+          
+          # ---- keep only numeric columns ----
+          num_cols <- names(dt_sub)[sapply(dt_sub, is.numeric)]
+          
+          if (length(num_cols) == 0) {
+            stop("No numeric expression columns found in file")
+          }
+          
+          dt_sub <- dt_sub[, c("gene", num_cols), with = FALSE]
+          
+          # ---- collapse duplicates within file ----
+          dt_sub <- dt_sub[, lapply(.SD, base::mean, na.rm = TRUE),
+                           by = gene,
+                           .SDcols = num_cols]
+          return(dt_sub)
+        }
+    
     if (!is.list(rna_studies))
       stop("rna_studies needs to be a list of GEO accession IDs or GEO ExpressionSets")
     
@@ -353,9 +383,11 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
       } else {
         expr_dt_count <- NULL
       }
+                                
       
       # --- Process FPKM / featureCounts / HTSeq-count / pre-combined matrices ---
       if (length(fpkm_files) > 0) {
+        
         dfs_fpkm <- lapply(fpkm_files, function(f) {
           dt <- data.table::fread(f)
           
@@ -366,6 +398,8 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
             count_cols <- grep("\\.bam$", colnames(dt))
             dt_sub <- dt[, c("Geneid", colnames(dt)[count_cols]), with = FALSE]
             colnames(dt_sub) <- c("gene", sub("\\.txt$", "", basename(f)))
+
+            dt_sub <- clean_dt_sub(dt_sub)
           } 
           # FPKM handling
           else if ("FPKM" %in% colnames(dt)) {
@@ -373,24 +407,27 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
             if (is.null(gene_col)) gene_col <- colnames(dt)[1]
             dt_sub <- dt[, .(Expr = mean(get("FPKM"), na.rm = TRUE)), by = get(gene_col)]
             colnames(dt_sub) <- c("gene", sub("\\.txt$", "", basename(f)))
+
+            dt_sub <- clean_dt_sub(dt_sub)
           } 
           # Generic 2-column counts (includes htseq.results)
           else if (ncol(dt) == 2) {
             colnames(dt) <- c("gene", sub("\\.txt$|\\.htseq\\.results$", "", basename(f)))
-            dt <- dt[!grepl("^__", gene), ]
-            dt_sub <- dt
+            dt <- dt[!grepl("^__", gene), ] # removing internal HTSeq junk rows safely
+            dt_sub <- clean_dt_sub(dt)
           }
           # Pre-combined count matrix
           else if (ncol(dt) > 2) {
             gene_col <- colnames(dt)[1]
             data.table::setnames(dt, gene_col, "gene")
-            dt_sub <- dt
+            dt_sub <- clean_dt_sub(dt)
           } 
           else {
             stop("Unknown FPKM / featureCounts format: ", f)
           }
           dt_sub
         })
+        
         expr_dt_fpkm <- Reduce(function(x, y) merge(x, y, by = "gene", all = TRUE), dfs_fpkm)
         expr_dt_fpkm <- expr_dt_fpkm[!is.na(gene) & gene != "", ]
                                
