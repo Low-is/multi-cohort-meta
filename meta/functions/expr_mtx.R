@@ -344,9 +344,15 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
         full.names = TRUE,
         recursive = TRUE
       )
-      if (length(txt_files) == 0) stop("No RNA-seq .txt files found for ", geo_id)
+
+      # --- FILTER OUT NON-EXPRESSION FILES ---
+      txt_files <- txt_files[
+        !grepl("miRNA|target|annotation|anno", basename(txt_files), ignore.case = TRUE)
+      ]
       
+      if (length(txt_files) == 0) stop("No RNA-seq .txt files found for ", geo_id)
       message("Detected ", length(txt_files), " processed RNA-seq .txt files for ", geo_id)
+
       
       # --- FILE TYPE DETECTION BY FILENAME: count.txt = ENSG, htseq.results + others = FPKM / featureCounts ---
       count_files <- txt_files[grepl("count\\.txt$", basename(txt_files))]
