@@ -393,9 +393,12 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
         })
         expr_dt_fpkm <- Reduce(function(x, y) merge(x, y, by = "gene", all = TRUE), dfs_fpkm)
         expr_dt_fpkm <- expr_dt_fpkm[!is.na(gene) & gene != "", ]
-        expr_dt_fpkm <- expr_dt_fpkm[, lapply(.SD, mean, na.rm = TRUE),
+                               
+        num_cols <- names(expr_dt_fpkm)[sapply(expr_dt_fpkm, is.numeric)]
+        
+        expr_dt_fpkm <- expr_dt_fpkm[, lapply(.SD, base::mean, na.rm = TRUE),
                                      by = gene,
-                                     .SDcols = setdiff(names(expr_dt_fpkm), "gene")]
+                                     .SDcols = num_cols]
       } else {
         expr_dt_fpkm <- NULL
       }
