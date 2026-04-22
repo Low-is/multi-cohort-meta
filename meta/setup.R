@@ -40,7 +40,8 @@ BiocManager::install(c(
   "Biobase",
   "limma",
   "AnnotationDbi",
-  "org.Hs.eg.db"
+  "org.Hs.eg.db",
+  "hta20transcriptcluster.db"
 ), ask = FALSE)
 
 # -----------------------
