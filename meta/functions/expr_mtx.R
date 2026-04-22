@@ -66,6 +66,19 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
         if (is.null(geo)) next
         
         mtx <- Biobase::exprs(geo)
+
+        # Dropping empty and invalid matrices
+        if (is.null(mtx) ||
+            !is.matrix(mtx) ||
+            nrow(mtx) == 0 ||
+            ncol(mtx) == 0) {
+          warning(sprintf(
+            "Dropping empty platform in %s platform %d (%d x %d)",
+            names(dna_studies)[s], k, nrow(mtx), ncol(mtx)
+          ))
+          next
+        }
+        
         fData <- Biobase::fData(geo)
         
         gene_cols <- c("Gene symbol", "Gene Symbol", "Symbol", "ILMN_Gene", "symbol", "GB_ACC", "ID")
