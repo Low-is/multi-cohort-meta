@@ -310,7 +310,7 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
       # --- Gather all txt-like files (including htseq.results) ---
       txt_files <- list.files(
         extract_dir,
-        pattern = "\\.(txt|htseq\\.results)$",
+        pattern = "\\.(txt|tsv|csv|htseq\\.results)(\\.gz)?$", # expanding discovery logic
         full.names = TRUE,
         recursive = TRUE
       )
