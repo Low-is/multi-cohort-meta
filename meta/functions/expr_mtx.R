@@ -387,6 +387,7 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
             }
           }
           dt_sub <- clean_dt_sub(dt_sub)
+          return(dt_sub)
         })
         expr_dt_count <- Reduce(function(x, y) merge(x, y, by = "gene", all = TRUE), dfs_count)
       } else {
@@ -461,11 +462,11 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
             dt_sub <- clean_dt_sub(dt)
           }
           # Pre-combined count matrix
-          else if (ncol(dt) > 2 {
+          else if (ncol(dt) > 2) {
             message("Detected multi-sample expression matrix: ", basename(f))
             
             gene_col <- colnames(dt)[1]
-            data.table::setnames(dt, colnames(dt)[1], gene_col, "gene")
+            data.table::setnames(dt, gene_col, "gene")
             
             dt_sub <- clean_dt_sub(dt)
           }
