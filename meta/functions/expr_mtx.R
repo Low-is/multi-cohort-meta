@@ -347,7 +347,7 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
 
       # --- FILTER OUT NON-EXPRESSION FILES ---
       txt_files <- txt_files[
-        grepl("count|raw|htseq|feature|fpkm|tpm|GSM", basename(txt_files), ignore.case = TRUE) &
+        grepl("count|raw|htseq|feature|fpkm|tpm|GSM|GSE", basename(txt_files), ignore.case = TRUE) &
         !grepl("miRNA|mirna|target|annotation|anno|genelist|metadata|h5|hdf5", basename(txt_files), ignore.case = TRUE)
       ]
       
