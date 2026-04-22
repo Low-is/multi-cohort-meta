@@ -10,8 +10,9 @@ library(hta20transcriptcluster.db)
 # -------------------------
 # LOAD FUNCTIONS
 # -------------------------
-message("🚀 Loading expression matrix functions...")
+message("🚀 Loading functions...")
 source("meta/functions/expr_mtx.R")
+source("meta/functions/pData.R")
 
 # -------------------------
 # LOAD STUDY LISTS
@@ -53,8 +54,17 @@ message(sprintf("Total RNA datasets processed: %d", length(rna_exprs)))
 # -------------------------
 # SAVING RESULTS
 # -------------------------
+message("Saving loaded matrices...")
+saveRDS(dna_exprs, "dna_matrices.rds")
+saveRDS(rna_exprs, "rna_matrices.rds")
 
 
 # -------------------------
 # LOADING PDATA
 # -------------------------
+message("🧠 Loading pData...")
+
+dna_pData <- get_pData(studies = dna_studies)
+rna_pData <- get_pData(studies = rna_studies)
+
+message("\n pData successfully loaded!")
