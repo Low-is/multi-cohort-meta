@@ -408,16 +408,47 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
 
             dt_sub <- clean_dt_sub(dt_sub)
           } 
+
+          # Per-sample GEO file
+          else if (ncol(dt) == 2 && colnames(dt)[1] %in% c("Gene", "gene", "Geneid", "GENEID", "GeneID")) {
+            message("Detected per-sample GEO expression file: ", basename(f))
+
+            gene_col <- colnames(dt)[1]
+            expr_col <- colnames(dt)[2]
+            
+            data.table::setnames(dt, c(gene_col, expr_col), c("gene", "Expr"))
+            
+            dt_sub <- dt[
+              !is.na(gene) & gene != "",
+              .(Expr = base::mean(Expr, na.rm = TRUE)),
+              by = gene
+            ]
+
+            sample_name <- sub("\\.txt(\\.gz)?$", "", basename(f))
+            data.table::setnames(dt_sub, "Expr", sample_name)
+          }
+          
           # FPKM / TPM handling
           else if ("FPKM" %in% colnames(dt) || "TPM" %in% colnames(dt)) {
-            expr_col <- intersect(c("FPKM", "TPM"), colnames(dt))[1]
             
+            expr_col <- intersect(c("FPKM", "TPM"), colnames(dt))[1]
             gene_col <- intersect(c("gene_short_name", "tracking_id", "gene_id"), colnames(dt))[1]
             
             if (is.null(gene_col)) gene_col <- colnames(dt)[1]
             
-            dt_sub <- dt[, .(Expr = mean(get(expr_col), na.rm = TRUE)), by = get(gene_col)]
-            setnames(dt_sub, c("gene", sub("\\.txt$", "", basename(f))))
+            dt_sub <- dt[, .(
+              gene = get(gene_col),
+              Expr = get(expr_col)
+            )]
+            
+            dt_sub <- dt_sub[
+              !is.na(gene) & gene != "",
+              .(Expr = base::mean(Expr, na.rm = TRUE)),
+              by = gene
+            ]
+
+            dt_sub <- data.table::as.data.table(dt_sub)
+            setnames(dt_sub, "Expr", sub("\\.txt$", "", basename(f)))
 
             dt_sub <- clean_dt_sub(dt_sub)
           } 
