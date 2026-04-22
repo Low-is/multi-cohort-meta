@@ -347,7 +347,8 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
 
       # --- FILTER OUT NON-EXPRESSION FILES ---
       txt_files <- txt_files[
-        !grepl("miRNA|target|annotation|anno", basename(txt_files), ignore.case = TRUE)
+        grepl("count|raw|htseq|feature|fpkm", basename(txt_files), ignore.case = TRUE) &
+        !grepl("tpm|miRNA|mirna|target|annotation|anno|genelist|metadata", basename(txt_files), ignore.case = TRUE)
       ]
       
       if (length(txt_files) == 0) stop("No RNA-seq .txt files found for ", geo_id)
