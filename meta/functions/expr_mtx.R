@@ -270,6 +270,7 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
         if (!dir.exists(extract_dir)) dir.create(extract_dir, recursive = TRUE)
         system(paste("tar -xvf", shQuote(tar_path), "-C", shQuote(extract_dir)))
       }
+      
 
       # ---- RESTRICT TO BULK RNA-SEQ ONLY ----
       h5_files <- list.files(
