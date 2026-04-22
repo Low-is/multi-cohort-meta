@@ -348,7 +348,7 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
       # --- FILTER OUT NON-EXPRESSION FILES ---
       txt_files <- txt_files[
         grepl("count|raw|htseq|feature|fpkm|tpm", basename(txt_files), ignore.case = TRUE) &
-        !grepl("miRNA|mirna|target|annotation|anno|genelist|metadata", basename(txt_files), ignore.case = TRUE)
+        !grepl("miRNA|mirna|target|annotation|anno|genelist|metadata|h5|hdf5", basename(txt_files), ignore.case = TRUE)
       ]
       
       if (length(txt_files) == 0) stop("No RNA-seq .txt files found for ", geo_id)
@@ -356,8 +356,8 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
 
       
       # --- FILE TYPE DETECTION BY FILENAME: count.txt = ENSG, htseq.results + others = FPKM / featureCounts ---
-      count_files <- txt_files[grepl("count\\.txt$", basename(txt_files))]
-      fpkm_files  <- txt_files[!grepl("count\\.txt$", basename(txt_files))]
+      count_files <- txt_files[grepl("count|raw|htseq|feature", basename(txt_files), ignore.case = TRUE)]
+      fpkm_files <- txt_files[!basename(txt_files) %in% count_files]
       
       message("Count files (ENSG): ", length(count_files))
       message("FPKM / featureCounts files: ", length(fpkm_files))
@@ -455,15 +455,14 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
           # Generic 2-column counts (includes htseq.results)
           else if (ncol(dt) == 2) {
             colnames(dt) <- c("gene", sub("\\.txt$|\\.htseq\\.results$", "", basename(f)))
-            dt <- dt[!grepl("^__", gene), ] # removing internal HTSeq junk rows safely
+            dt <- dt[!grepl("^__", dt[[1]]), ] # removing internal HTSeq junk rows safely
             dt_sub <- clean_dt_sub(dt)
           }
           # Pre-combined count matrix
-          else if (ncol(dt) > 2) {
-            gene_col <- colnames(dt)[1]
-            data.table::setnames(dt, gene_col, "gene")
+          else if (ncol(dt) > 2 && all(colnames(dt)[-1] %in% c("FPKM","TPM","CPM","count","expression"))) {
+            data.table::setnames(dt, colnames(dt)[1], "gene")
             dt_sub <- clean_dt_sub(dt)
-          } 
+          }
           else {
             stop("Unknown FPKM / featureCounts format: ", f)
           }
