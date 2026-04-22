@@ -270,6 +270,22 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
         if (!dir.exists(extract_dir)) dir.create(extract_dir, recursive = TRUE)
         system(paste("tar -xvf", shQuote(tar_path), "-C", shQuote(extract_dir)))
       }
+
+      # ---- RESTRICT TO BULK RNA-SEQ ONLY ----
+      h5_files <- list.files(
+        extract_dir,
+        pattern = "\\.h5$",
+        full.names = TRUE,
+        recursive = TRUE
+      )
+      
+      if (length(h5_files) > 0) {
+        warning(sprintf(
+          "Skipping %s: detected single-cell / H5 data (not supported in bulk pipeline)",
+          geo_id
+        ))
+        return(NULL)
+      }
       
       # --- Extract nested tar files if any ---
       tar_files <- list.files(extract_dir, pattern = "\\.tar$", full.names = TRUE)
