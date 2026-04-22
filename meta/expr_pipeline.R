@@ -5,6 +5,7 @@ library(limma)
 library(data.table)
 library(AnnotationDbi)
 library(org.Hs.eg.db)
+library(hta20transcriptcluster.db)
 
 # -------------------------
 # LOAD FUNCTIONS
