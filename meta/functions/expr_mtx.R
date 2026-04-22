@@ -356,8 +356,10 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
 
       
       # --- FILE TYPE DETECTION BY FILENAME: count.txt = ENSG, htseq.results + others = FPKM / featureCounts ---
-      count_files <- txt_files[grepl("count|raw|htseq|feature", basename(txt_files), ignore.case = TRUE)]
-      fpkm_files <- txt_files[!basename(txt_files) %in% count_files]
+      count_files <- txt_files[
+        grepl("count|raw|htseq|feature", basename(txt_files), ignore.case = TRUE)]
+               
+      fpkm_files <- setdiff(txt_files, count_files)
       
       message("Count files (ENSG): ", length(count_files))
       message("FPKM / featureCounts files: ", length(fpkm_files))
@@ -384,7 +386,7 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
               dt_sub <- dt[, c("gene", colnames(dt)[2]), with = FALSE]
             }
           }
-          dt_sub
+          dt_sub <- clean_dt_sub(dt_sub)
         })
         expr_dt_count <- Reduce(function(x, y) merge(x, y, by = "gene", all = TRUE), dfs_count)
       } else {
@@ -459,8 +461,12 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
             dt_sub <- clean_dt_sub(dt)
           }
           # Pre-combined count matrix
-          else if (ncol(dt) > 2 && all(colnames(dt)[-1] %in% c("FPKM","TPM","CPM","count","expression"))) {
-            data.table::setnames(dt, colnames(dt)[1], "gene")
+          else if (ncol(dt) > 2 {
+            message("Detected multi-sample expression matrix: ", basename(f))
+            
+            gene_col <- colnames(dt)[1]
+            data.table::setnames(dt, colnames(dt)[1], gene_col, "gene")
+            
             dt_sub <- clean_dt_sub(dt)
           }
           else {
