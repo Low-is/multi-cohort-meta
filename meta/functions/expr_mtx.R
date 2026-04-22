@@ -408,12 +408,16 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
 
             dt_sub <- clean_dt_sub(dt_sub)
           } 
-          # FPKM handling
-          else if ("FPKM" %in% colnames(dt)) {
+          # FPKM / TPM handling
+          else if ("FPKM" %in% colnames(dt) || "TPM" %in% colnames(dt)) {
+            expr_col <- intersect(c("FPKM", "TPM"), colnames(dt))[1]
+            
             gene_col <- intersect(c("gene_short_name", "tracking_id", "gene_id"), colnames(dt))[1]
+            
             if (is.null(gene_col)) gene_col <- colnames(dt)[1]
-            dt_sub <- dt[, .(Expr = mean(get("FPKM"), na.rm = TRUE)), by = get(gene_col)]
-            colnames(dt_sub) <- c("gene", sub("\\.txt$", "", basename(f)))
+            
+            dt_sub <- dt[, .(Expr = mean(get(expr_col), na.rm = TRUE)), by = get(gene_col)]
+            setnames(dt_sub, c("gene", sub("\\.txt$", "", basename(f))))
 
             dt_sub <- clean_dt_sub(dt_sub)
           } 
