@@ -14,7 +14,7 @@ dna_pData <- readRDS("meta/pdata/dna_pData.rds")
 rna_pData <- readRDS("meta/pdata/rna_pData.rds")
 
 # Apply condition detection + labeling
-dna_pData_cond <- apply_codition_to_list(
+dna_pData_cond <- apply_condition_to_list(
   dna_pData,
   case_patterns,
   control_patterns
