@@ -5,7 +5,7 @@ import csv
 # FILE PATHS
 # =========================
 GSE_PATH = "data/gse_ids.csv"
-REPORT_PATH = "outputs/weekly_reports.csv"
+REPORT_PATH = "outputs/weekly_report.csv"
 
 
 # =========================
