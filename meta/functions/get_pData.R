@@ -262,80 +262,119 @@ add_condition_column <- function(df, column, case_patterns, control_patterns){ #
 
 
 
+# ----------------------------
+# NORMALIZATION (GLOBAL SAFE)
+# ----------------------------
+normalize <- function(x) {
+  x <- tolower(as.character(x))
+  x <- gsub("[^a-z0-9 ]", " ", x)
+  x <- gsub("\\s+", " ", x)
+  trimws(x)
+}
+
+
+# ----------------------------
+# DROPPING ALL NA COLUMNS
+# ----------------------------
+drop_all_na_cols <- function(df) {
+  
+  keep <- sapply(df, function(x) {
+    
+    if (is.character(x) || is.factor(x)) {
+      x <- as.character(x)
+      x <- trimws(x)
+      return(!all(is.na(x) | x == ""))
+    }
+    
+    return(!all(is.na(x)))
+  })
+  
+  df[, keep, drop = FALSE]
+}
+
+
+# ----------------------------
+# DETECT CONDITION COLUMN
+# ----------------------------
 detect_condition_column <- function(df, case_patterns, control_patterns) {
-
-  normalize <- function(x) {
-    x <- tolower(as.character(x))
-    x <- gsub("[^a-z0-9 ]", " ", x)
-    x <- gsub("\\s+", " ", x)
-    trimws(x)
-  }
-
+  
+  exclude_cols <- c("gsm", "study", "platform_id")
+  
   char_cols <- names(df)[sapply(df, function(x) is.character(x) || is.factor(x))]
-  char_cols <- setdiff(char_cols, c("gsm", "study", "platform_id"))
-
+  char_cols <- setdiff(char_cols, exclude_cols)
+  
+  if (length(char_cols) == 0) return(NULL)
+  
   case_regex <- paste(normalize(case_patterns), collapse = "|")
   control_regex <- paste(normalize(control_patterns), collapse = "|")
-
+  
   scores <- sapply(char_cols, function(col) {
-
+    
     vals <- normalize(df[[col]])
     vals <- vals[!is.na(vals) & vals != ""]
+    
+    if (length(vals) == 0) return(0)
+    
     vals <- unique(vals)
-
-    n_unique <- length(vals)
+    
+    case_hits <- sum(grepl(case_regex, vals))
+    control_hits <- sum(grepl(control_regex, vals))
+    
     score <- 0
-
-    if (n_unique == 2) score <- score + 5
-    if (n_unique <= 5) score <- score + 2
-
-    case_hit <- any(grepl(case_regex, vals))
-    control_hit <- any(grepl(control_regex, vals))
-
-    if (case_hit && control_hit) {
-      score <- score + 6
-    } else if (case_hit || control_hit) {
-      score <- score + 3
+    
+    # strong signal: both present
+    if (case_hits > 0 && control_hits > 0) {
+      score <- score + 10
     }
-
+    
+    # one-sided signal
+    if (case_hits > 0 && control_hits == 0) {
+      score <- score + 6
+    }
+    
+    if (control_hits > 0 && case_hits == 0) {
+      score <- score + 6
+    }
+    
+    # structure bonus
+    n_unique <- length(vals)
+    if (n_unique == 2) score <- score + 3
+    if (n_unique <= 5) score <- score + 1
+    
     return(score)
   })
-
-  if (length(scores) == 0) return(NULL)
-
+  
+  if (all(scores == 0)) return(NULL)
+  
   best <- names(which.max(scores))
-
-  if (scores[best] == 0) return(NULL)
-
+  if (length(best) == 0) return(NULL)
+  
   return(best)
 }
 
 
-
+# ----------------------------
+# APPLY CONDITION LABELS
+# ----------------------------
 apply_condition_to_list <- function(pdata_list, case_patterns, control_patterns) {
   
-  normalize <- function(x) {
-    x <- tolower(as.character(x))
-    x <- gsub("[^a-z0-9 ]", " ", x)
-    x <- gsub("\\s+", " ", x)
-    trimws(x)
-  }
+  out <- list()
   
-  out <- lapply(names(pdata_list), function(study) {
+  for (study in names(pdata_list)) {
     
     df <- pdata_list[[study]]
+    df <- drop_all_na_cols(df)
     
     message("Processing: ", study)
     
-    col <- detect_condition_column(
-      df,
-      case_patterns = case_patterns,
-      control_patterns = control_patterns
-    )
+    col <- detect_condition_column(df, case_patterns, control_patterns)
     
     if (is.null(col)) {
-      warning("No condition column detected for ", study)
-      return(NULL)
+      warning("No condition column detected: ", study)
+      df$condition <- NA
+      df$condition <- factor(df$condition, levels = c("Control", "Case"))
+      out[[study]] <- df
+      next
     }
     
     message("Using column: ", col)
@@ -345,30 +384,61 @@ apply_condition_to_list <- function(pdata_list, case_patterns, control_patterns)
     case_regex <- paste(normalize(case_patterns), collapse = "|")
     control_regex <- paste(normalize(control_patterns), collapse = "|")
     
-    df$condition <- dplyr::case_when(
-      grepl(case_regex, values) ~ "Case",
-      grepl(control_regex, values) ~ "Control",
-      TRUE ~ NA_character_
-    )
+    df$condition <- NA_character_
     
+    for (i in seq_len(nrow(df))) {
+      
+      row_vals <- normalize(as.character(df[i, col]))
+      
+      case_hits <- sapply(case_patterns, function(p) {
+        grepl(paste0("\\b", normalize(p), "\\b"), row_vals)
+      })
+      
+      control_hits <- sapply(control_patterns, function(p) {
+        grepl(paste0("\\b", normalize(p), "\\b"), row_vals)
+      })
+      
+      case_hit <- any(case_hits)
+      control_hit <- any(control_hits)
+      
+      # ---- DECISION RULES ----
+      
+      if (case_hit && !control_hit) {
+        df$condition[i] <- "Case"
+        
+      } else if (control_hit && !case_hit) {
+        df$condition[i] <- "Control"
+        
+      } else if (case_hit && control_hit) {
+        
+        # resolve conflict by stronger evidence
+        case_score <- sum(case_hits)
+        control_score <- sum(control_hits)
+        
+        if (case_score > control_score) {
+          df$condition[i] <- "Case"
+        } else if (control_score > case_score) {
+          df$condition[i] <- "Control"
+        } else {
+          df$condition[i] <- "Control"  # default tie-breaker (or NA if you prefer)
+        }
+        
+      } else {
+        df$condition[i] <- NA_character_
+      }
+    }
+    
+    # keep dataset even if weak signal (DON'T DROP IT)
     if (all(is.na(df$condition))) {
-      warning("Skipping study (no Case/Control signal): ", study)
-      return(NULL)
+      warning("No Case/Control signal: ", study)
+      df$condition <- NA
     }
     
     df$condition <- factor(df$condition, levels = c("Control", "Case"))
     
-    return(df)
-  })
-  
-  # KEEP ONLY VALID ONES + FIX NAMES SAFELY
-  names(out) <- names(pdata_list)
-  out <- out[!sapply(out, is.null)]
-  
-  keep <- !sapply(out, is.null)
-  out <- out[keep]
-  
-  names(out) <- names(pdata_list)[keep]
+    out[[study]] <- df
+  }
   
   return(out)
+}
 }
