@@ -249,15 +249,11 @@ add_condition_column <- function(df, column, case_patterns, control_patterns){ #
   case_regex <- paste(case_patterns, collapse = "|")
   control_regex <- paste(control_patterns, collapse = "|")
   
-  df$condition <- ifelse(
-    grepl(case_regex, df[[column]]),
-    "Case",
-    ifelse(
-      grepl(control_regex, df[[column]]),
-      "Control",
-      df[[column]]
-    )
-  )
+  df$condition <- dplyr::case_when(
+  grepl(case_regex, tolower(df[[column]])) ~ "Case",
+  grepl(control_regex, tolower(df[[column]])) ~ "Control",
+  TRUE ~ NA_character_
+)
   
   df$condition <- factor(df$condition, levels = c("Control", "Case"))
   
