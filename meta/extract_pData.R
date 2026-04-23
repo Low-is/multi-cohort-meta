@@ -11,6 +11,18 @@ source("meta/functions/get_pData.R")
 
 
 # -------------------------
+# LOAD STUDY LISTS
+# -------------------------
+message("📥 Loading study ID JSON files...")
+
+dna_studies <- fromJSON("miner/outputs/dna_gse_ids.json")
+rna_studies <- fromJSON("miner/outputs/rna_gse_ids.json")
+
+message(sprintf("✔ Loaded %d DNA studies", length(dna_studies)))
+message(sprintf("✔ Loaded %d RNA studies", length(rna_studies)))
+
+
+# -------------------------
 # LOADING PDATA
 # -------------------------
 message("🧠 Loading pData...")
