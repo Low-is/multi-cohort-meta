@@ -23,7 +23,7 @@ pip install -r miner/requirements.txt
 ```
 # Bash
 
-Rscript meta/setup.R
+Rscript meta/setup.R # only need to run this once! 
 ```
 
 ## Run Pipeline
