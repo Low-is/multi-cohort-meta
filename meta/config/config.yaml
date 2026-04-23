@@ -1,1 +1,14 @@
+case_patterns:
+-bpd
+-sepsis
+-disease
+-treated
+-tumor
 
+control_patterns:
+-control
+-healthy
+-normal
+-untreated
+-nobpd
+-nosepsis
