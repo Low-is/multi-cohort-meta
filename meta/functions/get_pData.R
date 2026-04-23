@@ -313,49 +313,55 @@ detect_condition_column <- function(df, case_patterns, control_patterns) {
 
 
 apply_condition_to_list <- function(pdata_list, case_patterns, control_patterns) {
-
+  
   normalize <- function(x) {
     x <- tolower(as.character(x))
     x <- gsub("[^a-z0-9 ]", " ", x)
     x <- gsub("\\s+", " ", x)
     trimws(x)
   }
-
+  
   out <- lapply(names(pdata_list), function(study) {
-
+    
     df <- pdata_list[[study]]
-
+    
     message("Processing: ", study)
-
+    
     col <- detect_condition_column(
       df,
       case_patterns = case_patterns,
       control_patterns = control_patterns
     )
-
+    
     if (is.null(col)) {
       warning("No condition column detected for ", study)
       return(df)
     }
-
+    
     message("Using column: ", col)
-
+    
     df[[col]] <- normalize(df[[col]])
-
+    
     case_regex <- paste(normalize(case_patterns), collapse = "|")
     control_regex <- paste(normalize(control_patterns), collapse = "|")
-
+    
     df$condition <- dplyr::case_when(
       grepl(case_regex, df[[col]]) ~ "Case",
       grepl(control_regex, df[[col]]) ~ "Control",
       TRUE ~ NA_character_
     )
-
+    
+    if (all(is.na(df$condition))) {
+      warning("Skipping study (no Case/Control signal): ", study)
+      return(NULL)
+    }
+    
     df$condition <- factor(df$condition, levels = c("Control", "Case"))
-
+    
     return(df)
   })
-
+  
+  out <- Filter(Negate(is.null), out)
   names(out) <- names(pdata_list)
   return(out)
 }
