@@ -15,3 +15,8 @@ control_patterns:
   - untreated
   - nobpd
   - nosepsis
+  - "no bpd"
+  - "non-bpd"
+  - "bpd: severe"
+  - "no sepsis"
+  - "non-septic"
