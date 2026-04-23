@@ -340,14 +340,14 @@ apply_condition_to_list <- function(pdata_list, case_patterns, control_patterns)
     
     message("Using column: ", col)
     
-    df[[col]] <- normalize(df[[col]])
+    values <- normalize(df[[col]])
     
     case_regex <- paste(normalize(case_patterns), collapse = "|")
     control_regex <- paste(normalize(control_patterns), collapse = "|")
     
     df$condition <- dplyr::case_when(
-      grepl(case_regex, df[[col]]) ~ "Case",
-      grepl(control_regex, df[[col]]) ~ "Control",
+      grepl(case_regex, values) ~ "Case",
+      grepl(control_regex, values) ~ "Control",
       TRUE ~ NA_character_
     )
     
