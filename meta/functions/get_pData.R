@@ -277,7 +277,8 @@ detect_condition_column <- function(df, case_patterns, control_patterns) {
 
   scores <- sapply(char_cols, function(col) {
     vals <- unique(tolower(as.character(df[[col]])))
-    vals <- vals[!is.na(vals) & vals != ""]
+    vals <- gsub("[^a-z0-9 ]", " ", vals)
+    vals <- gsub("\\s+", " ", vals)
 
     n_unique <- length(vals)
     score <- 0
