@@ -4,7 +4,7 @@ email: "randolphl@uthscsa.edu"
 # DNA ARCHIVE SEARCH
 # -----------------------
 dna_archive_search:
-  database: gds
+  database: gse
   retmax: 500
   query: >
     (bronchopulmonary dysplasia OR BPD) AND
@@ -16,7 +16,7 @@ dna_archive_search:
 # RNA ARCHIVE SEARCH
 # -----------------------
 rna_archive_search:
-  database: gds
+  database: gse
   retmax: 500
   query: >
     (bronchopulmonary dysplasia OR BPD) AND
@@ -28,7 +28,7 @@ rna_archive_search:
 # DNA WEEKLY SEARCH
 # -----------------------
 dna_weekly_search:
-  database: gds
+  database: gse
   retmax: 500
   reldate: 730
   query: >
@@ -41,7 +41,7 @@ dna_weekly_search:
 # RNA WEEKLY SEARCH
 # -----------------------
 rna_weekly_search:
-  database: gds
+  database: gse
   retmax: 500
   reldate: 730
   query: >
