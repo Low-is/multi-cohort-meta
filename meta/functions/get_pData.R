@@ -255,7 +255,7 @@ add_condition_column <- function(df, column, case_patterns, control_patterns){ #
   TRUE ~ NA_character_
 )
   
-  df$condition <- factor(df$condition, levels = c("Control", "Case"))
+  df$condition <- factor(df$condition, levels = c("Control", "Case"), exclude = NULL)
   
   return(df)
 }
