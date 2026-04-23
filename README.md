@@ -34,7 +34,14 @@ cd miner
 python main.py
 
 cd ..
+# Process expression matrices
 RScript meta/expr_pipeline.R # This step will take awhile
+
+# Process pData
+RScript meta/extract_pData.R
+
+# Add 'condition' column to pData
+RScript meta/add_condition_column.R
 ```
 
 
