@@ -30,7 +30,19 @@ rna_pData_cond <- apply_condition_to_list(
 saveRDS(dna_pData_cond, "meta/pdata/dna_pData_with_condition.rds")
 saveRDS(rna_pData_cond, "meta/pdata/rna_pData_with_condition.rds")
 # Saving as csv
-write.csv(dna_pData_cond, "meta/pdata/dna_pData_with_condition.csv")
-write.csv(rna_pData_cond, "meta/pdata/rna_pData_with_condition.csv")
+lapply(names(dna_pData_cond), function(study) {
+  write.csv(
+    dna_pData_cond[[study]],
+    file = paste0("meta/pdata/", study, "_pData.csv"),
+    row.names = FALSE
+  )
+})
+lapply(names(rna_pData_cond), function(study) {
+  write.csv(
+    rna_pData_cond[[study]],
+    file = paste0("meta/pdata/", study, "_pData.csv"),
+    row.names = FALSE
+  )
+})
 
 message("✅ Condition column successfully added to all studies")
