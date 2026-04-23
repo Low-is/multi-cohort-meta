@@ -365,7 +365,10 @@ apply_condition_to_list <- function(pdata_list, case_patterns, control_patterns)
   names(out) <- names(pdata_list)
   out <- out[!sapply(out, is.null)]
   
-  names(out) <- names(pdata_list)[!sapply(out, is.null)]
+  keep <- !sapply(out, is.null)
+  out <- out[keep]
+  
+  names(out) <- names(pdata_list)[keep]
   
   return(out)
 }
