@@ -76,4 +76,4 @@ message("\n pData successfully loaded!")
 # -------------------------
 message("Saving pData...")
 saveRDS(dna_pData, "meta/pdata/dna_pData.rds")
-saveRDS(rna_pData, "meta/pdata/rna_pata.rds")
+saveRDS(rna_pData, "meta/pdata/rna_pData.rds")
