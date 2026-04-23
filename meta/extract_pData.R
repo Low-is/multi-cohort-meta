@@ -1,12 +1,9 @@
-#library(jsonlite)
-#library(dplyr)
-#library(GEOquery)
-#library(Biobase)
-#library(limma)
-#library(data.table)
-#library(AnnotationDbi)
-#library(org.Hs.eg.db)
-#library(hta20transcriptcluster.db)
+library(jsonlite)
+library(dplyr)
+library(GEOquery)
+library(Biobase)
+library(limma)
+library(data.table)
 source("meta/functions/get_pData.R")
 
 
