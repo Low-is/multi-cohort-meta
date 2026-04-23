@@ -299,3 +299,34 @@ detect_condition_column <- function(df) {
 
   return(best)
 }
+
+
+
+apply_condition_to_list <- function(pdata_list) {
+  
+  lapply(names(pdata_list), function(study) {
+    
+    df <- pdata_list[[study]]
+    
+    message("Processing: ", study)
+    
+    col <- detect_condition_column(df)
+    
+    if (is.null(col)) {
+      warning("No condition column detected for ", study)
+      return(df)
+    }
+    
+    message("Using column: ", col)
+    
+    df <- add_condition_column(
+      df,
+      column = col,
+      case_patterns = case_patterns,
+      control_patterns = control_patterns
+    )
+    
+    return(df)
+    
+  }) |> setNames(names(pdata_list))
+}
