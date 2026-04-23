@@ -263,3 +263,36 @@ add_condition_column <- function(df, column, case_patterns, control_patterns){ #
   
   return(df)
 }
+
+
+
+detect_condition_column <- function(df) {
+  char_cols <- names(df)[sapply(df, function(x) is.character(x) || is.factor(x))]
+
+  char_cols <- setdiff(char_cols, c("gsm", "study", "platform_id"))
+
+  scores <- sapply(char_cols, function(col) {
+    vals <- unique(tolower(df[[col]]))
+    vals <- vals[!is.na(vals) & vals != ""]
+
+    n_unique <- length(vals)
+
+    score <- 0
+
+    if(n_unique == 2) score <- score + 5
+    if(n_unique <= 5) score <- score + 2
+
+    if (any(grepl("contro|case|disease|treated|healthy|tumor|bpd|sepsis", vals))) {
+      score <- score + 5
+    }
+
+    return(score)
+  }
+  if (length(scores) ==0) return(NULL)
+
+  best <- names(which.max(scores))
+
+  if (scores[best] ==0) return(NULL)
+
+  return(best)
+}
