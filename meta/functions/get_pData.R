@@ -266,7 +266,7 @@ add_condition_column <- function(df, column, case_patterns, control_patterns){ #
 
 
 
-detect_condition_column <- function(df) {
+detect_condition_column <- function(df, case_patterns, control_patterns) {
   char_cols <- names(df)[sapply(df, function(x) is.character(x) || is.factor(x))]
 
   char_cols <- setdiff(char_cols, c("gsm", "study", "platform_id"))
@@ -276,7 +276,7 @@ detect_condition_column <- function(df) {
   control_regex <- paste(tolower(control_patterns), collapse = "|")
 
   scores <- sapply(char_cols, function(col) {
-    vals <- unique(tolower(df[[col]]))
+    vals <- unique(tolower(as.character(df[[col]])))
     vals <- vals[!is.na(vals) & vals != ""]
 
     n_unique <- length(vals)
@@ -285,32 +285,41 @@ detect_condition_column <- function(df) {
     if(n_unique == 2) score <- score + 5
     if(n_unique <= 5) score <- score + 2
 
-    if (any(grepl(case_regex, vals)) || any(grepl(control_regex, vals))) {
-      score <- score + 5
+    case_hit <- any(grepl(case_regex, vals))
+    control_hit <- any(grepl(control_regex, vals))
+
+    if (case_hit && control_hit) {
+      score <- score + 6
+    } else if (case_hit || control_hit) {
+      score <- score + 3
     }
 
     return(score)
-  }
-  if (length(scores) ==0) return(NULL)
+  })
+
+  if (length(scores) == 0) return(NULL)
 
   best <- names(which.max(scores))
 
-  if (scores[best] ==0) return(NULL)
+  if (scores[best] == 0) return(NULL)
 
   return(best)
 }
 
 
 
-apply_condition_to_list <- function(pdata_list) {
-  
-  lapply(names(pdata_list), function(study) {
+apply_condition_to_list <- function(pdata_list, case_patterns, control_patterns) {
+  out <- lapply(names(pdata_list), function(study) {
     
     df <- pdata_list[[study]]
     
     message("Processing: ", study)
     
-    col <- detect_condition_column(df)
+    col <- detect_condition_column(
+      df,
+      case_patterns = case_patterns,
+      control_patterns = control_patterns
+    )
     
     if (is.null(col)) {
       warning("No condition column detected for ", study)
@@ -328,5 +337,8 @@ apply_condition_to_list <- function(pdata_list) {
     
     return(df)
     
-  }) |> setNames(names(pdata_list))
+  })
+  
+  names(out) <- names(pdata_list)
+  return(out)
 }
