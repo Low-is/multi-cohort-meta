@@ -263,24 +263,31 @@ add_condition_column <- function(df, column, case_patterns, control_patterns){ #
 
 
 detect_condition_column <- function(df, case_patterns, control_patterns) {
-  char_cols <- names(df)[sapply(df, function(x) is.character(x) || is.factor(x))]
 
+  normalize <- function(x) {
+    x <- tolower(as.character(x))
+    x <- gsub("[^a-z0-9 ]", " ", x)
+    x <- gsub("\\s+", " ", x)
+    trimws(x)
+  }
+
+  char_cols <- names(df)[sapply(df, function(x) is.character(x) || is.factor(x))]
   char_cols <- setdiff(char_cols, c("gsm", "study", "platform_id"))
 
-  # Build regex from config
-  case_regex <- paste(tolower(case_patterns), collapse = "|")
-  control_regex <- paste(tolower(control_patterns), collapse = "|")
+  case_regex <- paste(normalize(case_patterns), collapse = "|")
+  control_regex <- paste(normalize(control_patterns), collapse = "|")
 
   scores <- sapply(char_cols, function(col) {
-    vals <- unique(tolower(as.character(df[[col]])))
-    vals <- gsub("[^a-z0-9 ]", " ", vals)
-    vals <- gsub("\\s+", " ", vals)
+
+    vals <- normalize(df[[col]])
+    vals <- vals[!is.na(vals) & vals != ""]
+    vals <- unique(vals)
 
     n_unique <- length(vals)
     score <- 0
 
-    if(n_unique == 2) score <- score + 5
-    if(n_unique <= 5) score <- score + 2
+    if (n_unique == 2) score <- score + 5
+    if (n_unique <= 5) score <- score + 2
 
     case_hit <- any(grepl(case_regex, vals))
     control_hit <- any(grepl(control_regex, vals))
@@ -306,36 +313,49 @@ detect_condition_column <- function(df, case_patterns, control_patterns) {
 
 
 apply_condition_to_list <- function(pdata_list, case_patterns, control_patterns) {
+
+  normalize <- function(x) {
+    x <- tolower(as.character(x))
+    x <- gsub("[^a-z0-9 ]", " ", x)
+    x <- gsub("\\s+", " ", x)
+    trimws(x)
+  }
+
   out <- lapply(names(pdata_list), function(study) {
-    
+
     df <- pdata_list[[study]]
-    
+
     message("Processing: ", study)
-    
+
     col <- detect_condition_column(
       df,
       case_patterns = case_patterns,
       control_patterns = control_patterns
     )
-    
+
     if (is.null(col)) {
       warning("No condition column detected for ", study)
       return(df)
     }
-    
+
     message("Using column: ", col)
-    
-    df <- add_condition_column(
-      df,
-      column = col,
-      case_patterns = case_patterns,
-      control_patterns = control_patterns
+
+    df[[col]] <- normalize(df[[col]])
+
+    case_regex <- paste(normalize(case_patterns), collapse = "|")
+    control_regex <- paste(normalize(control_patterns), collapse = "|")
+
+    df$condition <- dplyr::case_when(
+      grepl(case_regex, df[[col]]) ~ "Case",
+      grepl(control_regex, df[[col]]) ~ "Control",
+      TRUE ~ NA_character_
     )
-    
+
+    df$condition <- factor(df$condition, levels = c("Control", "Case"))
+
     return(df)
-    
   })
-  
+
   names(out) <- names(pdata_list)
   return(out)
 }
