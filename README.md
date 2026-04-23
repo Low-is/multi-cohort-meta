@@ -34,7 +34,7 @@ cd miner
 python main.py
 
 cd ..
-RScript meta/expr_pipeline.R
+RScript meta/expr_pipeline.R # This step will take awhile
 ```
 
 
