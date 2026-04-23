@@ -441,4 +441,3 @@ apply_condition_to_list <- function(pdata_list, case_patterns, control_patterns)
   
   return(out)
 }
-}
