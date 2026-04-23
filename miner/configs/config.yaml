@@ -33,7 +33,7 @@ dna_weekly_search:
   reldate: 730
   query: >
     (bronchopulmonary dysplasia OR BPD) AND
-    (Expression profiling by array OR microarray OR "gene expression profiling") AND
+    ("Expression profiling by array" OR microarray OR "gene expression profiling") AND
     Homo sapiens[Organism] AND
     (neonate OR newborn OR infant OR preterm OR premature OR "extremely low gestational age")
 
