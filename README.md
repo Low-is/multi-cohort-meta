@@ -26,6 +26,17 @@ pip install -r miner/requirements.txt
 Rscript meta/setup.R
 ```
 
+## Run Pipeline
+```
+# Bash
+
+cd miner
+python main.py
+
+cd ..
+RScript meta/expr_pipeline.R
+```
+
 
 # Citations: 
 Zheng, H., Rao, A.M., Ganesan, A. et al. Multi-cohort analysis identifies a blood-based immune transcriptomic signature for early lung cancer detection. npj Precis. Onc. 9, 246 (2025).[https://doi.org/10.1038/s41698-025-01043-z](https://doi.org/10.1038/s41698-025-01043-z)
