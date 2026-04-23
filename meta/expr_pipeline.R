@@ -12,7 +12,7 @@ library(hta20transcriptcluster.db)
 # -------------------------
 message("🚀 Loading functions...")
 source("meta/functions/expr_mtx.R")
-source("meta/functions/pData.R")
+source("meta/functions/get_pData.R")
 
 # -------------------------
 # LOAD STUDY LISTS
