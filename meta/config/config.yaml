@@ -1,6 +1,9 @@
 case_patterns:
   - bpd
+  - "bpd case"
+  - "bronchopulmonary dysplasia"
   - sepsis
+  - septic
   - disease
   - treated
   - tumor
