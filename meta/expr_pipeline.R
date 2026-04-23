@@ -55,8 +55,8 @@ message(sprintf("Total RNA datasets processed: %d", length(rna_exprs)))
 # SAVING RESULTS
 # -------------------------
 message("Saving loaded matrices...")
-saveRDS(dna_exprs, "../matrices/dna_matrices.rds")
-saveRDS(rna_exprs, "../matrices/rna_matrices.rds")
+saveRDS(dna_exprs, "meta/matrices/dna_matrices.rds")
+saveRDS(rna_exprs, "meta/matrices/rna_matrices.rds")
 
 
 # -------------------------
@@ -74,5 +74,5 @@ message("\n pData successfully loaded!")
 # SAVING RESULTS
 # -------------------------
 message("Saving pData...")
-saveRDS(dna_pData, "../pdata/dna_pData.rds")
-saveRDS(rna_pData, "../pdata/rna_pata.rds")
+saveRDS(dna_pData, "meta/pdata/dna_pData.rds")
+saveRDS(rna_pData, "meta/pdata/rna_pata.rds")
