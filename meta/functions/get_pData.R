@@ -335,7 +335,7 @@ apply_condition_to_list <- function(pdata_list, case_patterns, control_patterns)
     
     if (is.null(col)) {
       warning("No condition column detected for ", study)
-      return(df)
+      return(NULL)
     }
     
     message("Using column: ", col)
@@ -361,7 +361,11 @@ apply_condition_to_list <- function(pdata_list, case_patterns, control_patterns)
     return(df)
   })
   
-  out <- Filter(Negate(is.null), out)
+  # KEEP ONLY VALID ONES + FIX NAMES SAFELY
   names(out) <- names(pdata_list)
+  out <- out[!sapply(out, is.null)]
+  
+  names(out) <- names(pdata_list)[!sapply(out, is.null)]
+  
   return(out)
 }
