@@ -23,7 +23,8 @@ renv::init(bare = TRUE)
 install.packages(c(
   "jsonlite",
   "data.table",
-  "dplyr"
+  "dplyr",
+  "yaml"
 ))
 
 # -----------------------
