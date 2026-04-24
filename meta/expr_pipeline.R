@@ -1,3 +1,4 @@
+library(yaml)
 library(jsonlite)
 library(dplyr)
 library(GEOquery)
