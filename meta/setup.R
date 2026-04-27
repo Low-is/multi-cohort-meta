@@ -24,7 +24,8 @@ install.packages(c(
   "jsonlite",
   "data.table",
   "dplyr",
-  "yaml"
+  "yaml",
+  "COCONUT"
 ))
 
 # -----------------------
