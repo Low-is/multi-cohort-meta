@@ -1,3 +1,6 @@
+###########################################
+# ---Get normalized DNA expression matrices | returns raw processed RNA count matrices---
+############################################
 generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna_studies = list()) {
   
   #### Handling duplicated genes ####
@@ -608,3 +611,102 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
     return(list_of_RNA_mtx)
   }
 }
+###########################################
+# ---Get normalized DNA expression matrices | returns raw processed RNA count matrices---
+############################################
+
+
+
+###########################################
+# ---Get normalized RNA-seq count matrix---
+############################################
+
+get_norm_RNA_counts <- function(expr_matrix, pData,
+                                min_count = 10,
+                                min_samples = 2,
+                                make_plots = TRUE) {
+  
+  if (!"condition" %in% colnames(pData))
+    stop("There must be a 'condition' column in pData")
+  
+  ## -----------------------------
+  ## 1. Clean counts
+  ## -----------------------------
+  expr_matrix[!is.finite(expr_matrix)] <- 0
+  expr_matrix <- round(expr_matrix)
+  
+  ## Remove genes with all zeros
+  expr_matrix <- expr_matrix[rowSums(expr_matrix) > 0, , drop = FALSE]
+  
+  ## -----------------------------
+  ## 2. Pre-filter low counts
+  ## -----------------------------
+  keep <- rowSums(expr_matrix >= min_count) >= min_samples
+  expr_matrix <- expr_matrix[keep, , drop = FALSE]
+  
+  ## -----------------------------
+  ## 3. Construct DESeq object
+  ## -----------------------------
+  dds <- DESeqDataSetFromMatrix(
+    countData = expr_matrix,
+    colData   = pData,
+    design    = ~ condition
+  )
+  
+  ## -----------------------------
+  ## 4. Size factor normalization ONLY
+  ## -----------------------------
+  dds <- estimateSizeFactors(dds)
+  norm_mtx <- counts(dds, normalized = TRUE)
+  
+  ## -----------------------------
+  ## 5. Variance stabilization (recommended)
+  ## -----------------------------
+  vst_mtx <- assay(vst(dds, blind = TRUE))
+  
+  ## -----------------------------
+  ## 6. Diagnostic plots
+  ## -----------------------------
+  if (make_plots) {
+    png("normalization_boxplots.png",
+        units = "in",
+        width = 8,
+        height = 8,
+        res = 600)
+    
+    par(mfrow = c(3, 1), mar = c(6, 4, 2, 1))
+    
+    boxplot(log2(expr_matrix + 1),
+            outline = FALSE,
+            main = "Raw counts (log2)",
+            col = "grey80",
+            las = 2)
+    
+    boxplot(log2(norm_mtx + 1),
+            outline = FALSE,
+            main = "Size-factor normalized (log2)",
+            col = "skyblue",
+            las = 2)
+    
+    boxplot(vst_mtx,
+            outline = FALSE,
+            main = "VST-transformed",
+            col = "seagreen3",
+            las = 2)
+    
+    dev.off()
+  }
+  
+  ## -----------------------------
+  ## 7. Return everything useful
+  ## -----------------------------
+  return(list(
+    norm_counts = norm_mtx,
+    vst         = vst_mtx,
+    dds         = dds
+  ))
+}
+
+###########################################
+# ---Get normalized RNA-seq count matrix---
+############################################
