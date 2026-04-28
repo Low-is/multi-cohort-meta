@@ -26,7 +26,7 @@ pip install -r miner/requirements.txt
 Rscript meta/setup.R # only need to run this once! 
 ```
 
-## Run Pipeline
+## Run Data Processing Pipeline
 ```
 # Bash
 
@@ -42,6 +42,13 @@ RScript meta/extract_pData.R
 
 # Add 'condition' column to pData
 RScript meta/add_condition_column.R
+```
+
+## Run Meta-Analysis Pipeline
+```
+# Bash
+
+RScript run-meta/run_meta.R
 ```
 
 
