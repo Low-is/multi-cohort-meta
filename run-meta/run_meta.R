@@ -22,29 +22,15 @@ message("Matrices loaded!")
 
 # Need to add code that filters matrices to match dimmensions of pData
 
-# Removing NULL lists
-dna_mats <- dna_matrices[!sapply(dna_matrices, is.null)]
-rna_mats <- rna_matrices[!sapply(rna_matrices, is.null)]
-
-# Remove NULL strings inside vectors
-clean_genes <- function(x) {
-  x <- x[!is.na(x)]
-  x <- x[x != "NULL"]
-  x
-}
-
-#dna_mats <- lapply(dna_mats, clean_genes)
-#rna_mats <- lapply(rna_mats, clean_genes)
-all_mats <- c(dna_mats, rna_mats)
-
-lapply(all_mats, function(mtx) {
+all_matrices <- c(dna_matrices, rna_matrices)
+lapply(all_matrices, function(mtx) {
   dim(mtx)
   head(rownames(mtx))
 })
 
 # Find common genes across all studies being used for meta-analysis
 message("Searching for common genes...")
-common_genes <- Reduce(intersect, all_mats)
+common_genes <- Reduce(intersect, all_matrices)
 #common_genes <- find_common_genes(DNA = config$analysis$modalities$DNA,
                                   #RNA = config$analysis$modalities$RNA,
                                   #list_of_dna_mtx = dna_mats,
