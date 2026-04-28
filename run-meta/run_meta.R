@@ -33,8 +33,8 @@ clean_genes <- function(x) {
   x
 }
 
-dna_mats <- lapply(dna_mats, clean_genes)
-rna_mats <- lapply(rna_mats, clean_genes)
+#dna_mats <- lapply(dna_mats, clean_genes)
+#rna_mats <- lapply(rna_mats, clean_genes)
 all_mats <- c(dna_mats, rna_mats)
 
 # Find common genes across all studies being used for meta-analysis
