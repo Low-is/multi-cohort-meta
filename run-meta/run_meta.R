@@ -1,6 +1,6 @@
 library(yaml)
 library(jsonlite)
-#library(COCONUT)
+library(COCONUT)
 source("run-meta/functions/meta_analysis_functions.R")
 
 # Loading config file
@@ -26,8 +26,8 @@ message("Matrices loaded!")
 message("Searching for common genes...")
 common_genes <- find_common_genes(DNA = config$analysis$modalities$DNA,
                                   RNA = config$analysis$modalities$RNA,
-                                  list_of_dna_mtx = dna_matrices[dna_studies],
-                                  list_of_rna_mtx = rna_matrices[rna_studies],
+                                  list_of_dna_mtx = dna_matrices,
+                                  list_of_rna_mtx = rna_matrices,
                                   use_DEG = config$analysis$use_DEG
                                  )
 message(sprintf("%d common genes detected!", length(common_genes)))
