@@ -31,6 +31,8 @@ message(sprintf("✔ Loaded %d RNA studies", length(rna_studies)))
 # -------------------------
 # RUN PIPELINE
 # -------------------------
+system.time({
+  
 message("\n🧬 Starting DNA (microarray) processing...")
 
 dna_exprs <- generate_exprs_mtx(
@@ -59,3 +61,6 @@ message(sprintf("Total RNA datasets processed: %d", length(rna_exprs)))
 message("Saving loaded matrices...")
 saveRDS(dna_exprs, "meta/matrices/dna_matrices.rds")
 saveRDS(rna_exprs, "meta/matrices/rna_matrices.rds")
+
+  Sys.sleep(2)
+})
