@@ -362,7 +362,9 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
       #count_files <- txt_files[grepl("count|raw|htseq|feature", basename(txt_files), ignore.case = TRUE)]
       #fpkm_files <- setdiff(txt_files, count_files)
                
-      count_files <- txt_files[grepl("count\\.txt", basename(txt_files))]
+      count_files <- txt_files[grepl("count\\.txt$", basename(txt_files)) &
+                              !grepl("\\.txt\\.gz$", basename(txt_files))]
+               
       fpkm_files <- txt_files[!grepl("count\\.txt$", basename(txt_files))]   
       
       message("Count files (ENSG): ", length(count_files))
