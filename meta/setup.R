@@ -24,9 +24,10 @@ install.packages(c(
   "jsonlite",
   "data.table",
   "dplyr",
-  "yaml",
-  "COCONUT"
+  "yaml"
 ))
+
+install.packages("COCONUT_1.0.2.tar.gz", repos = NULL, type = "source")
 
 # -----------------------
 # 4. Install Bioconductor manager (if needed)
