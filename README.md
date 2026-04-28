@@ -44,11 +44,11 @@ RScript meta/extract_pData.R
 RScript meta/add_condition_column.R
 ```
 
-## Run Meta-Analysis Pipeline
+## Run Meta-Analysis Pipeline (under development)
 ```
 # Bash
 
-RScript run-meta/run_meta.R # under development
+RScript run-meta/run_meta.R 
 ```
 
 
