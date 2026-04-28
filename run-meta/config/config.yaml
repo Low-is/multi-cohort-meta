@@ -1,0 +1,12 @@
+# config
+
+analysis:
+  modalities:
+    DNA: true
+    RNA: true
+
+  use_DEG: false
+
+  inputs:
+    dna_gse_file: "miner/outputs/dna_gse_ids.json"
+    rna_gse_file: "miner/outputs/rna_gse_ids.json"
