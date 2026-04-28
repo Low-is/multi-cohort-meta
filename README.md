@@ -48,7 +48,7 @@ RScript meta/add_condition_column.R
 ```
 # Bash
 
-RScript run-meta/run_meta.R
+RScript run-meta/run_meta.R # under development
 ```
 
 
