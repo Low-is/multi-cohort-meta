@@ -17,7 +17,9 @@ message("Studies loaded!")
 # Loading expression matrices
 message("Loading expression matrices...")
 dna_matrices <-  readRDS("meta/matrices/dna_matrices.rds")
-rna_matrices <- readRDS("meta/matrices/rna_matrices.rds")
+rna_matrices <- readRDS("meta/matrices/rna_matrices.rds") # the str is a list of 2: x$expr and x$pData
+# Extracting expression matrices from RNA-seq data
+rna_matrices <- lapply(rna_matrices, function(x) x$expr)
 message("Matrices loaded!")
 
 # Need to add code that filters matrices to match dimmensions of pData
