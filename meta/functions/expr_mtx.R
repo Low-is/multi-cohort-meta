@@ -337,7 +337,7 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
       )
       if (length(gz_files) > 0) {
         message("Decompressing ", length(gz_files), " compressed files ...")
-        lapply(gz_files, function(f) R.utils::gunzip(f, remove = FALSE, overwrite = TRUE))
+        lapply(gz_files, function(f) R.utils::gunzip(f, remove = TRUE, overwrite = TRUE))
       }
       
       # --- Gather all txt-like files (including htseq.results) ---
