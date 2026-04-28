@@ -359,10 +359,11 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
 
       
       # --- FILE TYPE DETECTION BY FILENAME: count.txt = ENSG, htseq.results + others = FPKM / featureCounts ---
-      count_files <- txt_files[
-        grepl("count|raw|htseq|feature", basename(txt_files), ignore.case = TRUE)]
+      #count_files <- txt_files[grepl("count|raw|htseq|feature", basename(txt_files), ignore.case = TRUE)]
+      #fpkm_files <- setdiff(txt_files, count_files)
                
-      fpkm_files <- setdiff(txt_files, count_files)
+      count_files <- txt_files[grepl("count\\.txt", basename(txt_files))]
+      fpkm_files <- txt_files[!grepl("count\\.txt$", basename(txt_files))]   
       
       message("Count files (ENSG): ", length(count_files))
       message("FPKM / featureCounts files: ", length(fpkm_files))
