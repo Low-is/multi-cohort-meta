@@ -1,2 +1,4 @@
 #list.files("meta/COCONUT", recursive = TRUE)
-devtools::install("meta/COCONUT/COCONUT")
+install.packages("meta/COCONUT/COCONUT",
+                repos = NULL,
+                type = "source")
