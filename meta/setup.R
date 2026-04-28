@@ -27,9 +27,7 @@ install.packages(c(
   "yaml"
 ))
 
-install.packages("meta/COCONUT_1.0.2.tar.gz",
-                 repos = NULL,
-                 type = "source")
+untar("meta/COCONUT_1.0.2.tar.gz", exdir = "meta/COCONUT")
 
 # -----------------------
 # 4. Install Bioconductor manager (if needed)
