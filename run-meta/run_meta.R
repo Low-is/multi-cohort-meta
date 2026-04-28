@@ -37,6 +37,11 @@ clean_genes <- function(x) {
 #rna_mats <- lapply(rna_mats, clean_genes)
 all_mats <- c(dna_mats, rna_mats)
 
+lapply(all_mats, function(mtx) {
+  dim(mtx)
+  head(rownames(mtx))
+})
+
 # Find common genes across all studies being used for meta-analysis
 message("Searching for common genes...")
 common_genes <- Reduce(intersect, all_mats)
