@@ -1,6 +1,6 @@
 library(yaml)
 library(jsonlite)
-#library(COCONUT)
+library(COCONUT)
 source("run-meta/functions/meta_analysis_functions.R")
 
 # Loading config file
