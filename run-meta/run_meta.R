@@ -24,7 +24,7 @@ message("Matrices loaded!")
 
 # Removing NULL lists
 dna_mats <- dna_matrices[!sapply(dna_matrices, is.null)]
-rna_mats <- rna_matrices[!saaply(rna_matrices, is.null)]
+rna_mats <- rna_matrices[!sapply(rna_matrices, is.null)]
 
 # Remove NULL strings inside vectors
 clean_genes <- function(x) {
