@@ -18,16 +18,12 @@ message("Studies loaded!")
 message("Loading expression matrices...")
 dna_matrices <-  readRDS("meta/matrices/dna_matrices.rds")
 rna_matrices <- readRDS("meta/matrices/rna_matrices.rds") # the str is a list of 2: x$expr and x$pData
-# Extracting expression matrices from RNA-seq data
-rna_matrices <- lapply(rna_matrices, function(x) x$expr)
 message("Matrices loaded!")
 
 # Need to add code that filters matrices to match dimmensions of pData
 
-all_matrices <- c(dna_matrices, rna_matrices)
-lapply(all_matrices, function(mtx) {
-  dim(mtx)
-})
+dim(rna_matrices[["GSE106910"]]$expr)
+colnames(rna_matrices[["GSE106910"]]$expr)
 
 # Find common genes across all studies being used for meta-analysis
 message("Searching for common genes...")
