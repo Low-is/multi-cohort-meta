@@ -26,7 +26,7 @@ message("Matrices loaded!")
 
 all_matrices <- c(dna_matrices, rna_matrices)
 lapply(all_matrices, function(mtx) {
-  str(mtx)
+  dim(mtx)
 })
 
 # Find common genes across all studies being used for meta-analysis
