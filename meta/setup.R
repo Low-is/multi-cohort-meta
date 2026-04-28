@@ -28,6 +28,7 @@ install.packages(c(
 ))
 
 untar("meta/COCONUT_1.0.2.tar.gz", exdir = "meta/COCONUT")
+#list.files("meta/COCONUT", recursive = TRUE)
 install.packages("meta/COCONUT/COCONUT",
                 repos = NULL,
                 type = "source")
