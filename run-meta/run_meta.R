@@ -26,7 +26,7 @@ rna_mtxs <- Filter(Negate(is.null), rna_mtxs)
 # Need to add code that filters matrices to match dimmensions of pData
 
 all_matrices <- c(dna_matrices, rna_mtxs)
-lapply(all_matricesm, function(x) head(rownames(x)))
+lapply(all_matrices, function(x) head(rownames(x)))
 
 # Find common genes across all studies being used for meta-analysis
 #message("Searching for common genes...")
