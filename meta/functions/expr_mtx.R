@@ -308,7 +308,7 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
       # ---- RESTRICT TO BULK RNA-SEQ ONLY ----
       h5_files <- list.files(
         extract_dir,
-        pattern = "\\.h5$|cell_metadata.*\\.csv\\.gz$|compiled_counts.*\\.csv\\.gz$)",
+        pattern = "\\.h5$|cell_metadata.*\\.csv\\.gz$|compiled_counts.*\\.csv\\.gz$",
         full.names = TRUE,
         recursive = TRUE
       )
@@ -331,7 +331,7 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
       if (length(tar_files) > 0) {
         message("Inspecting ", length(tar_files), " tar file(s) ...")
         for (tf in tar_files) {
-          contents <- system(paste("tar -tf", shQoute(tf)), intern = TRUE)
+          contents <- system(paste("tar -tf", shQuote(tf)), intern = TRUE)
 
           is_h5_only <- all(grepl("\\.h5$|\\.h5ad$|\\.loom$", contents))
 
@@ -343,7 +343,7 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
             next
           }
           message("Extracting: ", basename(tf))
-          system(paste("tar -xvf", shQoute(tf), "-C", shQoute(extract_dir)))
+          system(paste("tar -xvf", shQuote(tf), "-C", shQuote(extract_dir)))
         }
       }
       
