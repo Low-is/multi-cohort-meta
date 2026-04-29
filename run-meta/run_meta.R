@@ -20,7 +20,7 @@ dna_matrices <-  readRDS("meta/matrices/dna_matrices.rds")
 rna_matrices <- readRDS("meta/matrices/rna_matrices.rds") # the str is a list of 2: x$expr and x$pData
 message("Matrices loaded!")
 
-lapply(rna_matrices, function(x) str(x))
+str(rna_matrices[["GSE106910"]])
 
 # Need to add code that filters matrices to match dimmensions of pData
 all_matrices <- c(dna_matrices, rna_matrices)
