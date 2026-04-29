@@ -2,6 +2,7 @@ library(yaml)
 library(jsonlite)
 library(COCONUT)
 source("run-meta/functions/meta_analysis_functions.R")
+source("meta/functions/expr_mtx.R")
 
 # Loading config file
 message("Loading config file...")
