@@ -353,6 +353,8 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
         grepl("count|raw|htseq|feature|fpkm|tpm|GSM|GSE", basename(txt_files), ignore.case = TRUE) &
         !grepl("miRNA|mirna|target|annotation|anno|genelist|metadata|h5|hdf5", basename(txt_files), ignore.case = TRUE)
       ]
+
+      txt_files <- txt_files[!duplicated(gsub("\\.gz$", "", basename(txt_files)))]
       
       if (length(txt_files) == 0) stop("No RNA-seq .txt files found for ", geo_id)
       message("Detected ", length(txt_files), " processed RNA-seq .txt files for ", geo_id)
