@@ -20,13 +20,15 @@ dna_matrices <-  readRDS("meta/matrices/dna_matrices.rds")
 rna_matrices <- readRDS("meta/matrices/rna_matrices.rds") # the str is a list of 2: x$expr and x$pData
 message("Matrices loaded!")
 
-rna_mtxs <- lapply(rna_matrices, function(x) x$expr)
-rna_mtxs <- Filter(Negate(is.null), rna_mtxs)
+message("Getting norm RNA counts...")
+norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices)
+message("Extracted norm RNA counts!")
+
 
 # Need to add code that filters matrices to match dimmensions of pData
 
-all_matrices <- c(dna_matrices, rna_mtxs)
-lapply(all_matrices, function(x) head(rownames(x)))
+#all_matrices <- c(dna_matrices, rna_mtxs)
+#lapply(all_matrices, function(x) head(rownames(x)))
 
 # Find common genes across all studies being used for meta-analysis
 #message("Searching for common genes...")
