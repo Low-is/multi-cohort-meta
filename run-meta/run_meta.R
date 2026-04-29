@@ -22,7 +22,7 @@ message("Matrices loaded!")
 
 rna_mtxs <- lapply(rna_matrices, function(x) x$expr))
 
-lapply(rna_mtx, function(x) str(x))
+lapply(rna_mtxs, function(x) str(x))
 
 # Need to add code that filters matrices to match dimmensions of pData
 all_matrices <- c(dna_matrices, rna_matrices)
