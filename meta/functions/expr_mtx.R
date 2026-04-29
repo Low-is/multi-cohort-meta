@@ -308,7 +308,7 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
       # ---- RESTRICT TO BULK RNA-SEQ ONLY ----
       h5_files <- list.files(
         extract_dir,
-        pattern = "\\.h5$",
+        pattern = "\\.h5$|cell_metadata.*\\.csv\\.gz$|compiled_counts.*\\.csv\\.gz$)",
         full.names = TRUE,
         recursive = TRUE
       )
@@ -322,10 +322,29 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
       }
       
       # --- Extract nested tar files if any ---
+      #tar_files <- list.files(extract_dir, pattern = "\\.tar$", full.names = TRUE)
+      #if (length(tar_files) > 0) {
+        #message("Extracting ", length(tar_files), " nested tar file(s) ...")
+        #for (tf in tar_files) system(paste("tar -xvf", shQuote(tf), "-C", shQuote(extract_dir)))
+      #}
       tar_files <- list.files(extract_dir, pattern = "\\.tar$", full.names = TRUE)
       if (length(tar_files) > 0) {
-        message("Extracting ", length(tar_files), " nested tar file(s) ...")
-        for (tf in tar_files) system(paste("tar -xvf", shQuote(tf), "-C", shQuote(extract_dir)))
+        message("Inspecting ", length(tar_files), " tar file(s) ...")
+        for (tf in tar_files) {
+          contents <- system(paste("tar -tf", shQoute(tf)), intern = TRUE)
+
+          is_h5_only <- all(grepl("\\.h5$|\\.h5ad$|\\.loom$", contents))
+
+          if (is_h5_only) {
+            warning(sprintf(
+              "Skipping %s: tar contains only single-cell H5 data",
+              basename(tf)
+            ))
+            next
+          }
+          message("Extracting: ", basename(tf))
+          system(paste("tar -xvf", shQoute(tf), "-C", shQoute(extract_dir)))
+        }
       }
       
       # --- Decompress all .txt.gz AND .htseq.results.gz files ---
