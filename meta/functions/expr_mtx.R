@@ -644,7 +644,7 @@ get_norm_RNA_counts <- function(rna_list,
     x[!is.finite(x)] <- 0
     x <- round(x)
 
-    x <- x[rowSums(x) > 0, , drop = FALSE]
+    #x <- x[rowSums(x) > 0, , drop = FALSE]
     
     keep <- rowSums(x >= min_count) >= min_samples
     x <- x[keep, , drop = FALSE]
