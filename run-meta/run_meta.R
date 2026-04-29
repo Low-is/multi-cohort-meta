@@ -21,7 +21,7 @@ rna_matrices <- readRDS("meta/matrices/rna_matrices.rds") # the str is a list of
 message("Matrices loaded!")
 
 rna_mtxs <- lapply(rna_matrices, function(x) x$expr)
-
+rna_mtxs <- Filter(Negate(is.null), rna_mtxs)
 lapply(rna_mtxs, function(x) dim(x))
 
 # Need to add code that filters matrices to match dimmensions of pData
