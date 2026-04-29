@@ -22,7 +22,7 @@ rna_matrices <- readRDS("meta/matrices/rna_matrices.rds") # the str is a list of
 message("Matrices loaded!")
 
 pData <- lapply(rna_matrices, function(x) x$pData)
-View(pData$GSE275938)
+lapply(pData, function(x) dim(x))
 
 #message("Getting norm RNA counts...")
 #norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices)
