@@ -35,7 +35,7 @@ python main.py
 
 cd ..
 # Process expression matrices
-RScript meta/expr_pipeline.R # Takes about 15 mintutes to run
+RScript meta/expr_pipeline.R # Takes ~15 mintutes to run
 
 # Process pData
 RScript meta/extract_pData.R
