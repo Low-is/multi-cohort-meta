@@ -620,59 +620,68 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
 # ---Get normalized DNA expression matrices | returns raw processed RNA count matrices---
 ############################################
 
-
+                              
 
 ###########################################
 # ---Get normalized RNA-seq count matrix---
 ############################################
 
-get_norm_RNA_counts <- function(expr_matrix, pData,
+get_norm_RNA_counts <- function(rna_list,
                                 min_count = 10,
                                 min_samples = 2,
                                 make_plots = TRUE) {
-  
-  if (!"condition" %in% colnames(pData))
-    stop("There must be a 'condition' column in pData")
-  
-  ## -----------------------------
-  ## 1. Clean counts
-  ## -----------------------------
-  expr_matrix[!is.finite(expr_matrix)] <- 0
-  expr_matrix <- round(expr_matrix)
-  
-  ## Remove genes with all zeros
-  expr_matrix <- expr_matrix[rowSums(expr_matrix) > 0, , drop = FALSE]
+
+  expr_list <- lapply(rna_list, function(x) x$expr)
+  pData_list <- lapply(rna_list, function(x) x$pData)
+
+  names(expr_list) <- names(rna_list)
+  names(pData_list) <- names(rna_list)
   
   ## -----------------------------
-  ## 2. Pre-filter low counts
+  ## 1. CLEAN MATRICES
   ## -----------------------------
-  keep <- rowSums(expr_matrix >= min_count) >= min_samples
-  expr_matrix <- expr_matrix[keep, , drop = FALSE]
+  clean_expr <- lapply(expr_list, function(x) {
+    x[!is.finite(x)] <- 0
+    x <- round(x)
+
+    x <- x[rowSums(x) > 0, , drop = FALSE]
+    
+    keep <- rowSums(x >= min_count) >= min_samples
+    x <- x[keep, , drop = FALSE]
+    })
   
   ## -----------------------------
-  ## 3. Construct DESeq object
+  ## 2. VST TRANSFORMATION 
   ## -----------------------------
-  dds <- DESeqDataSetFromMatrix(
-    countData = expr_matrix,
-    colData   = pData,
-    design    = ~ condition
-  )
-  
+  vst_list <- lapply(names(clean_expr), function(i) {
+    x <- clean_expr[[i]]
+    pd <- pData_list[[i]]
+
+    common <- intersect(colnames(x), rownames(pd))
+    x <- x[, common, drop = FALSE]
+    pd <- pd[common, , drop = FALSE]
+
+    if (!"condition" %in% colnames(pd)) {
+      stop("Missing 'condition' in pData for: ", i)
+    }
+
+    dds <- DESeqDataSetFromMatrix(
+      countData = x,
+      colData = pd,
+      design = ~ condition
+    )
+
+    dds <- DESeq(dds, quiet = TRUE)
+    assay(vst(dds, blind = TRUE))
+  })
+
+  names(vst_list) <- names(clean_expr)
+                       
   ## -----------------------------
-  ## 4. Size factor normalization ONLY
-  ## -----------------------------
-  dds <- estimateSizeFactors(dds)
-  norm_mtx <- counts(dds, normalized = TRUE)
-  
-  ## -----------------------------
-  ## 5. Variance stabilization (recommended)
-  ## -----------------------------
-  vst_mtx <- assay(vst(dds, blind = TRUE))
-  
-  ## -----------------------------
-  ## 6. Diagnostic plots
+  ## 3. PLOTS
   ## -----------------------------
   if (make_plots) {
+    
     png("normalization_boxplots.png",
         units = "in",
         width = 8,
@@ -680,38 +689,34 @@ get_norm_RNA_counts <- function(expr_matrix, pData,
         res = 600)
     
     par(mfrow = c(3, 1), mar = c(6, 4, 2, 1))
-    
-    boxplot(log2(expr_matrix + 1),
-            outline = FALSE,
-            main = "Raw counts (log2)",
-            col = "grey80",
-            las = 2)
-    
-    boxplot(log2(norm_mtx + 1),
-            outline = FALSE,
-            main = "Size-factor normalized (log2)",
-            col = "skyblue",
-            las = 2)
-    
-    boxplot(vst_mtx,
-            outline = FALSE,
-            main = "VST-transformed",
-            col = "seagreen3",
-            las = 2)
-    
+
+    for (i in names(clean_expr)) {
+
+      raw < log2(expr_list[[i]] +1)
+      clean <- log2(clean_expr[[i]] +1)
+
+      boxplot(raw,
+             outline = FALSE,
+             main = paste0(i, " RAW"),
+             col = "grey80",
+             las = 2)
+      boxplot(clean,
+              outline = FALSE,
+              main = paste0(i, " CLEAN"),
+              col = "seagreen3",
+              las = 2)
+    }
+
     dev.off()
   }
   
   ## -----------------------------
-  ## 7. Return everything useful
+  ## 4. RETURN ONLY CLEANED COUNTS
   ## -----------------------------
-  return(list(
-    norm_counts = norm_mtx,
-    vst         = vst_mtx,
-    dds         = dds
-  ))
+  return(clean_expr)
 }
 
 ###########################################
 # ---Get normalized RNA-seq count matrix---
 ############################################
+
