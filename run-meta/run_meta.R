@@ -20,7 +20,7 @@ dna_matrices <-  readRDS("meta/matrices/dna_matrices.rds")
 rna_matrices <- readRDS("meta/matrices/rna_matrices.rds") # the str is a list of 2: x$expr and x$pData
 message("Matrices loaded!")
 
-rna_mtxs <- lapply(rna_matrices, function(x) x$expr))
+rna_mtxs <- lapply(rna_matrices, function(x) x$expr)
 
 lapply(rna_mtxs, function(x) str(x))
 
