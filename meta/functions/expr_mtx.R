@@ -656,9 +656,9 @@ get_norm_RNA_counts <- function(rna_list,
     x <- clean_expr[[i]]
     pd <- pData_list[[i]]
 
-    common <- intersect(colnames(x), rownames(pd))
-    x <- x[, common, drop = FALSE]
-    pd <- pd[common, , drop = FALSE]
+    #common <- intersect(colnames(x), rownames(pd))
+    #x <- x[, common, drop = FALSE]
+    #pd <- pd[common, , drop = FALSE]
 
     if (!"condition" %in% colnames(pd)) {
       stop("Missing 'condition' in pData for: ", i)
