@@ -21,17 +21,15 @@ rna_matrices <- readRDS("meta/matrices/rna_matrices.rds") # the str is a list of
 message("Matrices loaded!")
 
 # Need to add code that filters matrices to match dimmensions of pData
-
-dim(rna_matrices[["GSE106910"]]$expr)
-colnames(rna_matrices[["GSE106910"]]$expr)
+all_matrices <- c(dna_matrices, rna_matrices)
 
 # Find common genes across all studies being used for meta-analysis
-#message("Searching for common genes...")
-#common_genes <- Reduce(intersect, all_matrices)
+message("Searching for common genes...")
+common_genes <- Reduce(intersect, all_matrices)
 #common_genes <- find_common_genes(DNA = config$analysis$modalities$DNA,
                                   #RNA = config$analysis$modalities$RNA,
                                   #list_of_dna_mtx = dna_mats,
                                   #list_of_rna_mtx = rna_mats,
                                   #use_DEG = config$analysis$use_DEG
                                  #)
-#message(sprintf("%d common genes detected!", length(common_genes)))
+message(sprintf("%d common genes detected!", length(common_genes)))
