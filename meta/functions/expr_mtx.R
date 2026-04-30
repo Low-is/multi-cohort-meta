@@ -662,7 +662,7 @@ get_norm_RNA_counts <- function(rna_list,
   pData_list <- lapply(rna_list, function(x) x$pData)
 
   names(expr_list) <- names(rna_list)
-  names(pData_list) <- names(rna_list)
+  #names(pData_list) <- names(rna_list) # load externally extracted pData
   
   ## -----------------------------
   ## 1. CLEAN MATRICES
