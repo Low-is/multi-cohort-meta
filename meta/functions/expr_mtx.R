@@ -327,9 +327,13 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
         #message("Extracting ", length(tar_files), " nested tar file(s) ...")
         #for (tf in tar_files) system(paste("tar -xvf", shQuote(tf), "-C", shQuote(extract_dir)))
       #}
+      skip_dataset <- FALSE
+      
       tar_files <- list.files(extract_dir, pattern = "\\.tar$", full.names = TRUE)
+      
       if (length(tar_files) > 0) {
         message("Inspecting ", length(tar_files), " tar file(s) ...")
+        
         for (tf in tar_files) {
           contents <- system(paste("tar -tf", shQuote(tf)), intern = TRUE)
 
@@ -338,14 +342,18 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
           if (is_h5_only) {
             warning(sprintf(
               "Skipping %s: tar contains only single-cell H5 data",
-              basename(tf)
+              geo_id
             ))
-            next
+
+            skip_dataset <- TRUE
+            break
           }
           message("Extracting: ", basename(tf))
           system(paste("tar -xvf", shQuote(tf), "-C", shQuote(extract_dir)))
         }
       }
+
+      if (skip_dataset) return(NULL)
       
       # --- Decompress all .txt.gz AND .htseq.results.gz files ---
       gz_files <- list.files(
