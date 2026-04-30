@@ -16,7 +16,7 @@ control_patterns:
   - nobpd
   - nosepsis
   - nonbpd
-  - "bpd control"
+  - "bpd_control"
   - "no bpd"
   - "non-bpd"
   - "bpd: severe"
