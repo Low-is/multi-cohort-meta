@@ -19,14 +19,12 @@ message("Studies loaded!")
 message("Loading expression matrices...")
 dna_matrices <-  readRDS("meta/matrices/dna_matrices.rds")
 rna_matrices <- readRDS("meta/matrices/rna_matrices.rds") # the str is a list of 2: x$expr and x$pData
+rna_matrices <- rna_matrices[!sapply(rna_matrices, is.null)] # Removing NULL single cell datasets
 message("Matrices loaded!")
 
-rna_matrices <- rna_matrices[!sapply(rna_matrices, is.null)]
 
-lapply(rna_matrices, function(x) dim(x$expr))
-
-#pData <- lapply(rna_matrices, function(x) x$pData)
-#lapply(pData, function(x) dim(x))
+pData <- lapply(rna_matrices, function(x) x$pData)
+lapply(pData, function(x) dim(x))
 
 #message("Getting norm RNA counts...")
 #norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices)
