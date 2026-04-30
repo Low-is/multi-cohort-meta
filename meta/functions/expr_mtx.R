@@ -654,15 +654,15 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
 ############################################
 
 get_norm_RNA_counts <- function(rna_list,
+                                pData,
                                 min_count = 10,
                                 min_samples = 2,
                                 make_plots = TRUE) {
 
   expr_list <- lapply(rna_list, function(x) x$expr)
-  pData_list <- lapply(rna_list, function(x) x$pData)
-
+  
   names(expr_list) <- names(rna_list)
-  #names(pData_list) <- names(rna_list) # load externally extracted pData
+  names(pData) <- names(rna_list) 
   
   ## -----------------------------
   ## 1. CLEAN MATRICES
@@ -681,7 +681,7 @@ get_norm_RNA_counts <- function(rna_list,
   ## -----------------------------
   vst_list <- lapply(names(clean_expr), function(i) {
     x <- clean_expr[[i]]
-    pd <- pData_list[[i]]
+    pd <- pData[[i]]
 
     #common <- intersect(colnames(x), rownames(pd))
     #x <- x[, common, drop = FALSE]
