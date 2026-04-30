@@ -22,28 +22,28 @@ rna_matrices <- readRDS("meta/matrices/rna_matrices.rds") # the str is a list of
 rna_matrices <- rna_matrices[!sapply(rna_matrices, is.null)] # Removing NULL single cell datasets
 message("Matrices loaded!")
 
-lapply(rna_matrices, function(x) head(rownames(x$expr)))
+#lapply(rna_matrices, function(x) head(rownames(x$expr)))
 
 #pData <- lapply(rna_matrices, function(x) x$pData)
 #lapply(pData, function(x) dim(x))
 
-#message("Getting norm RNA counts...")
-#norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices)
-#message("Extracted norm RNA counts!")
+message("Getting norm RNA counts...")
+norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices)
+message("Extracted norm RNA counts!")
 
 
 # Need to add code that filters matrices to match dimmensions of pData
 
-#all_matrices <- c(dna_matrices, rna_mtxs)
+all_matrices <- c(dna_matrices, rna_mtxs)
 #lapply(all_matrices, function(x) head(rownames(x)))
 
 # Find common genes across all studies being used for meta-analysis
-#message("Searching for common genes...")
-#common_genes <- Reduce(intersect, all_matrices)
+message("Searching for common genes...")
+common_genes <- Reduce(intersect, all_matrices)
 #common_genes <- find_common_genes(DNA = config$analysis$modalities$DNA,
                                   #RNA = config$analysis$modalities$RNA,
                                   #list_of_dna_mtx = dna_mats,
                                   #list_of_rna_mtx = rna_mats,
                                   #use_DEG = config$analysis$use_DEG
                                  #)
-#message(sprintf("%d common genes detected!", length(common_genes)))
+message(sprintf("%d common genes detected!", length(common_genes)))
