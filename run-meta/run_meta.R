@@ -24,8 +24,8 @@ message("Matrices loaded!")
 
 #lapply(rna_matrices, function(x) head(rownames(x$expr)))
 
-pData <- lapply(rna_matrices, function(x) x$pData)
-head(pData[["GSE125873"]])
+rna_pdata <- readRDS("meta/pdata/rna_pData.rds")
+head(rna_pdata[["GSE125873"]])
 
 #message("Getting norm RNA counts...")
 #norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices)
