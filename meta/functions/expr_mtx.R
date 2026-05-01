@@ -659,18 +659,51 @@ get_norm_RNA_counts <- function(rna_list,
                                 min_samples = 2,
                                 make_plots = TRUE) {
 
+  handling_duplicates <- function(data_table) {
+    if (is.list(data_table$Genes)) {
+      data_table[, Genes := vapply(Genes, function(x) {
+        if (is.null(x) || length(x) == 0 || all(is.na(x))) {
+          return(NA_character_)
+        } else if (is.list(x)) {
+          return(as.character(unlist(x)))
+        } else {
+          return(as.character(x))
+        }
+      }, FUN.VALUE = character(1))]
+    }
+    
+    data_table <- na.omit(data_table[(Genes != "" & !is.na(Genes)), ])
+    
+    if (any(duplicated(data_table$Genes))) {
+      exprs_data.table <- data_table[, lapply(.SD, mean), by = Genes, .SDcols = !'Genes']
+    } else {
+      exprs_data.table <- data_table
+    }
+    
+    exprs_mtx <- as.matrix(exprs_data.table[, -1])
+    rownames(exprs_mtx) <- exprs_data.table$Genes
+    
+    return(exprs_mtx)
+  }
+  
+
   expr_list <- lapply(rna_list, function(x) x$expr)
 
   names(expr_list) <- names(rna_list)
   names(pData) <- names(rna_list)
 
   ## -----------------------------
-  ## 1. CLEAN MATRICES
+  ## 1. CLEAN MATRICES + HANDLE DUPLICATES
   ## -----------------------------
   clean_expr <- lapply(expr_list, function(x) {
     x[!is.finite(x)] <- 0
     x <- round(x)
-    return(x)
+
+    dt <- data.table::as.data.table(x, keep.rownames = "Genes")
+
+    x_clean <- handling_duplicates(dt)
+
+    return(x_clean)
   })
 
   ## -----------------------------
