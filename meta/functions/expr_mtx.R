@@ -671,7 +671,7 @@ get_norm_RNA_counts <- function(rna_list,
 
     dt <- data.table(Genes = rownames(mat), mat)
     dt$Genes <- as.character(dt$Genes)
-    dt <- dt[!is.na(df$Genes) & dt$Genes != "", ]
+    dt <- dt[!is.na(dt$Genes) & dt$Genes != "", ]
 
     # collapse duplicates
     if (any(duplicated(dt$Genes))) {
