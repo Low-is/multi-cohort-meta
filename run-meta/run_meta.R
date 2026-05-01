@@ -44,11 +44,11 @@ lapply(dna_matrices, function(x) head(rownames(x)))
 
 
 # Find common genes across all studies being used for meta-analysis
-message("Searching for common genes...")
-common_genes <- find_common_genes(DNA = config$analysis$modalities$DNA,
-                                  RNA = config$analysis$modalities$RNA,
-                                  list_of_dna_mtx = dna_matrices,
-                                  list_of_rna_mtx = NULL,
-                                  use_DEG = config$analysis$use_DEG
-                                 )
-message(sprintf("%d common genes detected!", length(common_genes)))
+#message("Searching for common genes...")
+#common_genes <- find_common_genes(DNA = config$analysis$modalities$DNA,
+                                  #RNA = config$analysis$modalities$RNA,
+                                  #list_of_dna_mtx = dna_matrices,
+                                  #list_of_rna_mtx = NULL,
+                                  #use_DEG = config$analysis$use_DEG
+                                 #)
+#message(sprintf("%d common genes detected!", length(common_genes)))
