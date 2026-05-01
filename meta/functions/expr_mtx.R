@@ -688,10 +688,11 @@ get_norm_RNA_counts <- function(rna_list,
       .groups = "drop"
     )
 
-  mat_out <- df_collapsed
-  rownames(mat_out) <- mat_out$Genes
-  mat_out$Genes <- NULL
-
+  genes <- df_collapsed$Genes
+    
+  mat_out <- df_collapsed[-1, ]
+  rownames(mat_out) <- genes
+ 
   mat_out <- as.matrix(mat_out)
 
   mat_out
