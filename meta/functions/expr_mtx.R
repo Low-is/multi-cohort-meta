@@ -660,24 +660,21 @@ get_norm_RNA_counts <- function(rna_list,
                                 make_plots = TRUE) {
 
   expr_list <- lapply(rna_list, function(x) x$expr)
-  
+
   names(expr_list) <- names(rna_list)
-  names(pData) <- names(rna_list) 
-  
+  names(pData) <- names(rna_list)
+
   ## -----------------------------
   ## 1. CLEAN MATRICES
   ## -----------------------------
   clean_expr <- lapply(expr_list, function(x) {
     x[!is.finite(x)] <- 0
     x <- round(x)
+    return(x)
+  })
 
-    #x <- x[rowSums(x) > 0, , drop = FALSE]
-    #keep <- rowSums(x >= min_count) >= min_samples
-    #x <- x[keep, , drop = FALSE]
-    })
-  
   ## -----------------------------
-  ## 2. VST TRANSFORMATION 
+  ## 2. VST TRANSFORMATION
   ## -----------------------------
   vst_list <- lapply(names(clean_expr), function(i) {
     tryCatch({
@@ -685,57 +682,60 @@ get_norm_RNA_counts <- function(rna_list,
       pd <- pData[[i]]
 
       if (is.null(x) || is.null(pd)) return(NULL)
-
       if (!is.matrix(x)) return(NULL)
 
       if (!"condition" %in% colnames(pd)) {
-        stop("Missing 'condition' in pData for: ", i)
+        warning(paste("Skipping", i, ": missing condition"))
+        return(NULL)
       }
 
       if (ncol(x) != nrow(pd)) {
         warning(paste("Skipping", i, ": countData and colData mismatch"))
         return(NULL)
       }
-      
+
       dds <- DESeqDataSetFromMatrix(
-      countData = x,
-      colData = pd,
-      design = ~ condition
+        countData = x,
+        colData = pd,
+        design = ~ condition
       )
-      
+
       dds <- DESeq(dds, quiet = TRUE)
       assay(vst(dds, blind = TRUE))
-    , error = function(e) {
+
+    }, error = function(e) {
       warning(paste("Skipping", i, ":", e$message))
       return(NULL)
     })
   })
 
   names(vst_list) <- names(clean_expr)
-                       
+
+
   ## -----------------------------
   ## 3. PLOTS
   ## -----------------------------
   if (make_plots) {
-    
+
     png("normalization_boxplots.png",
         units = "in",
         width = 8,
         height = 8,
         res = 600)
-    
+
     par(mfrow = c(3, 1), mar = c(6, 4, 2, 1))
 
     for (i in names(clean_expr)) {
 
-      raw < log2(expr_list[[i]] +1)
-      clean <- log2(clean_expr[[i]] +1)
+      raw <- log2(expr_list[[i]] + 1)
+      clean <- log2(clean_expr[[i]] + 1)
 
       boxplot(raw,
-             outline = FALSE,
-             main = paste0(i, " RAW"),
-             col = "grey80",
-             las = 2)
+              outline = FALSE,
+              main = paste0(i, " RAW"),
+              col = "grey80",
+              las = 2)
+
       boxplot(clean,
               outline = FALSE,
               main = paste0(i, " CLEAN"),
@@ -745,7 +745,7 @@ get_norm_RNA_counts <- function(rna_list,
 
     dev.off()
   }
-  
+
   ## -----------------------------
   ## 4. RETURN ONLY CLEANED COUNTS
   ## -----------------------------
@@ -755,4 +755,3 @@ get_norm_RNA_counts <- function(rna_list,
 ###########################################
 # ---Get normalized RNA-seq count matrix---
 ############################################
-
