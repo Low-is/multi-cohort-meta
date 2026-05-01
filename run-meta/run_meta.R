@@ -36,7 +36,7 @@ norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices, pData = rna_pdata)
 message("Extracted norm RNA counts!")
 
 #lapply(dna_matrices, function(x) head(rownames(x)))
-lapply(norm_rna_mtxs, function(x) rownames(x)[1:50])
+lapply(norm_rna_mtxs, function(x) dim(x))
 
 
 # Need to add code that filters matrices to match dimmensions of pData
