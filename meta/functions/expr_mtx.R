@@ -702,9 +702,9 @@ get_norm_RNA_counts <- function(rna_list,
     x <- as.matrix(x)
 
     # optional filtering (kept consistent)
-    x <- x[rowSums(x) > 0, , drop = FALSE]
-    keep <- rowSums(x >= min_count) >= min_samples
-    x <- x[keep, , drop = FALSE]
+    #x <- x[rowSums(x) > 0, , drop = FALSE]
+    #keep <- rowSums(x >= min_count) >= min_samples
+    #x <- x[keep, , drop = FALSE]
 
     # handle duplicates AFTER cleaning
     handling_duplicates(x)
