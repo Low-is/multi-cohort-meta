@@ -33,7 +33,7 @@ message("Getting norm RNA counts...")
 norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices, pData = rna_pdata)
 message("Extracted norm RNA counts!")
 
-lapply(dna_matrices, function(x) head(rownames(x)))
+#lapply(dna_matrices, function(x) head(rownames(x)))
 lapply(norm_rna_mtxs, function(x) head(rownames(x)))
 
 
