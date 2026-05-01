@@ -2,7 +2,7 @@
 
 analysis:
   modalities:
-    DNA: true
+    DNA: false
     RNA: true
 
   use_DEG: false
