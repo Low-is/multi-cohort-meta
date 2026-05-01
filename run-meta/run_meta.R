@@ -31,9 +31,9 @@ rna_pdata <- readRDS("meta/pdata/rna_pData_with_condition.rds")
 #lapply(rna_pdata, function(x) dim(x))
 
 
-message("Getting norm RNA counts...")
-norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices, pData = rna_pdata)
-message("Extracted norm RNA counts!")
+#message("Getting norm RNA counts...")
+#norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices, pData = rna_pdata)
+#message("Extracted norm RNA counts!")
 
 #lapply(dna_matrices, function(x) head(rownames(x)))
 #lapply(norm_rna_mtxs, function(x) head(rownames(x)))
@@ -47,8 +47,8 @@ message("Extracted norm RNA counts!")
 message("Searching for common genes...")
 common_genes <- find_common_genes(DNA = config$analysis$modalities$DNA,
                                   RNA = config$analysis$modalities$RNA,
-                                  list_of_dna_mtx = NULL,
-                                  list_of_rna_mtx = norm_rna_mtxs,
+                                  list_of_dna_mtx = dna_matrices,
+                                  list_of_rna_mtx = NULL,
                                   use_DEG = config$analysis$use_DEG
                                  )
 message(sprintf("%d common genes detected!", length(common_genes)))
