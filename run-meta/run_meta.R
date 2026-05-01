@@ -2,6 +2,8 @@ library(yaml)
 library(jsonlite)
 library(COCONUT)
 library(DESeq2)
+library(data.table)
+library(dplyr)
 source("run-meta/functions/meta_analysis_functions.R")
 source("meta/functions/expr_mtx.R")
 
