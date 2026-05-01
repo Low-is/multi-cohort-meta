@@ -25,11 +25,11 @@ message("Matrices loaded!")
 #lapply(rna_matrices, function(x) head(rownames(x$expr)))
 
 rna_pdata <- readRDS("meta/pdata/rna_pData_with_condition.rds")
-rna_pdata[["GSE125873"]]$condition
 
-#message("Getting norm RNA counts...")
-#norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices)
-#message("Extracted norm RNA counts!")
+
+message("Getting norm RNA counts...")
+norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices, pData = rna_pdata)
+message("Extracted norm RNA counts!")
 
 
 # Need to add code that filters matrices to match dimmensions of pData
