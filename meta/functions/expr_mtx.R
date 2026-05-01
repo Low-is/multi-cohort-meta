@@ -669,24 +669,17 @@ get_norm_RNA_counts <- function(rna_list,
   ## -----------------------------
   handling_duplicates <- function(mat) {
 
-    df <- as.data.frame(mat, check.names = FALSE)
-
-    # create Genes column from rownames
-    df$Genes <- rownames(df)
-
-    df$Genes <- as.character(df$Genes)
-    df <- df[!is.na(df$Genes) & df$Genes != "", ]
-
-    # move Genes to front
-    df <- df[, c("Genes", setdiff(colnames(df), "Genes"))]
+    dt <- data.table(Genes = rownames(mat), mat)
+    dt$Genes <- as.character(dt$Genes)
+    dt <- dt[!is.na(df$Genes) & dt$Genes != "", ]
 
     # collapse duplicates
-    if (anyDuplicated(df$Genes)) {
-      df <- aggregate(. ~ Genes, data = df, FUN = mean)
+    if (any(duplicated(dt$Genes))) {
+      dt <- aggregate(. ~ Genes, data = dt, FUN = mean)
     }
 
-    mat <- as.matrix(df[, -1, drop = FALSE])
-    rownames(mat) <- df$Genes
+    mat <- as.matrix(dt[, -1, drop = FALSE])
+    rownames(mat) <- dt$Genes
 
     return(mat)
   }
