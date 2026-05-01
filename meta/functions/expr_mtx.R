@@ -674,21 +674,25 @@ get_norm_RNA_counts <- function(rna_list,
   df <- data.frame(
     Genes = rownames(mat),
     mat,
-    check.names = FALSE
+    check.names = FALSE,
+    stringsAsFactors = FALSE
   )
 
   df$Genes <- as.character(df$Genes)
   df <- df[!is.na(df$Genes) & df$Genes != "", ]
 
-  df_collapsed <- df |>
-    dplyr::group_by(Genes) |>
+  df_collapsed <- df %>%
+    dplyr::group_by(Genes) %>%
     dplyr::summarise(
       dplyr::across(where(is.numeric), ~ mean(.x, na.rm = TRUE)),
       .groups = "drop"
     )
 
-  mat_out <- as.matrix(df_collapsed[, -1, drop = FALSE])
-  rownames(mat_out) <- df_collapsed$Genes
+  mat_out <- df_collapsed
+  rownames(mat_out) <- mat_out$Genes
+  mat_out$Genes <- NULL
+
+  mat_out <- as.matrix(mat_out)
 
   mat_out
 }
