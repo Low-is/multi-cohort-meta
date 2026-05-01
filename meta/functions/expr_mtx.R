@@ -667,28 +667,55 @@ get_norm_RNA_counts <- function(rna_list,
   ## -----------------------------
   ## DUPLICATE HANDLING FUNCTION
   ## -----------------------------
-  handling_duplicates <- function(mat) {
+  #handling_duplicates <- function(mat) {
 
-  mat <- as.matrix(mat)
+  #mat <- as.matrix(mat)
 
-  df <- tibble::tibble(
-    Genes = rownames(mat),
-    mat
-  ) %>%
-    dplyr::mutate(Genes = as.character(Genes)) %>%
-    dplyr::filter(!is.na(Genes), Genes != "")
+  #df <- tibble::tibble(
+    #Genes = rownames(mat),
+    #mat
+  #) %>%
+    #dplyr::mutate(Genes = as.character(Genes)) %>%
+    #dplyr::filter(!is.na(Genes), Genes != "")
 
-  df_collapsed <- df %>%
-    dplyr::group_by(Genes) %>%
-    dplyr::summarise(
-      dplyr::across(where(is.numeric), ~ mean(.x, na.rm = TRUE)),
-      .groups = "drop"
-    )
+  #df_collapsed <- df %>%
+    #dplyr::group_by(Genes) %>%
+    #dplyr::summarise(
+      #dplyr::across(where(is.numeric), ~ mean(.x, na.rm = TRUE)),
+      #.groups = "drop"
+    #)
 
-  df_collapsed %>%
-    tibble::column_to_rownames("Genes") %>%
-    as.matrix()
-}
+  #df_collapsed %>%
+    #tibble::column_to_rownames("Genes") %>%
+    #as.matrix()
+#}
+
+handling_duplicates <- function(data_table) {
+    if (is.list(data_table$Genes)) {
+      data_table[, Genes := vapply(Genes, function(x) {
+        if (is.null(x) || length(x) == 0 || all(is.na(x))) {
+          return(NA_character_)
+        } else if (is.list(x)) {
+          return(as.character(unlist(x)))
+        } else {
+          return(as.character(x))
+        }
+      }, FUN.VALUE = character(1))]
+    }
+    
+    data_table <- na.omit(data_table[(Genes != "" & !is.na(Genes)), ])
+    
+    if (any(duplicated(data_table$Genes))) {
+      exprs_data.table <- data_table[, lapply(.SD, mean), by = Genes, .SDcols = !'Genes']
+    } else {
+      exprs_data.table <- data_table
+    }
+    
+    exprs_mtx <- as.matrix(exprs_data.table[, -1])
+    rownames(exprs_mtx) <- exprs_data.table$Genes
+    
+    return(exprs_mtx)
+  }
 
   ## -----------------------------
   ## 1. CLEAN + HANDLE DUPLICATES
@@ -706,8 +733,9 @@ get_norm_RNA_counts <- function(rna_list,
     #keep <- rowSums(x >= min_count) >= min_samples
     #x <- x[keep, , drop = FALSE]
 
-    # handle duplicates AFTER cleaning
-    handling_duplicates(x)
+    dt <- data.table(Genes = rownames(x), x)
+    
+    handling_duplicates(dt)
   })
 
   ## -----------------------------
