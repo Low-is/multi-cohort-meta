@@ -671,15 +671,12 @@ get_norm_RNA_counts <- function(rna_list,
 
   mat <- as.matrix(mat)
 
-  df <- data.frame(
+  df <- tibble::tibble(
     Genes = rownames(mat),
-    mat,
-    check.names = FALSE,
-    stringsAsFactors = FALSE
-  )
-
-  df$Genes <- as.character(df$Genes)
-  df <- df[!is.na(df$Genes) & df$Genes != "", ]
+    mat
+  ) %>%
+    dplyr::mutate(Genes = as.character(Genes)) %>%
+    dplyr::filter(!is.na(Genes), Genes != "")
 
   df_collapsed <- df %>%
     dplyr::group_by(Genes) %>%
@@ -688,14 +685,9 @@ get_norm_RNA_counts <- function(rna_list,
       .groups = "drop"
     )
 
-  genes <- df_collapsed$Genes
-    
-  mat_out <- df_collapsed[-1, ]
-  rownames(mat_out) <- genes
- 
-  mat_out <- as.matrix(mat_out)
-
-  mat_out
+  df_collapsed %>%
+    tibble::column_to_rownames("Genes") %>%
+    as.matrix()
 }
 
   ## -----------------------------
