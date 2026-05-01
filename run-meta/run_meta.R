@@ -25,7 +25,7 @@ message("Matrices loaded!")
 
 rna_pdata <- readRDS("meta/pdata/rna_pData_with_condition.rds")
 
-lapply(rna_matrices, function(x) dim(x))
+lapply(rna_matrices, function(x) dim(x$expr))
 lapply(rna_pdata, function(x) dim(x))
 
 
