@@ -49,7 +49,8 @@ BiocManager::install(c(
   "limma",
   "AnnotationDbi",
   "org.Hs.eg.db",
-  "hta20transcriptcluster.db"
+  "hta20transcriptcluster.db",
+  "DESeq2"
 ), ask = FALSE)
 
 # -----------------------
