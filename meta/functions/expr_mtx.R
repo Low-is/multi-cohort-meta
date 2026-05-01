@@ -680,25 +680,35 @@ get_norm_RNA_counts <- function(rna_list,
   ## 2. VST TRANSFORMATION 
   ## -----------------------------
   vst_list <- lapply(names(clean_expr), function(i) {
-    x <- clean_expr[[i]]
-    pd <- pData[[i]]
+    tryCatch({
+      x <- clean_expr[[i]]
+      pd <- pData[[i]]
 
-    #common <- intersect(colnames(x), rownames(pd))
-    #x <- x[, common, drop = FALSE]
-    #pd <- pd[common, , drop = FALSE]
+      if (is.null(x) || is.null(pd)) return(NULL)
 
-    if (!"condition" %in% colnames(pd)) {
-      stop("Missing 'condition' in pData for: ", i)
-    }
+      if (!is.matrix(x)) return(NULL)
 
-    dds <- DESeqDataSetFromMatrix(
+      if (!"condition" %in% colnames(pd)) {
+        stop("Missing 'condition' in pData for: ", i)
+      }
+
+      if (ncol(x) != nrow(pd)) {
+        warning(paste("Skipping", i, ": countData and colData mismatch"))
+        return(NULL)
+      }
+      
+      dds <- DESeqDataSetFromMatrix(
       countData = x,
       colData = pd,
       design = ~ condition
-    )
-
-    dds <- DESeq(dds, quiet = TRUE)
-    assay(vst(dds, blind = TRUE))
+      )
+      
+      dds <- DESeq(dds, quiet = TRUE)
+      assay(vst(dds, blind = TRUE))
+    , error = function(e) {
+      warning(paste("Skipping", i, ":", e$message))
+      return(NULL)
+    })
   })
 
   names(vst_list) <- names(clean_expr)
