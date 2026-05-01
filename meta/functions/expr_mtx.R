@@ -675,11 +675,14 @@ get_norm_RNA_counts <- function(rna_list,
 
     # collapse duplicates
     if (any(duplicated(dt$Genes))) {
-      dt <- aggregate(. ~ Genes, data = dt, FUN = mean)
+      exprs_dt <- dt[, lapply(.SD, mean, na.rm = TRUE), by = Genes]
+    } else {
+      exprs_dt <- dt
     }
-
-    mat <- as.matrix(dt[, -1, drop = FALSE])
-    rownames(mat) <- dt$Genes
+    
+    genes <- exprs_dt$Genes
+    mat <- as.matrix(exprs_dt[, -1, drop = FALSE])
+    rownames(mat) <- genes
 
     return(mat)
   }
