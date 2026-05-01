@@ -695,11 +695,11 @@ get_norm_RNA_counts <- function(rna_list,
   ## -----------------------------
   clean_expr <- lapply(expr_list, function(x) {
 
-    x[!is.finite(x)] <- 0
-    x <- round(x)
+    #x[!is.finite(x)] <- 0
+    #x <- round(x)
 
     # ensure matrix
-    x <- as.matrix(x)
+    #x <- as.matrix(x)
 
     # optional filtering (kept consistent)
     #x <- x[rowSums(x) > 0, , drop = FALSE]
