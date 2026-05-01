@@ -659,51 +659,56 @@ get_norm_RNA_counts <- function(rna_list,
                                 min_samples = 2,
                                 make_plots = TRUE) {
 
-  handling_duplicates <- function(data_table) {
-    if (is.list(data_table$Genes)) {
-      data_table[, Genes := vapply(Genes, function(x) {
-        if (is.null(x) || length(x) == 0 || all(is.na(x))) {
-          return(NA_character_)
-        } else if (is.list(x)) {
-          return(as.character(unlist(x)))
-        } else {
-          return(as.character(x))
-        }
-      }, FUN.VALUE = character(1))]
-    }
-    
-    data_table <- na.omit(data_table[(Genes != "" & !is.na(Genes)), ])
-    
-    if (any(duplicated(data_table$Genes))) {
-      exprs_data.table <- data_table[, lapply(.SD, mean), by = Genes, .SDcols = !'Genes']
-    } else {
-      exprs_data.table <- data_table
-    }
-    
-    exprs_mtx <- as.matrix(exprs_data.table[, -1])
-    rownames(exprs_mtx) <- exprs_data.table$Genes
-    
-    return(exprs_mtx)
-  }
-  
-
   expr_list <- lapply(rna_list, function(x) x$expr)
 
   names(expr_list) <- names(rna_list)
   names(pData) <- names(rna_list)
 
   ## -----------------------------
-  ## 1. CLEAN MATRICES + HANDLE DUPLICATES
+  ## DUPLICATE HANDLING FUNCTION
+  ## -----------------------------
+  handling_duplicates <- function(mat) {
+
+    df <- as.data.frame(mat, check.names = FALSE)
+
+    # create Genes column from rownames
+    df$Genes <- rownames(df)
+
+    df$Genes <- as.character(df$Genes)
+    df <- df[!is.na(df$Genes) & df$Genes != "", ]
+
+    # move Genes to front
+    df <- df[, c("Genes", setdiff(colnames(df), "Genes"))]
+
+    # collapse duplicates
+    if (anyDuplicated(df$Genes)) {
+      df <- aggregate(. ~ Genes, data = df, FUN = mean)
+    }
+
+    mat <- as.matrix(df[, -1, drop = FALSE])
+    rownames(mat) <- df$Genes
+
+    return(mat)
+  }
+
+  ## -----------------------------
+  ## 1. CLEAN + HANDLE DUPLICATES
   ## -----------------------------
   clean_expr <- lapply(expr_list, function(x) {
+
     x[!is.finite(x)] <- 0
     x <- round(x)
 
-    dt <- data.table::as.data.table(x, keep.rownames = "Genes")
+    # ensure matrix
+    x <- as.matrix(x)
 
-    x_clean <- handling_duplicates(dt)
+    # optional filtering (kept consistent)
+    x <- x[rowSums(x) > 0, , drop = FALSE]
+    keep <- rowSums(x >= min_count) >= min_samples
+    x <- x[keep, , drop = FALSE]
 
-    return(x_clean)
+    # handle duplicates AFTER cleaning
+    handling_duplicates(x)
   })
 
   ## -----------------------------
@@ -711,6 +716,7 @@ get_norm_RNA_counts <- function(rna_list,
   ## -----------------------------
   vst_list <- lapply(names(clean_expr), function(i) {
     tryCatch({
+
       x <- clean_expr[[i]]
       pd <- pData[[i]]
 
@@ -743,7 +749,6 @@ get_norm_RNA_counts <- function(rna_list,
   })
 
   names(vst_list) <- names(clean_expr)
-
 
   ## -----------------------------
   ## 3. PLOTS
@@ -780,11 +785,10 @@ get_norm_RNA_counts <- function(rna_list,
   }
 
   ## -----------------------------
-  ## 4. RETURN ONLY CLEANED COUNTS
+  ## 4. RETURN CLEANED MATRICES
   ## -----------------------------
   return(clean_expr)
 }
-
 ###########################################
 # ---Get normalized RNA-seq count matrix---
 ############################################
