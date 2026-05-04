@@ -72,7 +72,7 @@ meta_res <- generate_list_for_meta_analysis(
   RNA = config$analysis$modalities$RNA,
   list_of_dna_mtx = dna_matrices,
   list_of_rna_mtx = norm_rna_mtxs,
-  list_of_pData = combined_pData[[pData]],
+  list_of_pData = combined_pData[pData],
   study = study,
   common_genes = common_genes
 )
