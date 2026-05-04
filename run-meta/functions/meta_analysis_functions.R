@@ -103,382 +103,115 @@ find_common_genes <- function(
 # ---Meta-analysis function--- 
 ############################################
 
-# meta_results <- function(list_of_studies) {
-# 
-#   list_of_es <- lapply(list_of_studies, function(study) {
-#     effect.sizes(study)
-#   })
-# 
-#   summary <- combine.effect.sizes(list_of_es)
-# 
-#   # ----------------------------------
-#   # Clean g and se.g
-#   # ----------------------------------
-#   # summary$g <- summary$g[!apply(is.na(summary$g) | is.infinite(summary$g), 1, any), ]
-#   # summary$se.g <- summary$se.g[!apply(is.na(summary$se.g) | is.infinite(summary$se.g), 1, any), ]
-# 
-#   # bad_g    <- apply(is.na(summary$g)    | is.infinite(summary$g),    1, any)
-#   # bad_se.g <- apply(is.na(summary$se.g) | is.infinite(summary$se.g), 1, any)
-#   # 
-#   # keep <- !(bad_g | bad_se.g)
-#   # 
-#   # summary$g    <- summary$g[keep, , drop = FALSE]
-#   # summary$se.g <- summary$se.g[keep, , drop = FALSE]
-#   # 
-#   # g_genes <- rownames(summary$g)
-#   # 
-#   # summary$pooled.estimates$genes <- rownames(summary$pooled.estimates)
-#   # summary$pooled.estimates <- summary$pooled.estimates %>%
-#   #   dplyr::filter(genes %in% g_genes)
-#   # 
-#   # summary$pooled.estimates <- summary$pooled.estimates %>%
-#   #   dplyr::filter(!apply(is.na(.) | is.infinite(as.matrix(.)), 1, any))
-#   # 
-#   # 
-#   # num_cols <- sapply(summary$pooled.estimates, is.numeric)
-#   # summary$pooled.estimates[num_cols] <- lapply(
-#   #   summary$pooled.estimates[num_cols],
-#   #   function(x) ifelse(x == 0, 1e-200, x)
-#   # )
-#   # 
-#   # rownames(summary$pooled.estimates) <- summary$pooled.estimates$genes
-#   # 
-#   # g     <- summary$g
-#   # se.g  <- summary$se.g
-#   # pool    <- summary$pooled.estimates$summary
-#   # se.pool <- summary$pooled.estimates$se.summary
-#   # p.het   <- summary$pooled.estimates$pval.het
-#   # 
-#   # names(pool)    <- rownames(g)
-#   # names(se.pool) <- rownames(g)
-#   # names(p.het)   <- rownames(g)
-# 
-#   # common_genes <- Reduce(intersect, lapply(list_of_studies, function(s) rownames(s$expr)))
-#   # common_genes <- rownames(summary$g)
-#   
-#   # NEW
-#   # ----------------------------------
-#   # 1. Remove invalid rows from g and se.g
-#   # ----------------------------------
-#   
-#   bad_g    <- apply(is.na(summary$g)    | is.infinite(summary$g),    1, any)
-#   bad_se.g <- apply(is.na(summary$se.g) | is.infinite(summary$se.g), 1, any)
-#   
-#   keep <- !(bad_g | bad_se.g)
-#   
-#   summary$g    <- summary$g[keep, , drop = FALSE]
-#   summary$se.g <- summary$se.g[keep, , drop = FALSE]
-#   
-#   g_genes <- rownames(summary$g)
-#   
-#   # ----------------------------------
-#   # 2. Synchronize pooled.estimates with g
-#   # ----------------------------------
-#   
-#   summary$pooled.estimates$genes <- rownames(summary$pooled.estimates)
-#   
-#   
-#   # ----------------------------------
-#   # 3. Remove NA / infinite rows from pooled.estimates
-#   # ----------------------------------
-#   
-#   summary$pooled.estimates <- summary$pooled.estimates[keep, , drop = FALSE]
-#   
-#   # ----------------------------------
-#   # 4. Replace numeric zeros with small value
-#   # ----------------------------------
-#   
-#   num_cols <- sapply(summary$pooled.estimates, is.numeric)
-#   
-#   summary$pooled.estimates[num_cols] <- lapply(
-#     summary$pooled.estimates[num_cols],
-#     function(x) ifelse(x == 0, 1e-200, x)
-#   )
-#   
-#   # ----------------------------------
-#   # 5. Restore rownames
-#   # ----------------------------------
-#   
-#   rownames(summary$pooled.estimates) <- summary$pooled.estimates$genes
-#   
-#   # ----------------------------------
-#   # 6. Final synchronization of all objects
-#   # ----------------------------------
-#   
-#   # common_genes <- intersect(
-#   #   rownames(summary$g),
-#   #   rownames(summary$pooled.estimates)
-#   # )
-#   # 
-#   # summary$g    <- summary$g[common_genes, , drop = FALSE]
-#   # summary$se.g <- summary$se.g[common_genes, , drop = FALSE]
-#   # summary$pooled.estimates <- summary$pooled.estimates[common_genes, ]
-#   
-#   # ----------------------------------
-#   # 7. Extract vectors for meta-analysis
-#   # ----------------------------------
-#   
-#   g     <- summary$g
-#   se.g  <- summary$se.g
-#   
-#   pool    <- summary$pooled.estimates$summary
-#   se.pool <- summary$pooled.estimates$se.summary
-#   p.het   <- summary$pooled.estimates$pval.het
-#   
-#   names(pool)    <- rownames(summary$pooled.estimates)
-#   names(se.pool) <- rownames(summary$pooled.estimates)
-#   names(p.het)   <- rownames(summary$pooled.estimates)
-#   # NEW
-#   
-#   
-#   # ----------------------------------
-#   # NEW: confidence intervals
-#   # ----------------------------------
-#   lower_CI <- pool - 1.96 * se.pool
-#   upper_CI <- pool + 1.96 * se.pool
-#   
-# 
-#   
-#   # ----------------------------------
-#   # Pre-filter genes for p-value computation
-#   # ----------------------------------
-#   # Pre-filter genes for p-value computation
-#   robust_idx      <- abs(pool) > 0.5
-#   candidate_genes <- names(pool)[robust_idx]
-#   
-#   # Align candidate_genes with rows present in pooled.estimates
-#   candidate_genes <- intersect(
-#     candidate_genes,
-#     rownames(summary$pooled.estimates)
-#   )
-#   
-#   
-#   ## --- GLOBAL SANITY CHECK BLOCK ---------------------------------
-#   cat("\n================ META SANITY CHECK ================\n")
-#   
-#   # 1) Basic sizes
-#   cat("nrow(summary$pooled.estimates):", nrow(summary$pooled.estimates), "\n")
-#   cat("nrow(summary$g):",              nrow(summary$g), "\n")
-#   cat("nrow(summary$se.g):",           nrow(summary$se.g), "\n")
-#   
-#   # 2) Names consistency
-#   cat("length(pool):",     length(pool), "\n")
-#   cat("length(se.pool):",  length(se.pool), "\n")
-#   cat("length(p.het):",    length(p.het), "\n")
-#   cat("length(lower_CI):", length(lower_CI), "\n")
-#   cat("length(upper_CI):", length(upper_CI), "\n")
-#   
-#   cat("all(names(pool)    %in% rownames(summary$pooled.estimates)):",
-#       all(names(pool)    %in% rownames(summary$pooled.estimates)), "\n")
-#   cat("all(names(se.pool) %in% rownames(summary$pooled.estimates)):",
-#       all(names(se.pool) %in% rownames(summary$pooled.estimates)), "\n")
-#   cat("all(names(p.het)   %in% rownames(summary$pooled.estimates)):",
-#       all(names(p.het)   %in% rownames(summary$pooled.estimates)), "\n")
-#   
-#   # 3) Candidate genes
-#   cat("length(candidate_genes):", length(candidate_genes), "\n")
-#   cat("length(unique(candidate_genes)):", length(unique(candidate_genes)), "\n")
-#   cat("all(candidate_genes %in% rownames(summary$pooled.estimates)):",
-#       all(candidate_genes %in% rownames(summary$pooled.estimates)), "\n")
-#   cat("any(duplicated(candidate_genes)):",
-#       any(duplicated(candidate_genes)), "\n")
-#   
-#   # 4) p‑value vectors (only if they exist)
-#   if (exists("combined_pvals")) {
-#     cat("length(combined_pvals):", length(combined_pvals), "\n")
-#   }
-#   if (exists("fdr")) {
-#     cat("length(fdr):", length(fdr), "\n")
-#   }
-#   
-#   # 5) What will be assigned where
-#   cat("\n--- planned assignments ---\n")
-#   cat("pooled_pval index size (candidate_genes):", length(candidate_genes), "\n")
-#   cat("FDR index size (candidate_genes):",         length(candidate_genes), "\n")
-#   cat("lower_CI size:", length(lower_CI), " | upper_CI size:", length(upper_CI), "\n")
-#   
-#   cat("===================================================\n\n")
-#   ## --- END GLOBAL SANITY CHECK BLOCK ------------------------------
-#   
-#   # summary$pooled.estimates$pooled_pval <- NA_real_
-#   # summary$pooled.estimates$FDR         <- NA_real_
-#   
-#   summary$pooled.estimates <- summary$pooled.estimates[candidate_genes, ]
-#   
-#   study_pvals <- get.ttest.P(study$expr[candidate_genes, , drop = FALSE],
-#                      study$class)[, "P.both"]
-#   
-#   
-#   # if (length(candidate_genes) > 0) {
-#   #   
-#   #   study_pvals <- lapply(list_of_studies, function(study) {
-#   #     
-#   #     genes_here <- intersect(
-#   #       candidate_genes,
-#   #       rownames(study$expr)
-#   #     )
-#   # 
-#   #     
-#   #     pvals <- rep(NA_real_, length(candidate_genes))
-#   #     names(pvals) <- candidate_genes
-#   #     
-#   #     if (length(genes_here) > 0) {
-#   #       tmp <- get.ttest.P(
-#   #         study$expr[genes_here, , drop = FALSE],
-#   #         study$class
-#   #       )[ , "P.both"]
-#   #       
-#   #       pvals[genes_here] <- tmp
-#   #     }
-#   #     
-#   #     pvals
-#   #   })
-#     
-#     pval_matrix <- do.call(cbind, study_pvals)
-#     
-#     # Remove rows with all-NA pvals are dropped before metap
-#     valid_rows <- apply(!is.na(pval_matrix), 1, any)
-#     
-#     combined_pvals <- rep(NA_real_, length(candidate_genes))
-#     names(combined_pvals) <- candidate_genes
-#   
-#     
-#     if (any(valid_rows)) {
-#       combined_pvals[valid_rows] <- apply(
-#         pval_matrix[valid_rows, , drop = FALSE],
-#         1,
-#         function(pvec) metap::sumlog(pvec[!is.na(pvec)])$p
-#       )
-#     }
-#     
-#     cat("combined_pvals:", length(combined_pvals), "\n")
-#     cat("study_pvals:", length(study_pvals), "\n")
-#     cat("summary$pooled.estimates$pooled_pval:", length(summary$pooled.estimates$pooled_pval), "\n")
-#     
-#     
-#     fdr <- rep(NA_real_, length(candidate_genes))
-#     
-#     names(fdr) <- candidate_genes
-#     
-#     if (any(!is.na(combined_pvals))) {
-#       fdr[!is.na(combined_pvals)] <-
-#         p.adjust(combined_pvals[!is.na(combined_pvals)], method = "fdr")
-#     }
-#     
-#     # Now assignment is safe: lengths match subset size
-#     summary$pooled.estimates$pooled_pval[candidate_genes] <- combined_pvals
-#     summary$pooled.estimates$FDR[candidate_genes]         <- fdr
-#   
-#   
-#   
-  
-  # robust_idx <- abs(pool) > 0.5
-  # candidate_genes <- names(pool)[robust_idx]
-  # 
-  # summary$pooled.estimates$pooled_pval <- NA
-  # summary$pooled.estimates$FDR <- NA
-  # 
-  # 
-  # if(length(candidate_genes) > 0){
-  #   
-  #   study_pvals <- lapply(list_of_studies, function(study) {
-  #     get.ttest.P(study$expr[candidate_genes, , drop=FALSE], study$class)[, "P.both"]
-  #   })
-  #   
-  #   pval_matrix <- do.call(cbind, study_pvals)
-  #   
-  #   combined_pvals <- apply(pval_matrix, 1, function(pvec)
-  #     metap::sumlog(pvec)$p)
-  #   
-  #   fdr <- p.adjust(combined_pvals, method="fdr")
-  #   
-  #   summary$pooled.estimates$pooled_pval[candidate_genes] <- combined_pvals
-  #   summary$pooled.estimates$FDR[candidate_genes] <- fdr
-  #   
-  #   # summary$pooled.estimates$pooled_pval <- combined_pvals
-  #   # summary$pooled.estimates$FDR <- fdr
-  # }
-  # 
-  # 
-  # summary$pooled.estimates$lower_CI <- lower_CI
-  # summary$pooled.estimates$upper_CI <- upper_CI
-  
-  # summary$pooled.estimates$lower_CI <- lower_CI[robust_idx]
-  # summary$pooled.estimates$upper_CI <- upper_CI[robust_idx]
+meta_results <- function(list_of_studies) {
+    
+    list_of_es <- lapply(list_of_studies, function(study) {
+      effect.sizes(study)
+    })
+    
+    summary <- combine.effect.sizes(list_of_es)
+    
+    summary$g <- summary$g[!apply(is.na(summary$g) | is.infinite(summary$g), 1, any), ]
+    summary$se.g <- summary$se.g[!apply(is.na(summary$se.g) | is.infinite(summary$se.g), 1, any), ]
+    g_genes <- rownames(summary$g)
+    
+    summary$pooled.estimates$genes <- rownames(summary$pooled.estimates)
+    summary$pooled.estimates <- summary$pooled.estimates %>%
+      dplyr::filter(genes %in% g_genes)
+    
+    summary$pooled.estimates <- summary$pooled.estimates %>%
+      dplyr::filter(!apply(is.na(.) | is.infinite(as.matrix(.)), 1, any))
+    
+    summary$pooled.estimates <- as.data.frame(lapply(summary$pooled.estimates, function(x) ifelse(x == 0, 1e-200, x)))
+    rownames(summary$pooled.estimates) <- g_genes
+    
+    g <- summary$g
+    se.g <- summary$se.g
+    
+    pool    <- summary$pooled.estimates[, "summary"]
+    names(pool) <- rownames(g)
+    
+    se.pool <- summary$pooled.estimates[, "se.summary"]
+    names(se.pool) <- rownames(g)
+    
+    x.label <- "Standardized Mean Difference (log2 scale)"
+    
+    # Adding FDR corrected p-values
+    summary$pooled.estimates <- summary$pooled.estimates %>%
+      dplyr::mutate(
+        FDR = p.adjust(p.value, method = "BH")
+      )
+    
 
-  # ----------------------------------
-  # Robust gene selection
-  # ----------------------------------
-  # robust_genes <- character()
-  # 
-  # for (gene in rownames(g)) {
-  # 
-  #   g_gene <- g[gene, ]
-  # 
-  #   strong_effect <- abs(pool[gene]) > 0.5
-  #   ci_consistent <- (lower_CI[gene] > 0) || (upper_CI[gene] < 0)
-  #   hetero_ok     <- is.na(p.het[gene]) || p.het[gene] > 0.05
-  #   fdr_ok        <- fdr[gene] < 0.05
-  #   same_dir      <- (all(g_gene > 0)) || (all(g_gene < 0))
-  # 
-  #   if (strong_effect && ci_consistent && hetero_ok && fdr_ok && same_dir) {
-  #     robust_genes <- c(robust_genes, gene)
-  #   }
-  # }
-  # 
-  # cat("Number of robust genes:", length(robust_genes), "\n")
-
-  # ----------------------------------
-  # Forest plots (unchanged)
-  # ----------------------------------
-  # x.label <- "Standardized Mean Difference (log2 scale)"
-  # 
-  # for (gene in robust_genes) {
-  #   g_gene <- g[gene, ]
-  #   se.g_gene <- se.g[gene, ]
-  #   study_names <- gsub("_g", "", names(g_gene))
-  # 
-  #   pdf(file = paste0(gene, ".pdf"), height = 3.5, width = 3.5)
-  #   par(cex = 0.65)
-  #   metaplot(
-  #     g_gene, se.g_gene,
-  #     labels = study_names,
-  #     summn = pool[gene],
-  #     sumse = se.pool[gene],
-  #     sumnn = 1 / se.pool[gene]^2,
-  #     summlabel = "Summary effect",
-  #     xlab = x.label,
-  #     ylab = "",
-  #     xlim = c(-3, 3),
-  #     main = bquote(italic(.(gene))),
-  #     colors = meta.colors(
-  #       box = "violetred",
-  #       lines = "plum",
-  #       summary = "mediumpurple",
-  #       text = "black",
-  #       axes = "black",
-  #       zero = "black"
-  #     ),
-  #     boxsize = 1,
-  #     lty.random = 1,
-  #     lwd.random = 2,
-  #     zero = 0,
-  #     col.zero = "black",
-  #     lty.zero = 3
-  #   )
-  #   dev.off()
-  # }
-  
-  
-
-#   list(
-#     summary          = summary,
-#     pooled_estimates = summary$pooled.estimates,
-#     robust_genes     = robust_genes
-#   )
-# }
-
-# Refer to Processing_Results.R script | 3-6-2026
+    
+    consistent_genes <- c()
+    
+    for (gene in rownames(g)) {
+      
+      g_gene  <- g[gene, ]
+      se_gene <- se.g[gene, ]
+      
+      pooled   <- pool[gene]
+      se_pooled <- se.pool[gene]
+      
+      # 95% CI
+      lower_CI <- pooled - 1.96 * se_pooled
+      upper_CI <- pooled + 1.96 * se_pooled
+      
+      # Criterion 1: pooled effect must be ≥ |0.5|
+      strong_effect <- abs(pooled) >= 0.5
+      
+      # Criterion 2: CI does NOT cross zero
+      ci_significant <- (lower_CI > 0) || (upper_CI < 0)
+      
+      # Criterion 3 (optional): All study effects trend same direction
+      # (keep this if you want it, or remove if not needed)
+      consistent_direction <- (all(g_gene > 0)) || (all(g_gene < 0))
+      
+      # Final rule
+      if (strong_effect && ci_significant && consistent_direction) {
+        consistent_genes <- c(consistent_genes, gene)
+      }
+    }
+    
+    
+    for (gene in consistent_genes) {
+      g_gene <- g[gene, ]
+      se.g_gene <- se.g[gene, ]
+      study_names <- gsub("_g", "", names(g_gene))
+      
+      pdf(file = paste0(gene, ".pdf"), height = 3.5, width = 3.5)
+      par(cex = 0.65)
+      metaplot(g_gene, se.g_gene,
+               labels = study_names,
+               summn = pool[gene],
+               sumse = se.pool[gene],
+               sumnn = 1/se.pool[gene]^2,
+               summlabel = "Summary effect",
+               xlab = x.label,
+               ylab = "",
+               xlim = c(-3, 3),
+               main = bquote(italic(.(gene))),
+               colors = meta.colors(box = "violetred", lines = "plum", summary = "mediumpurple", 
+                                    text = "black", axes = "black", zero = "black"),  
+               boxsize = 1,
+               lty.random = 1,  
+               lwd.random = 2,   
+               zero = 0,  
+               col.zero = "black", 
+               lty.zero = 3)
+      dev.off()
+    }
+    
+    # Flatten results for easier access
+    meta_flat <- list(
+      summary          = summary,
+      pooled_estimates = summary$pooled.estimates,
+      consistent_genes = consistent_genes
+    )
+    
+    return(meta_flat)
+  }
 
 ############################################
 # ---Meta-analysis function--- 
