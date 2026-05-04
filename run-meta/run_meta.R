@@ -63,8 +63,8 @@ message(sprintf("%d common genes detected!", length(common_genes)))
 dna_pData <- readRDS("meta/pdata/dna_pData_with_condition.rds")
 rna_pData <- readRDS("meta/pdata/rna_pData_with_condition.rds")
 
-lapply(dna_pData, function(x) str(x$condition))
-lapply(rna_pData, function(x) str(x$condition))
+lapply(dna_pData, function(x) head(x$condition))
+lapply(rna_pData, function(x) head(x$condition))
 
 #combined_pData <- c(dna_pData, rna_pData)
 
