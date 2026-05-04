@@ -173,35 +173,77 @@ meta_results <- function(list_of_studies) {
         consistent_genes <- c(consistent_genes, gene)
       }
     }
-    
-    
-    for (gene in consistent_genes) {
-      g_gene <- g[gene, ]
-      se.g_gene <- se.g[gene, ]
-      study_names <- gsub("_g", "", names(g_gene))
-      
-      pdf(file = paste0(gene, ".pdf"), height = 3.5, width = 3.5)
-      par(cex = 0.65)
-      metaplot(g_gene, se.g_gene,
-               labels = study_names,
-               summn = pool[gene],
-               sumse = se.pool[gene],
-               sumnn = 1/se.pool[gene]^2,
-               summlabel = "Summary effect",
-               xlab = x.label,
-               ylab = "",
-               xlim = c(-3, 3),
-               main = bquote(italic(.(gene))),
-               colors = meta.colors(box = "violetred", lines = "plum", summary = "mediumpurple", 
-                                    text = "black", axes = "black", zero = "black"),  
-               boxsize = 1,
-               lty.random = 1,  
-               lwd.random = 2,   
-               zero = 0,  
-               col.zero = "black", 
-               lty.zero = 3)
-      dev.off()
-    }
+
+    fp_data <- summary$pooled_estimates[consistent_genes, ] %>%
+      dplyr::mutate(
+          logOR = summary,
+          SE = se.summary,
+          OR = exp(logOR),
+          lower = exp(logOR - 1.96 * SE),
+          upper = exp(logOR + 1.96 * SE),
+          FDR = round(FDR, 3)
+      )
+
+    fp_data <- fp_data %>%
+      dplyr::mutate(
+          Gene = consistent_genes,
+          CI = sprintf("%.2f - %.2f", lower, upper),
+          OR_txt = sprintf("%.2f", OR)
+      ) %>%
+      dplyr::arrange(desc(OR), Gene)
+
+    label_mat <- cbind(
+        as.character(fp_data$Gene),
+        fp_data$OR_txt,
+        fp_data$CI,
+        fp_data$FDR
+    )
+    colnames(label_mat) <- c("Gene", "OR", "CI", "FDR")
+    png("...",
+       width = 10,
+       height = 14,
+       units = "in",
+       res = 800)
+    forestplot(
+        labeltext = label_mat,
+        mean = fp_data$OR,
+        lower = fp_data$lower,
+        upper = fp_data$upper,
+
+        boxsize = 0.4,
+        clip = c(0.1, 10),
+        xticks = c(0.1, 0.5, 1, 2, 5, 10),
+
+        xlog = TRUE,
+        zero = 1,
+
+        graphwidth = unit(0.5, "npc"),
+
+        colgap = unit(6, "mm"),
+        lineheight = unit(6, "mm"),
+
+        col = fpColors(
+            box = "royalblue",
+            line = "darkblue",
+            summary = "royalblue"
+        ),
+        txt_gp = fpTxtGp(
+            ticks = gpar(cex = 1.3),
+            xlab = gpar(cex = 1.5)
+        )
+    ) |>
+        fp_add_header(
+            Gene = c("", "Gene"),
+            OR = c("", "OR"),
+            CI = c("", "95% CI"),
+            FDR = c("", "FDR")
+        ) |>
+        fp_set_zebra_style("#EFEFEF") |>
+        fp_set_favors(low = "Likely No BPD",
+                     high = "Likely BPD",
+                     txt_gp = gapr(cex = 1.5),
+                     arrows = FALSE)
+    dev.off()
     
     # Flatten results for easier access
     meta_flat <- list(
