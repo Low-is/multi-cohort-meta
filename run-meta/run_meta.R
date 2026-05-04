@@ -58,24 +58,26 @@ common_genes <- find_common_genes(DNA = config$analysis$modalities$DNA,
 message(sprintf("%d common genes detected!", length(common_genes)))
 
 
-message("Starting meta-analysis...")
+#message("Starting meta-analysis...")
 
 dna_pData <- readRDS("meta/pdata/dna_pData_with_condition.rds")
 rna_pData <- readRDS("meta/pdata/rna_pData_with_condition.rds")
 
 combined_pData <- c(dna_pData, rna_pData)
 
+lapply(combined_pData, function(x) str(x$condition))
+
 pData <- names(c(dna_matrices, norm_rna_mtxs))
 study <- names(c(dna_matrices, norm_rna_mtxs))
                                      
-meta_res <- generate_list_for_meta_analysis(
-  DNA = config$analysis$modalities$DNA,
-  RNA = config$analysis$modalities$RNA,
-  list_of_dna_mtx = dna_matrices,
-  list_of_rna_mtx = norm_rna_mtxs,
-  list_of_pData = combined_pData[pData],
-  study = study,
-  common_genes = common_genes
-)
+#meta_res <- generate_list_for_meta_analysis(
+  #DNA = config$analysis$modalities$DNA,
+  #RNA = config$analysis$modalities$RNA,
+  #list_of_dna_mtx = dna_matrices,
+  #list_of_rna_mtx = norm_rna_mtxs,
+  #list_of_pData = combined_pData[pData],
+  #study = study,
+  #common_genes = common_genes
+#)
 
-message("Meta-analysis completed!")
+#message("Meta-analysis completed!")
