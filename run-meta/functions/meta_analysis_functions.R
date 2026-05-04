@@ -199,7 +199,7 @@ meta_results <- function(list_of_studies) {
         fp_data$FDR
     )
     colnames(label_mat) <- c("Gene", "OR", "CI", "FDR")
-    png("...",
+    png("run-meta/output/fp.png",
        width = 10,
        height = 14,
        units = "in",
