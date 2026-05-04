@@ -26,3 +26,4 @@ control_patterns:
   - "bpd: severe"
   - "no sepsis"
   - "non-septic"
+  - "no lung disease"
