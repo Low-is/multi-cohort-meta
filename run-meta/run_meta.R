@@ -38,12 +38,12 @@ rna_pdata <- readRDS("meta/pdata/rna_pData_with_condition.rds")
 #lapply(rna_pdata, function(x) dim(x))
 
 
-#message("Getting norm RNA counts...")
-#norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices, pData = rna_pdata)
-#message("Extracted norm RNA counts!")
+message("Getting norm RNA counts...")
+norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices, pData = rna_pdata)
+message("Extracted norm RNA counts!")
 
-lapply(dna_matrices, function(x) dim(x))
-#lapply(norm_rna_mtxs, function(x) head(rownames(x)))
+#lapply(dna_matrices, function(x) dim(x))
+lapply(norm_rna_mtxs, function(x) dim(x))
 
 
 # Need to add code that filters matrices to match dimmensions of pData
