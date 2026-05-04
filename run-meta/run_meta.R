@@ -59,15 +59,15 @@ message(sprintf("%d common genes detected!", length(common_genes)))
 str(unlist(c(dna_studies, rna_studies)))
 
 
-#message("Starting meta-analysis...")
+message("Starting meta-analysis...")
                                      
-#meta_res <- generate_list_for_meta_analysis(
-  #DNA = config$analysis$modalities$DNA,
-  #RNA = config$analysis$modalities$RNA,
-  #list_of_dna_mtx = dna_matrices,
-  #list_of_rna_mtx = norm_rna_mtxs,
-  #study = unlist(c(dna_studies, rna_studies)),
-  #common_genes = common_genes
-#)
+meta_res <- generate_list_for_meta_analysis(
+  DNA = config$analysis$modalities$DNA,
+  RNA = config$analysis$modalities$RNA,
+  list_of_dna_mtx = dna_matrices,
+  list_of_rna_mtx = norm_rna_mtxs,
+  study = unlist(c(dna_studies, rna_studies)),
+  common_genes = common_genes
+)
 
-#message("Meta-analysis completed!")
+message("Meta-analysis completed!")
