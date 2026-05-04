@@ -28,6 +28,8 @@ is_meth <- function(genes) {
   mean(grepl("^cg", genes, ignore.case = TRUE)) > 0.05
 }
 
+dna_matrices <- dna_matrices[!sapply(dna_matrices, function(m) is_meth(rownames(m)))]
+
 rna_matrices <- readRDS("meta/matrices/rna_matrices.rds") # the str is a list of 2: x$expr and x$pData
 rna_matrices <- rna_matrices[!sapply(rna_matrices, is.null)] # Removing NULL single cell datasets
 message("Matrices loaded!")
