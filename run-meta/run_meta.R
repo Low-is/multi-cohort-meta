@@ -43,7 +43,7 @@ norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices, pData = rna_pdata)
 message("Extracted norm RNA counts!")
 
 #lapply(dna_matrices, function(x) dim(x))
-lapply(norm_rna_mtxs, function(x) dim(x))
+#lapply(norm_rna_mtxs, function(x) dim(x))
 
 
 # Need to add code that filters matrices to match dimmensions of pData
@@ -51,11 +51,11 @@ lapply(norm_rna_mtxs, function(x) dim(x))
 
 
 # Find common genes across all studies being used for meta-analysis
-#message("Searching for common genes...")
-#common_genes <- find_common_genes(DNA = config$analysis$modalities$DNA,
-                                  #RNA = config$analysis$modalities$RNA,
-                                  #list_of_dna_mtx = dna_matrices,
-                                  #list_of_rna_mtx = NULL,
-                                  #use_DEG = config$analysis$use_DEG
-                                 #)
-#message(sprintf("%d common genes detected!", length(common_genes)))
+message("Searching for common genes...")
+common_genes <- find_common_genes(DNA = config$analysis$modalities$DNA,
+                                  RNA = config$analysis$modalities$RNA,
+                                  list_of_dna_mtx = dna_matrices,
+                                  list_of_rna_mtx = norm_rna_mtxs,
+                                  use_DEG = config$analysis$use_DEG
+                                 )
+message(sprintf("%d common genes detected!", length(common_genes)))
