@@ -428,15 +428,15 @@ apply_condition_to_list <- function(pdata_list, case_patterns, control_patterns)
       }
     }
     
-    # keep dataset even if weak signal (DON'T DROP IT)
-    if (all(is.na(df$condition))) {
-      warning("No Case/Control signal: ", study)
-      df$condition <- NA
-    }
-    
-    df$condition <- factor(df$condition, levels = c("Control", "Case"))
-    
-    out[[study]] <- df
+    # drop dataset if no condition signal at all
+if (all(is.na(df$condition))) {
+  warning("Dropping study (no Case/Control signal): ", study)
+  next
+}
+
+df$condition <- factor(df$condition, levels = c("Control", "Case"))
+
+out[[study]] <- df
   }
   
   return(out)
