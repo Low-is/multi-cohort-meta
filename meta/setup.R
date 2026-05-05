@@ -53,8 +53,27 @@ BiocManager::install(c(
   "DESeq2"
 ), ask = FALSE)
 
+
 # -----------------------
-# 6. Save locked environment
+# 6. Install GEOmetadb + download SQLite
+# -----------------------
+if (!requireNamespace("GEOmetadb", quietly = TRUE)) {
+  BiocManager::install("GEOmetadb", ask = FALSE)
+}
+
+message("📦 Downloading GEOmetadb SQLite...")
+
+# Create a consistent directory inside project
+dir.create("meta/db", recursive = TRUE, showWarnings = FALSE)
+
+# Download database
+sqlite_path <- GEOmetadb::getSQLiteFile(destdir = "meta/db")
+
+message("✔ GEOmetadb SQLite saved at: ", sqlite_path)
+
+
+# -----------------------
+# 7. Save locked environment
 # -----------------------
 renv::snapshot()
 
