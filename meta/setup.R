@@ -66,6 +66,8 @@ message("📦 Downloading GEOmetadb SQLite...")
 # Create a consistent directory inside project
 dir.create("meta/db", recursive = TRUE, showWarnings = FALSE)
 
+options(timeout = 600)
+options(download.file.method = "libcurl")
 # Download database
 sqlite_path <- GEOmetadb::getSQLiteFile(destdir = "meta/db")
 
