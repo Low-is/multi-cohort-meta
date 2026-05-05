@@ -428,11 +428,26 @@ apply_condition_to_list <- function(pdata_list, case_patterns, control_patterns)
       }
     }
     
-    # drop dataset if no condition signal at all
+# drop dataset if no condition signal at all
 if (all(is.na(df$condition))) {
   warning("Dropping study (no Case/Control signal): ", study)
   next
 }
+
+# ----------------------------
+# REMOVE NA SAMPLES (NEW)
+# ----------------------------
+before_n <- nrow(df)
+df <- df[!is.na(df$condition), , drop = FALSE]
+after_n <- nrow(df)
+
+if (after_n == 0) {
+  warning("Dropping study (all samples removed after NA filtering): ", study)
+  next
+}
+
+message(sprintf("Removed %d NA samples (remaining: %d)", 
+                before_n - after_n, after_n))
 
 df$condition <- factor(df$condition, levels = c("Control", "Case"))
 
