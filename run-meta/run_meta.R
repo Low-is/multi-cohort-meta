@@ -66,11 +66,6 @@ lapply(rna_matrices, function(x) colnames(x$expr))
 dna_pData <- readRDS("meta/pdata/dna_pData_with_condition.rds")
 rna_pData <- readRDS("meta/pdata/rna_pData_with_condition.rds")
 
-lapply(dna_pData, function(x) length(x$condition))
-lapply(rna_pData, function(x) length(x$condition))
-
-lapply(dna_pData, function(x) sum(is.na(x$condition)))
-lapply(rna_pData, function(x) sum(is.na(x$condition)))
 
 #combined_pData <- c(dna_pData, rna_pData)
 
