@@ -23,7 +23,7 @@ get_pData <- function(studies = list()) {
   
   out <- vector("list", length(studies))
   
-  sqlite_file <- "C:\\Users\\RANDOLPHL\\Downloads\\GEOmetadb.sqlite"
+  sqlite_file <- normalizePath("meta/db/GEOmetadb.sqlite", mustWork = TRUE)
   con <- DBI::dbConnect(RSQLite::SQLite(), sqlite_file)
   
   for (i in seq_along(studies)) {
