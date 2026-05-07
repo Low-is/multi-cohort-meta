@@ -449,6 +449,28 @@ if (after_n == 0) {
 message(sprintf("Removed %d NA samples (remaining: %d)", 
                 before_n - after_n, after_n))
 
+
+# ----------------------------
+# DROP SINGLE-CLASS DATASETS
+# ----------------------------
+    
+class_counts <- table(df$condition)
+    
+# only one class remaining
+if (length(class_counts) < 2) {
+  warning(sprintf(
+    "Dropping study %s: only %s samples detected",
+    study,
+    names(class_counts)[1]
+  ))
+  next
+}
+
+
+# ----------------------------
+# FINAL FACTOR CONVERSION
+# ----------------------------
+    
 df$condition <- factor(df$condition, levels = c("Control", "Case"))
 
 out[[study]] <- df
