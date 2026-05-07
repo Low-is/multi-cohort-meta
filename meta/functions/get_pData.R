@@ -242,7 +242,7 @@ get_pData <- function(studies = list()) {
 }
 
 
-add_condition_column <- function(df, column, case_patterns, control_patterns){ # This may be more challenging to implement
+add_condition_column <- function(df, column, case_patterns, control_patterns){ 
   
   if(!(column %in% colnames(df))) stop("Column not found in df")
   
@@ -420,7 +420,7 @@ apply_condition_to_list <- function(pdata_list, case_patterns, control_patterns)
         } else if (control_score > case_score) {
           df$condition[i] <- "Control"
         } else {
-          df$condition[i] <- "Control"  # default tie-breaker (or NA if you prefer)
+          df$condition[i] <- "Control"  # default tie-breaker 
         }
         
       } else {
