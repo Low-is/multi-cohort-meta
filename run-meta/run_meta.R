@@ -65,7 +65,7 @@ rna_pData <- readRDS("meta/pdata/rna_pData_with_condition.rds")
 
 lapply(dna_pData, function(x) head(x))
 message("Now moving on to RNA pData...")
-lapply(rna_pData, function(x) head(x$expr))
+lapply(rna_pData, function(x) head(x))
 
 #combined_pData <- c(dna_pData, rna_pData)
 
