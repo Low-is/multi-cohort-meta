@@ -60,12 +60,12 @@ rna_pdata <- readRDS("meta/pdata/rna_pData_with_condition.rds")
 
 #message("Starting meta-analysis...")
 
-lapply(dna_matrices, function(x) colnames(x))
-lapply(rna_matrices, function(x) colnames(x$expr))
-
 dna_pData <- readRDS("meta/pdata/dna_pData_with_condition.rds")
 rna_pData <- readRDS("meta/pdata/rna_pData_with_condition.rds")
 
+lapply(dna_pData, function(x) head(x))
+message("Now moving on to RNA pData...")
+lapply(rna_pData, function(x) head(x$expr))
 
 #combined_pData <- c(dna_pData, rna_pData)
 
