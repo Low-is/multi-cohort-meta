@@ -41,11 +41,11 @@ dna_pData <- readRDS("meta/pdata/dna_pData_with_condition.rds")
 rna_pData <- readRDS("meta/pdata/rna_pData_with_condition.rds")
 message("pData loaded!")
 
-length(dna_matrices) == length(dna_pData)
-length(rna_matrices) == length(rna_pData)
+length(dna_matrices) == length(dna_pData) # FALSE
+length(rna_matrices) == length(rna_pData) # FALSE
 
-lapply(dna_pData, function(x) head(x))
-lapply(rna_pData, function(x) head(x))
+lapply(dna_matrices, function(x) colnames(x))
+lapply(rna_matrices, function(x) colnames(x$expr))
 
 
 # Need to add code that filters matrices to match dimmensions of pData                                   
