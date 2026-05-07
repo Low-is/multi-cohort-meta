@@ -466,6 +466,29 @@ if (length(class_counts) < 2) {
   next
 }
 
+# ----------------------------
+# REMOVE miRNA / unwanted rows
+# ----------------------------
+config <- yaml::read_yaml("meta/config/config.yaml")
+    
+if ("title" %in% colnames(df)) {
+  remove_pattern <- paste(config$remove_pattern, collapse = "|")
+
+  before_filter <- nrow(df)
+
+  df <- df[!grepl(remove_pattern, df$title, ignore.case = TRUE), , drop = FALSE]
+
+  removed_n <- before_filter - nrow(df)
+
+  if (removed_n > 0) {
+    message(sprintf(
+      "Removed %d unwanted samples from %s",
+      removed_n,
+      study
+    ))
+  }
+}
+
 
 # ----------------------------
 # FINAL FACTOR CONVERSION
