@@ -37,9 +37,7 @@ message("Matrices loaded!")
 
 rna_pdata <- readRDS("meta/pdata/rna_pData_with_condition.rds")
 
-
-lapply(rna_matrices, function(x) head(colnames(x$expr)))
-
+                                     
 #message("Getting norm RNA counts...")
 #norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices, pData = rna_pdata)
 #message("Extracted norm RNA counts!")
@@ -65,13 +63,7 @@ lapply(rna_matrices, function(x) head(colnames(x$expr)))
 dna_pData <- readRDS("meta/pdata/dna_pData_with_condition.rds")
 rna_pData <- readRDS("meta/pdata/rna_pData_with_condition.rds")
 
-#lapply(dna_pData, function(x) head(x))
-
-lapply(rna_pData, function(x) head(x))
-
-#message("Extracting pData...")
-#lapply(dna_matrices, function(x) head(colnames(x)))
-#lapply(norm_rna_mtxs, function(x) head(colnames(x)))
+View(rna_pData[["GSE271605"]])
 
 #combined_pData <- c(dna_pData, rna_pData)
 
