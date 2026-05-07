@@ -65,8 +65,8 @@ lapply(rna_matrices, function(x) head(colnames(x$expr)))
 dna_pData <- readRDS("meta/pdata/dna_pData_with_condition.rds")
 rna_pData <- readRDS("meta/pdata/rna_pData_with_condition.rds")
 
-lapply(dna_pData, function(x) head(x))
-message("Now moving on to RNA pData...")
+#lapply(dna_pData, function(x) head(x))
+
 lapply(rna_pData, function(x) head(x))
 
 #message("Extracting pData...")
