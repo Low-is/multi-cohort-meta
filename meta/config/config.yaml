@@ -28,3 +28,10 @@ control_patterns:
   - "no sepsis"
   - "non-septic"
   - "no lung disease"
+
+remove_pattern:
+  - mirna
+  - microrna
+  - scramble
+  - inhibtor
+  - transfection
