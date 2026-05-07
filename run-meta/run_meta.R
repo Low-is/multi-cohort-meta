@@ -35,16 +35,24 @@ rna_matrices <- readRDS("meta/matrices/rna_matrices.rds") # the str is a list of
 rna_matrices <- rna_matrices[!sapply(rna_matrices, is.null)] # Removing NULL single cell datasets
 message("Matrices loaded!")
 
-rna_pdata <- readRDS("meta/pdata/rna_pData_with_condition.rds")
+                                     
+message("Loading pData...")
+dna_pData <- readRDS("meta/pdata/dna_pData_with_condition.rds")
+rna_pData <- readRDS("meta/pdata/rna_pData_with_condition.rds")
+message("pData loaded!")
 
+length(dna_matrices) == length(dna_pData)
+length(rna_matrices) == length(rna_pData)
+
+lapply(dna_pData, function(x) head(x))
+lapply(rna_pData, function(x) head(x))
+
+
+# Need to add code that filters matrices to match dimmensions of pData                                   
                                      
 #message("Getting norm RNA counts...")
 #norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices, pData = rna_pdata)
 #message("Extracted norm RNA counts!")
-
-
-# Need to add code that filters matrices to match dimmensions of pData
-
 
 
 # Find common genes across all studies being used for meta-analysis
@@ -59,11 +67,6 @@ rna_pdata <- readRDS("meta/pdata/rna_pData_with_condition.rds")
 
 
 #message("Starting meta-analysis...")
-
-dna_pData <- readRDS("meta/pdata/dna_pData_with_condition.rds")
-rna_pData <- readRDS("meta/pdata/rna_pData_with_condition.rds")
-
-View(rna_pData[["GSE271605"]])
 
 #combined_pData <- c(dna_pData, rna_pData)
 
