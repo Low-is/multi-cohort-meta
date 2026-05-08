@@ -72,9 +72,9 @@ resolve_matrix_names <- function(expr_colnames, pdata) {
 
   if (is_gsm) {
 
-    gsm_norm <- normalize(pdata$gsm)
+    pdata_gsm <- pdata$gsm
 
-    matched_rows <- match(expr_norm, gsm_norm)
+    matched_rows <- match(expr_norm, pdata_gsm)
 
     if (any(is.na(matched_rows))) {
       warning("GSM matching failed")
