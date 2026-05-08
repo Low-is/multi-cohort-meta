@@ -58,7 +58,7 @@ resolve_matrix_names <- function(expr_colnames, pdata) {
     )
   ]
 
-  expr_norm <- normalize(expr_colnames)
+  expr_norm <- expr_colnames
 
   # -------------------------
   # DETECT GSM MODE
