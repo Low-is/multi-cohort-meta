@@ -66,19 +66,14 @@ for (study in names(dna_matrices)) {
   expr <- dna_matrices[[study]]
   pdata <- dna_pData_cond[[study]]
 
-  res <- resolve_matrix_names(
+  expr <- resolve_matrix_names(
     expr_colnames = colnames(expr),
+    expr_matrix = expr,
     pdata = pdata
   )
 
-  if (is.null(res)) next
-
-  expr <- expr[, res$pdata_rows, drop = FALSE]
-  expr <- as.matrix(expr)
-
+  if (is.null(expr)) next
   if (length(dim(expr)) < 2) next
-
-  colnames(expr) <- res$matched_gsms
 
   dna_matrices_new[[study]] <- expr
 }
@@ -94,19 +89,14 @@ for (study in names(norm_rna_mtxs)) {
   expr <- norm_rna_mtxs[[study]]
   pdata <- rna_pData_cond[[study]]
 
-  res <- resolve_matrix_names(
+  expr <- resolve_matrix_names(
     expr_colnames = colnames(expr),
+    expr_matrix = expr,
     pdata = pdata
   )
 
-  if (is.null(res)) next
-
-  expr <- expr[, res$pdata_rows, drop = FALSE]
-  expr <- as.matrix(expr)
-
+  if (is.null(expr)) next
   if (length(dim(expr)) < 2) next
-
-  colnames(expr) <- res$matched_gsms
 
   rna_matrices_new[[study]] <- expr
 }
