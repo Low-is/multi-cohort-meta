@@ -761,7 +761,7 @@ handling_duplicates <- function(data_table) {
       }
 
       dds <- DESeqDataSetFromMatrix(
-        countData = x,
+        countData = x, # adding round() may help with the error 5-8-2026
         colData = pd,
         design = ~ condition
       )
