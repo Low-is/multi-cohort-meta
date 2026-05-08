@@ -42,7 +42,7 @@ generate_candidate_titles <- function(title_vec) {
 
 
 
-resolve_matrix_names(expr_colnames, expr_matrix, pdata) {
+resolve_matrix_names <- function(expr_colnames, expr_matrix, pdata) {
 
   # -------------------------
   # REMOVE OBVIOUS NON-SAMPLES
@@ -59,11 +59,17 @@ resolve_matrix_names(expr_colnames, expr_matrix, pdata) {
   expr_colnames <- expr_colnames[keep]
   expr_matrix <- expr_matrix[, keep, drop = FALSE]
 
+  # safety check
+  if (length(expr_colnames) == 0) {
+    warning("No valid sample columns after filtering")
+    return(NULL)
+  }
+
   # -------------------------
   # DETECT GSM MODE
   # -------------------------
 
-  is_gsm <- all(grepl("^GSM", expr_colnames))
+  is_gsm <- mean(grepl("^GSM", expr_colnames)) > 0.8
 
   # -------------------------
   # CASE 1: GSM-BASED MATCHING
@@ -78,6 +84,11 @@ resolve_matrix_names(expr_colnames, expr_matrix, pdata) {
       return(NULL)
     }
 
+    if (length(matched_rows) != length(expr_colnames)) {
+      warning("GSM mismatch: length issue")
+      return(NULL)
+    }
+
     if (any(duplicated(matched_rows))) {
       warning("Duplicate GSM mapping detected")
       return(NULL)
@@ -85,36 +96,40 @@ resolve_matrix_names(expr_colnames, expr_matrix, pdata) {
 
     message("Matched using GSM IDs")
 
-    expr_matrix <- expr_matrix[, order(matched_rows), drop = FALSE]
-    colnames(expr_matrix) <- pdata$gsm[matched_rows][order(matched_rows)]
+    ord <- order(matched_rows)
+
+    expr_matrix <- expr_matrix[, ord, drop = FALSE]
+    colnames(expr_matrix) <- pdata$gsm[matched_rows][ord]
 
     return(expr_matrix)
   }
-  
+
   # -------------------------
   # CASE 2: TITLE-BASED MATCHING
   # -------------------------
 
   candidates <- generate_candidate_titles(as.character(pdata$title))
 
+  expr_norm <- normalize(expr_colnames)
+
   for (method in names(candidates)) {
 
-    candidate <- candidates[[method]]
-    candidate_norm <- normalize(candidate)
-
-    expr_norm <- normalize(expr_colnames)
+    candidate_norm <- normalize(candidates[[method]])
 
     if (all(expr_norm %in% candidate_norm)) {
 
       matched_rows <- match(expr_norm, candidate_norm)
 
       if (any(is.na(matched_rows))) next
+      if (length(matched_rows) != length(expr_colnames)) next
       if (any(duplicated(matched_rows))) next
 
       message("Matched using: ", method)
 
-      expr_matrix <- expr_matrix[, order(matched_rows), drop = FALSE]
-      colnames(expr_matrix) <- pdata$gsm[matched_rows][order(matched_rows)]
+      ord <- order(matched_rows)
+
+      expr_matrix <- expr_matrix[, ord, drop = FALSE]
+      colnames(expr_matrix) <- pdata$gsm[matched_rows][ord]
 
       return(expr_matrix)
     }
