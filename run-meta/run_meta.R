@@ -47,8 +47,8 @@ message("pData loaded!")
 dna_matrices <- dna_matrices[names(dna_pData)] 
 rna_matrices <- rna_matrices[names(rna_pData)]
 
-View(colnames(rna_matrices[["GSE156028"]]$expr))
-View(rna_pData[["GSE156028"]]$title)
+lapply(rna_matrices, function(x) colnames(x$expr))
+rna_pData[["GSE156028"]]$title
                                                                
                                      
 #message("Getting norm RNA counts...")
