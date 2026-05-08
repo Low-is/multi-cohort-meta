@@ -48,17 +48,16 @@ resolve_matrix_names <- function(expr_colnames, pdata) {
   # REMOVE OBVIOUS NON-SAMPLES
   # -------------------------
 
-  expr_colnames <- expr_colnames[
-    !tolower(expr_colnames) %in% c(
-      "id",
-      "gene",
-      "genes",
-      "length",
-      "symbol"
-    )
-  ]
+  keep <- !tolower(expr_colnames) %in% c(
+    "id",
+    "gene",
+    "genes",
+    "length",
+    "symbol"
+  )
 
-  expr_norm <- expr_colnames
+  expr_colnames <- expr_colnames[keep]
+  expr_matrix <- expr_matrix[, keep, drop = FALSE]
 
   # -------------------------
   # DETECT GSM MODE
@@ -72,9 +71,7 @@ resolve_matrix_names <- function(expr_colnames, pdata) {
 
   if (is_gsm) {
 
-    pdata_gsm <- pdata$gsm
-
-    matched_rows <- match(expr_norm, pdata_gsm)
+    matched_rows <- match(expr_colnames, pdata$gsm)
 
     if (any(is.na(matched_rows))) {
       warning("GSM matching failed")
@@ -88,59 +85,41 @@ resolve_matrix_names <- function(expr_colnames, pdata) {
 
     message("Matched using GSM IDs")
 
-    return(list(
-      method = "gsm",
-      pdata_rows = matched_rows,
-      matched_titles = pdata$title[matched_rows],
-      matched_gsms = pdata$gsm[matched_rows]
-    ))
-  }
+    expr_matrix <- expr_matrix[, order(matched_rows), drop = FALSE]
+    colnames(expr_matrix) <- pdata$gsm[matched_rows][order(matched_rows)]
 
+    return(expr_matrix)
+  }
+  
   # -------------------------
   # CASE 2: TITLE-BASED MATCHING
   # -------------------------
 
-  candidates <- generate_candidate_titles(
-    as.character(pdata$title)
-  )
+  candidates <- generate_candidate_titles(as.character(pdata$title))
 
   for (method in names(candidates)) {
 
     candidate <- candidates[[method]]
     candidate_norm <- normalize(candidate)
 
+    expr_norm <- normalize(expr_colnames)
+
     if (all(expr_norm %in% candidate_norm)) {
 
       matched_rows <- match(expr_norm, candidate_norm)
 
-      # -------------------------
-      # VALIDATE MATCHES
-      # -------------------------
-
-      if (any(is.na(matched_rows))) {
-        next
-      }
-
-      if (any(duplicated(matched_rows))) {
-        warning(
-          "Duplicate sample mapping detected using: ",
-          method
-        )
-        next
-      }
+      if (any(is.na(matched_rows))) next
+      if (any(duplicated(matched_rows))) next
 
       message("Matched using: ", method)
 
-      return(list(
-        method = method,
-        pdata_rows = matched_rows,
-        matched_titles = candidate[matched_rows],
-        matched_gsms = pdata$gsm[matched_rows]
-      ))
+      expr_matrix <- expr_matrix[, order(matched_rows), drop = FALSE]
+      colnames(expr_matrix) <- pdata$gsm[matched_rows][order(matched_rows)]
+
+      return(expr_matrix)
     }
   }
 
   warning("Could not resolve matrix sample names")
-
   return(NULL)
 }
