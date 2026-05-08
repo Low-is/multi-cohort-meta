@@ -42,7 +42,7 @@ generate_candidate_titles <- function(title_vec) {
 
 
 
-resolve_matrix_names <- function(expr_colnames, pdata) {
+resolve_matrix_names(expr_colnames, expr_matrix, pdata) {
 
   # -------------------------
   # REMOVE OBVIOUS NON-SAMPLES
