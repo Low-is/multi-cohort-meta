@@ -26,6 +26,10 @@ rna_pData_cond <- apply_condition_to_list(
   control_patterns
 )
 
+dna_matrices <- readRDS("meta/matrices/dna_matrices.rds")
+rna
+
+
 # Save results
 saveRDS(dna_pData_cond, "meta/pdata/dna_pData_with_condition.rds")
 saveRDS(rna_pData_cond, "meta/pdata/rna_pData_with_condition.rds")
