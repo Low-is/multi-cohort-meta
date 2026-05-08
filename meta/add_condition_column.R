@@ -1,5 +1,6 @@
 # Loading functions
 source("meta/functions/get_pData.R")
+source("meta/functions/expr_mtx.R")
 
 # Load config
 library(yaml)
