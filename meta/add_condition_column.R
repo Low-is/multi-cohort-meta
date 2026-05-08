@@ -1,6 +1,7 @@
 # Loading functions
 source("meta/functions/get_pData.R")
 source("meta/functions/expr_mtx.R")
+source("meta/functions/filter_data.R")
 library(data.table)
 library(dplyr)
 library(DESeq2)
