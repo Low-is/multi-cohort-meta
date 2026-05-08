@@ -59,41 +59,59 @@ norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices, pData = rna_pData_cond)
 message("Extracted norm RNA counts!")
 
                                      
-dna_matrices <- mapply(
-  function(expr, pdata) {
+dna_matrices_new <- list()
 
-    res <- resolve_matrix_names(
-      expr_colnames = colnames(expr),
-      pdata = pdata
-    )
+for (study in names(dna_matrices)) {
 
-    expr <- expr[, res$pdata_rows, drop = FALSE]
-    colnames(expr) <- res$matched_gsms
+  expr <- dna_matrices[[study]]
+  pdata <- dna_pData_cond[[study]]
 
-    expr
-  },
-  dna_matrices,
-  dna_pData_cond,
-  SIMPLIFY = FALSE
-)
+  res <- resolve_matrix_names(
+    expr_colnames = colnames(expr),
+    pdata = pdata
+  )
 
-norm_rna_mtxs <- mapply(
-  function(expr, pdata) {
+  if (is.null(res)) next
 
-    res <- resolve_matrix_names(
-      expr_colnames = colnames(expr),
-      pdata = pdata
-    )
+  expr <- expr[, res$pdata_rows, drop = FALSE]
+  expr <- as.matrix(expr)
 
-    expr <- expr[, res$pdata_rows, drop = FALSE]
-    colnames(expr) <- res$matched_gsms
+  if (length(dim(expr)) < 2) next
 
-    expr
-  },
-  norm_rna_mtxs,
-  rna_pData_cond,
-  SIMPLIFY = FALSE
-)
+  colnames(expr) <- res$matched_gsms
+
+  dna_matrices_new[[study]] <- expr
+}
+
+dna_matrices <- dna_matrices_new
+
+                                     
+
+rna_matrices_new <- list()
+
+for (study in names(norm_rna_mtxs)) {
+
+  expr <- norm_rna_mtxs[[study]]
+  pdata <- rna_pData_cond[[study]]
+
+  res <- resolve_matrix_names(
+    expr_colnames = colnames(expr),
+    pdata = pdata
+  )
+
+  if (is.null(res)) next
+
+  expr <- expr[, res$pdata_rows, drop = FALSE]
+  expr <- as.matrix(expr)
+
+  if (length(dim(expr)) < 2) next
+
+  colnames(expr) <- res$matched_gsms
+
+  rna_matrices_new[[study]] <- expr
+}
+
+norm_rna_mtxs <- rna_matrices_new
 
 
 # Save results
