@@ -42,24 +42,15 @@ rna_pData <- readRDS("meta/pdata/rna_pData_with_condition.rds")
 message("pData loaded!")
 
 
+# Need to add code that filters matrices to match dimmensions of pData         
+# Filtering list
 dna_matrices <- dna_matrices[names(dna_pData)] 
 rna_matrices <- rna_matrices[names(rna_pData)]
+                                                               
                                      
-                                     
-length(dna_matrices)
-length(dna_pData) 
-                                     
-length(rna_matrices)
-length(rna_pData) 
-
-
-
-
-# Need to add code that filters matrices to match dimmensions of pData                                   
-                                     
-#message("Getting norm RNA counts...")
-#norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices, pData = rna_pdata)
-#message("Extracted norm RNA counts!")
+message("Getting norm RNA counts...")
+norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices, pData = rna_pdata)
+message("Extracted norm RNA counts!")
 
 
 # Find common genes across all studies being used for meta-analysis
