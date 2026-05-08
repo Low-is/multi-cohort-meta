@@ -47,7 +47,7 @@ message("pData loaded!")
 dna_matrices <- dna_matrices[names(dna_pData)] 
 rna_matrices <- rna_matrices[names(rna_pData)]
 
-View(colnames(rna_matrices[["GSE156028"]]))
+View(colnames(rna_matrices$expr[["GSE156028"]]))
 View(rna_pData[["GSE156028"]]$title)
                                                                
                                      
