@@ -3,6 +3,7 @@ source("meta/functions/get_pData.R")
 source("meta/functions/expr_mtx.R")
 library(data.table)
 library(dplyr)
+library(DESeq2)
 
 # Load config
 library(yaml)
