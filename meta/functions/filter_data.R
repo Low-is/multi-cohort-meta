@@ -58,36 +58,60 @@ resolve_matrix_names <- function(expr_colnames, pdata) {
     )
   ]
 
+  expr_norm <- normalize(expr_colnames)
+
   # -------------------------
-  # GENERATE TITLE CANDIDATES
+  # DETECT GSM MODE
+  # -------------------------
+
+  is_gsm <- all(grepl("^GSM", expr_colnames))
+
+  # -------------------------
+  # CASE 1: GSM-BASED MATCHING
+  # -------------------------
+
+  if (is_gsm) {
+
+    gsm_norm <- normalize(pdata$gsm)
+
+    matched_rows <- match(expr_norm, gsm_norm)
+
+    if (any(is.na(matched_rows))) {
+      warning("GSM matching failed")
+      return(NULL)
+    }
+
+    if (any(duplicated(matched_rows))) {
+      warning("Duplicate GSM mapping detected")
+      return(NULL)
+    }
+
+    message("Matched using GSM IDs")
+
+    return(list(
+      method = "gsm",
+      pdata_rows = matched_rows,
+      matched_titles = pdata$title[matched_rows],
+      matched_gsms = pdata$gsm[matched_rows]
+    ))
+  }
+
+  # -------------------------
+  # CASE 2: TITLE-BASED MATCHING
   # -------------------------
 
   candidates <- generate_candidate_titles(
     as.character(pdata$title)
   )
 
-  expr_norm <- normalize(expr_colnames)
-
-  # -------------------------
-  # TRY EACH MATCHING STRATEGY
-  # -------------------------
-
   for (method in names(candidates)) {
 
     candidate <- candidates[[method]]
-
     candidate_norm <- normalize(candidate)
-
-    # -------------------------
-    # REQUIRE ALL MATRIX COLS TO MATCH
-    # -------------------------
 
     if (all(expr_norm %in% candidate_norm)) {
 
-      matched_rows <- match(
-        expr_norm,
-        candidate_norm
-      )
+      matched_rows <- match(expr_norm, candidate_norm)
 
       # -------------------------
       # VALIDATE MATCHES
@@ -97,7 +121,6 @@ resolve_matrix_names <- function(expr_colnames, pdata) {
         next
       }
 
-      # avoid duplicated mappings
       if (any(duplicated(matched_rows))) {
         warning(
           "Duplicate sample mapping detected using: ",
@@ -109,16 +132,10 @@ resolve_matrix_names <- function(expr_colnames, pdata) {
       message("Matched using: ", method)
 
       return(list(
-
         method = method,
-
         pdata_rows = matched_rows,
-
-        matched_titles =
-          candidate[matched_rows],
-
-        matched_gsms =
-          pdata$gsm[matched_rows]
+        matched_titles = candidate[matched_rows],
+        matched_gsms = pdata$gsm[matched_rows]
       ))
     }
   }
