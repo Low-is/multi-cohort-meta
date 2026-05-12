@@ -62,9 +62,10 @@ normalize <- function(x) {
 }
 
 candidates <- generate_candidate_titles(rna_pData[["GSE106910"]]$title)
-colnames(rna_matrices[["GSE106910"]])
+expr_norm <- normalize(colnames(rna_matrices[["GSE106910"]]))
 
 candidates
+expr_norm
 
 
                                                                                                    
