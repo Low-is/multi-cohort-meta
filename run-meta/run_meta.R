@@ -61,7 +61,8 @@ normalize <- function(x) {
   trimws(x)
 }
 
-generate_candidate_titles(rna_pData[["GSE106910"]]$title)
+#generate_candidate_titles(rna_pData[["GSE106910"]]$title)
+colnames(rna_matrices[["GSE106910"]])
 normalize(colnames(rna_matrices[["GSE106910"]]))
 
 
