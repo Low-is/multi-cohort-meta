@@ -104,7 +104,7 @@ resolve_matrix_names <- function(expr_colnames, expr_matrix, pdata) {
     return(expr_matrix)
   }
 
-  # -------------------------
+# -------------------------
   # CASE 2: TITLE-BASED MATCHING
   # -------------------------
 
@@ -116,25 +116,52 @@ resolve_matrix_names <- function(expr_colnames, expr_matrix, pdata) {
 
     candidate_norm <- normalize(candidates[[method]])
 
-    if (all(expr_norm %in% candidate_norm)) {
-
-      matched_rows <- match(expr_norm, candidate_norm)
-
-      if (any(is.na(matched_rows))) next
-      if (length(matched_rows) != length(expr_colnames)) next
-      if (any(duplicated(matched_rows))) next
-
-      message("Matched using: ", method)
-
-      ord <- order(matched_rows)
-
-      expr_matrix <- expr_matrix[, ord, drop = FALSE]
-      colnames(expr_matrix) <- pdata$gsm[matched_rows][ord]
-
-      return(expr_matrix)
+    # skip ambiguous mappings
+    if (any(duplicated(candidate_norm))) {
+      next
     }
+
+    matched_rows <- match(expr_norm, candidate_norm)
+
+    # keep only matched samples
+    keep <- !is.na(matched_rows)
+
+    if (sum(keep) == 0) {
+      next
+    }
+
+    matched_rows <- matched_rows[keep]
+
+    # subset matrix to matched samples only
+    expr_subset <- expr_matrix[, keep, drop = FALSE]
+
+    # avoid duplicate mappings
+    if (any(duplicated(matched_rows))) {
+      next
+    }
+
+    # reorder columns to pdata order
+    ord <- order(matched_rows)
+
+    matched_rows <- matched_rows[ord]
+
+    expr_subset <- expr_subset[, ord, drop = FALSE]
+
+    # rename columns
+    colnames(expr_subset) <- pdata$gsm[matched_rows]
+
+    message(
+      "Matched using: ",
+      method,
+      " (",
+      ncol(expr_subset),
+      " samples)"
+    )
+
+    return(expr_subset)
   }
 
   warning("Could not resolve matrix sample names")
   return(NULL)
+
 }
