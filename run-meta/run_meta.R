@@ -7,6 +7,7 @@ library(dplyr)
 source("run-meta/functions/meta_analysis_functions.R")
 source("run-meta/functions/Sepsis_MC_analysis_functions.R")
 source("meta/functions/expr_mtx.R")
+source("meta/functions/filter_data.R")
 
 
 # Loading config file
