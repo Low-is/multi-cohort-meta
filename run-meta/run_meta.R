@@ -50,7 +50,7 @@ message("pData loaded!")
 dna_matrices <- dna_matrices[names(dna_pData)] 
 rna_matrices <- rna_matrices[names(rna_pData)]
 
-candidates <- generate_candidate_titles(as.character(rna_pData[["GSE106910"]]$title))
+candidates <- generate_candidate_titles(rna_pData[["GSE106910"]]$title)
 colnames(rna_matrices[["GSE106910"]])
 
 candidates
