@@ -49,7 +49,7 @@ dna_matrices <- dna_matrices[names(dna_pData)]
 rna_matrices <- rna_matrices[names(rna_pData)]
 
 #lapply(rna_matrices, function(x) colnames(x$expr))
-lapply(rna_pData, function(x) head(x))
+View(rna_pData[["GSE106910"]])
 
                                                                                                    
 #message("Getting norm RNA counts...")
