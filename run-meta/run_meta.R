@@ -49,9 +49,8 @@ dna_matrices <- dna_matrices[names(dna_pData)]
 rna_matrices <- rna_matrices[names(rna_pData)]
 
 lapply(rna_matrices, function(x) colnames(x$expr))
-rna_pData[["GSE219156"]]$title
-                                                               
-                                     
+
+                                                                                                   
 #message("Getting norm RNA counts...")
 #norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices, pData = rna_pData)
 #message("Extracted norm RNA counts!")
