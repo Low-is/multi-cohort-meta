@@ -33,9 +33,9 @@ is_meth <- function(genes) {
 
 dna_matrices <- dna_matrices[!sapply(dna_matrices, function(m) is_meth(rownames(m)))]
 
-rna_matrices <- readRDS("meta/matrices/rna_matrices.rds") # the str is a list of 2: x$expr and x$pData
-rna_matrices <- rna_matrices[!sapply(rna_matrices, is.null)] # Removing NULL single cell datasets
-#rna_matrices <- readRDS("meta/matrices/norm_rna_mtxs.rds")
+#rna_matrices <- readRDS("meta/matrices/rna_matrices.rds") # the str is a list of 2: x$expr and x$pData
+#rna_matrices <- rna_matrices[!sapply(rna_matrices, is.null)] # Removing NULL single cell datasets
+rna_matrices <- readRDS("meta/matrices/norm_rna_mtxs.rds")
 message("Matrices loaded!")
 
                                      
