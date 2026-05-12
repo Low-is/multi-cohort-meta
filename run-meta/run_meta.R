@@ -47,9 +47,9 @@ message("pData loaded!")
 # Need to add code that filters matrices to match dimmensions of pData         
 # Filtering list
 dna_matrices <- dna_matrices[names(dna_pData)] 
-rna_matrices <- rna_matrices[names(rna_pData)]
+#rna_matrices <- rna_matrices[names(rna_pData)]
 
-colnames(rna_matrices[["GSE106910"]])
+names(rna_matrices)
 rna_pData[["GSE106910"]]$title
 
                                                                                                    
