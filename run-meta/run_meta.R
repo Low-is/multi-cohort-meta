@@ -68,7 +68,7 @@ dna_matrices <- lapply(dna_matrices, function(x) {
 })
 
 
-lapply(dna_matrices, function(x) 
+lapply(rna_matrices, function(x) 
   any(is.na(x)))
        
 # ----------------------------
