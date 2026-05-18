@@ -59,7 +59,7 @@ norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices, pData = rna_pData_cond)
 message("Extracted norm RNA counts!")
 
 
-names(dna_matrices)
+lapply(dna_matrices, function(x) dim(x))
 
                                      
 #dna_matrices_new <- list()
