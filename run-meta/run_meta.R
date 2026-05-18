@@ -60,9 +60,9 @@ dna_matrices <- mapply(function(mat, pd) {
 },
                        dna_matrices, dna_pData, SIMPLIFY = FALSE)
 
-dna_matrices <- lapply(dna_matrices, function(X) {
-  if (is.null(mat)) return(NULL)
-  mat[complete.cases(mat), , drop = FALSE]
+dna_matrices <- lapply(dna_matrices, function(x) {
+  if (is.null(x)) return(NULL)
+  mat[complete.cases(x), , drop = FALSE]
 })
 
 
