@@ -48,6 +48,13 @@ message("pData loaded!")
 # Need to add code that filters matrices to match dimmensions of pData         
 # Filtering list
 dna_matrices <- dna_matrices[!is.na(names(dna_matrices))]
+
+dna_matrices <- lapply(dna_matrices, function(mat) {
+  if (is.null(mat)) return(NULL)
+  # keep only columns with non-missing names
+  mat <- mat[, !is.na(colnames(mat)), drop = FALSE]
+  return(mat)
+})
                                      
 dna_pData <- dna_pData[names(dna_matrices)]  
 rna_matrices <- rna_matrices[names(rna_pData)]
@@ -63,8 +70,8 @@ normalize <- function(x) {
   trimws(x)
 }
 
-lapply(dna_matrices, function(x) colnames(x))
-lapply(dna_pData, function(x) x$gsm)
+lapply(dna_matrices, function(x) ncol(x))
+lapply(dna_pData, function(x) nrow(x))
                                                                                                  
 # Find common genes across all studies being used for meta-analysis
 #message("Searching for common genes...")
