@@ -63,8 +63,7 @@ normalize <- function(x) {
 
 
 lapply(dna_matrices, function(x) head(rownames(x)))
-lapply(rna_matrices, function(x) head(rownames(x)))
-
+names(dna_matrices)
                                                                                                    
 # Find common genes across all studies being used for meta-analysis
 #message("Searching for common genes...")
