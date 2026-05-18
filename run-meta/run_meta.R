@@ -67,8 +67,29 @@ dna_matrices <- lapply(dna_matrices, function(x) {
   x[complete.cases(x), , drop = FALSE]
 })
 
+# check NULL matrices
+which(sapply(dna_matrices, is.null))
+
+# check zero-row matrices
+which(sapply(dna_matrices, nrow) == 0)
+
+# check zero-column matrices
+which(sapply(dna_matrices, ncol) == 0)
+
+# dimensions
+sapply(dna_matrices, dim)
+
+# verify colnames exist
+sapply(dna_matrices, function(x) all(!is.na(colnames(x))))
+
+# verify rownames exist
+sapply(dna_matrices, function(x) all(!is.na(rownames(x))))
+
+# duplicated sample names
+sapply(dna_matrices, function(x) any(duplicated(colnames(x))))
+
+# duplicated gene names
 sapply(dna_matrices, function(x) any(duplicated(rownames(x))))
-sapply(rna_matrices, function(x) any(duplicated(rownames(x))))
        
 # ----------------------------
 # NORMALIZATION (GLOBAL SAFE)
