@@ -62,7 +62,7 @@ normalize <- function(x) {
 }
 
 names(dna_matrices)
-names(dna_pData)
+
                                                                                                    
 # Find common genes across all studies being used for meta-analysis
 #message("Searching for common genes...")
