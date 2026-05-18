@@ -67,9 +67,6 @@ dna_matrices <- lapply(dna_matrices, function(x) {
   x[complete.cases(x), , drop = FALSE]
 })
 
-
-lapply(rna_matrices, function(x) 
-  any(is.na(x)))
        
 # ----------------------------
 # NORMALIZATION (GLOBAL SAFE)
@@ -83,31 +80,31 @@ normalize <- function(x) {
 
                                                                                                  
 # Find common genes across all studies being used for meta-analysis
-#message("Searching for common genes...")
-#common_genes <- find_common_genes(DNA = config$analysis$modalities$DNA,
-                                  #RNA = config$analysis$modalities$RNA,
-                                  #list_of_dna_mtx = dna_matrices,
-                                  #list_of_rna_mtx = rna_matrices,
-                                  #use_DEG = config$analysis$use_DEG
-                                 #)
-#message(sprintf("%d common genes detected!", length(common_genes)))
+message("Searching for common genes...")
+common_genes <- find_common_genes(DNA = config$analysis$modalities$DNA,
+                                  RNA = config$analysis$modalities$RNA,
+                                  list_of_dna_mtx = dna_matrices,
+                                  list_of_rna_mtx = rna_matrices,
+                                  use_DEG = config$analysis$use_DEG
+                                 )
+message(sprintf("%d common genes detected!", length(common_genes)))
 
 
-#message("Starting meta-analysis...")
+message("Starting meta-analysis...")
 
-#combined_pData <- c(dna_pData, rna_pData)
+combined_pData <- c(dna_pData, rna_pData)
 
-#pData <- names(c(dna_matrices, rna_matrices))
-#study <- names(c(dna_matrices, rna_matrices))
+pData <- names(c(dna_matrices, rna_matrices))
+study <- names(c(dna_matrices, rna_matrices))
                                      
-#meta_res <- generate_list_for_meta_analysis(
-  #DNA = config$analysis$modalities$DNA,
-  #RNA = config$analysis$modalities$RNA,
-  #list_of_dna_mtx = dna_matrices,
-  #list_of_rna_mtx = rna_matrices,
-  #list_of_pData = combined_pData[pData],
-  #study = study,
-  #common_genes = common_genes
-#)
+meta_res <- generate_list_for_meta_analysis(
+  DNA = config$analysis$modalities$DNA,
+  RNA = config$analysis$modalities$RNA,
+  list_of_dna_mtx = dna_matrices,
+  list_of_rna_mtx = rna_matrices,
+  list_of_pData = combined_pData[pData],
+  study = study,
+  common_genes = common_genes
+)
 
-#message("Meta-analysis completed!")
+message("Meta-analysis completed!")
