@@ -44,6 +44,16 @@ generate_candidate_titles <- function(title_vec) {
 
 resolve_matrix_names <- function(expr_colnames, expr_matrix, pdata) {
 
+  # ----------------------------
+# NORMALIZATION (GLOBAL SAFE)
+# ----------------------------
+normalize <- function(x) {
+  x <- tolower(as.character(x))
+  x <- gsub("[^a-z0-9 ]", " ", x)
+  x <- gsub("\\s+", " ", x)
+  trimws(x)
+}
+
   # -------------------------
   # REMOVE OBVIOUS NON-SAMPLES
   # -------------------------
