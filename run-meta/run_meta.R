@@ -47,7 +47,8 @@ message("pData loaded!")
 
 # Need to add code that filters matrices to match dimmensions of pData         
 # Filtering list
-dna_matrices <- dna_matrices[!is.na(names(dna_matrices))]                                    
+dna_matrices <- dna_matrices[!is.na(names(dna_matrices))]
+dna_pData <- dna_pData[names(dna_matrices)]
 
 # ----------------------------
 # NORMALIZATION (GLOBAL SAFE)
