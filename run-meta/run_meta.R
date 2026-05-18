@@ -63,13 +63,7 @@ normalize <- function(x) {
   trimws(x)
 }
 
-message("DNA check...")
-lapply(dna_matrices, function(x) ncol(x))
-lapply(dna_pData, function(x) nrow(x))
-
-message("RNA check...")
-lapply(rna_matrices, function(x) ncol(x))
-lapply(rna_pData, function(x) nrow(x))
+lapply(dna_matrices, function(x) colnames(x))
                                                                                                  
 # Find common genes across all studies being used for meta-analysis
 #message("Searching for common genes...")
