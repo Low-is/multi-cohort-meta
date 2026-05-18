@@ -50,6 +50,16 @@ message("pData loaded!")
 dna_matrices <- dna_matrices[!is.na(names(dna_matrices))]
 dna_pData <- dna_pData[names(dna_matrices)]
 
+dna_matrices <- mapply(function(mat, pd) {
+  if (is.null(mat) || is.null(pd)) return(NULL)
+
+  common_gsm <- intersect(colnames(mat), pd$gsm)
+  mat <- mat[, common_gsm, drop = FALSE]
+
+  return(mat)
+},
+                       dna_matrices, dna_pData, SIMPLIFY = FALSE)
+
 # ----------------------------
 # NORMALIZATION (GLOBAL SAFE)
 # ----------------------------
