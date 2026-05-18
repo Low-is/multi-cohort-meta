@@ -67,8 +67,8 @@ dna_matrices <- lapply(dna_matrices, function(x) {
   x[complete.cases(x), , drop = FALSE]
 })
 
-sapply(dna_matrices, function(x) any(duplicated(rownames(x)))
-sapply(rna_matrices, function(x) any(duplicated(rownames(x)))
+sapply(dna_matrices, function(x) any(duplicated(rownames(x))))
+sapply(rna_matrices, function(x) any(duplicated(rownames(x))))
        
 # ----------------------------
 # NORMALIZATION (GLOBAL SAFE)
