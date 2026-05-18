@@ -61,8 +61,9 @@ normalize <- function(x) {
   trimws(x)
 }
 
+
+names(dna_matrices)                                    
 names(dna_pData)
-lapply(dna_pData, function(x) names(x))
 
                                                                                                    
 # Find common genes across all studies being used for meta-analysis
