@@ -58,59 +58,62 @@ message("Getting norm RNA counts...")
 norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices, pData = rna_pData_cond)
 message("Extracted norm RNA counts!")
 
-                                     
-dna_matrices_new <- list()
 
-for (study in names(dna_matrices)) {
-
-  expr <- dna_matrices[[study]]
-  pdata <- dna_pData_cond[[study]]
-
-  expr <- resolve_matrix_names(
-    expr_colnames = colnames(expr),
-    expr_matrix = expr,
-    pdata = pdata
-  )
-
-  if (is.null(expr)) next
-  if (length(dim(expr)) < 2) next
-
-  dna_matrices_new[[study]] <- expr
-}
-
-dna_matrices <- dna_matrices_new
+names(dna_matrices)
 
                                      
+#dna_matrices_new <- list()
 
-rna_matrices_new <- list()
+#for (study in names(dna_matrices)) {
 
-for (study in names(norm_rna_mtxs)) {
+  #expr <- dna_matrices[[study]]
+  #pdata <- dna_pData_cond[[study]]
 
-  expr <- norm_rna_mtxs[[study]]
-  pdata <- rna_pData_cond[[study]]
+  #expr <- resolve_matrix_names(
+    #expr_colnames = colnames(expr),
+    #expr_matrix = expr,
+    #pdata = pdata
+  #)
 
-  expr <- resolve_matrix_names(
-    expr_colnames = colnames(expr),
-    expr_matrix = expr,
-    pdata = pdata
-  )
+  #if (is.null(expr)) next
+  #if (length(dim(expr)) < 2) next
 
-  if (is.null(expr)) next
-  if (length(dim(expr)) < 2) next
+  #dna_matrices_new[[study]] <- expr
+#}
 
-  rna_matrices_new[[study]] <- expr
-}
+#dna_matrices <- dna_matrices_new
 
-norm_rna_mtxs <- rna_matrices_new
+                                     
+
+#rna_matrices_new <- list()
+
+#for (study in names(norm_rna_mtxs)) {
+
+  #expr <- norm_rna_mtxs[[study]]
+  #pdata <- rna_pData_cond[[study]]
+
+  #expr <- resolve_matrix_names(
+    #expr_colnames = colnames(expr),
+    #expr_matrix = expr,
+    #pdata = pdata
+  #)
+
+  #if (is.null(expr)) next
+  #if (length(dim(expr)) < 2) next
+
+  #rna_matrices_new[[study]] <- expr
+#}
+
+#norm_rna_mtxs <- rna_matrices_new
 
 
 # Save results
 saveRDS(dna_pData_cond, "meta/pdata/dna_pData_with_condition.rds")
 saveRDS(rna_pData_cond, "meta/pdata/rna_pData_with_condition.rds")
 
-message("✅ Condition column successfully added to all studies")
+#message("✅ Condition column successfully added to all studies")
 
-saveRDS(dna_matrices, "meta/matrices/dna_matrices.rds")
-saveRDS(norm_rna_mtxs, "meta/matrices/norm_rna_mtxs.rds")
+#saveRDS(dna_matrices, "meta/matrices/dna_matrices.rds")
+#saveRDS(norm_rna_mtxs, "meta/matrices/norm_rna_mtxs.rds")
 
-message("✅ Successfully saved updated matrices!")
+#message("✅ Successfully saved updated matrices!")
