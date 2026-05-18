@@ -60,6 +60,15 @@ dna_matrices <- mapply(function(mat, pd) {
 },
                        dna_matrices, dna_pData, SIMPLIFY = FALSE)
 
+dna_matrices <- lapply(dna_matrices, function(X) {
+  if (is.null(mat)) return(NULL)
+  mat[complete.cases(mat), , drop = FALSE]
+})
+
+
+lapply(dna_matrices, function(x) 
+  any(is.na(x)))
+       
 # ----------------------------
 # NORMALIZATION (GLOBAL SAFE)
 # ----------------------------
@@ -69,9 +78,6 @@ normalize <- function(x) {
   x <- gsub("\\s+", " ", x)
   trimws(x)
 }
-
-lapply(dna_matrices, function(x) any(is.na(x)))
-lapply(rna_matrices, function(x) any(is.na(x)))
 
                                                                                                  
 # Find common genes across all studies being used for meta-analysis
