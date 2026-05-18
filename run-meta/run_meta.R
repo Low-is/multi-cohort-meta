@@ -66,7 +66,7 @@ normalize <- function(x) {
 #normalize(colnames(rna_matrices[["GSE106910"]]$expr))
 
 #rna_pData[["GSE106910"]]$gsm
-names(rna_matrices)
+lapply(rna_matrices, function(x) colnames(x))
 
 
                                                                                                    
