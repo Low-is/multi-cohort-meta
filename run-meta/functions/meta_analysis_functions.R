@@ -144,6 +144,10 @@ meta_results <- function(list_of_studies) {
 
     FDR <- summary$pooled.estimates$FDR
     logOR <- pool
+    SE <- se.pool
+    OR <- exp(logOR)
+    lower <- exp(logOR - 1.96 * SE)
+    upper <- exp(logOR + 1.96 * SE)
 
     
     consistent_genes <- c()
@@ -187,11 +191,11 @@ meta_results <- function(list_of_studies) {
       #)
                                                      
     fp_data <- data.frame(
-        logOR = pool,
-        SE = se.pool,
-        OR = exp(logOR),
-        lower = exp(logOR - 1.96 * SE),
-        upper = exp(logOR + 1.96 * SE),
+        logOR = logOR,
+        SE = SE,
+        OR = OR,
+        lower = lower,
+        upper = upper,
         FDR = round(FDR, 3)
     )
     
