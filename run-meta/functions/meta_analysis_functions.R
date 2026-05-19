@@ -177,7 +177,7 @@ meta_results <- function(list_of_studies) {
     # Flatten results for easier access
     meta_flat <- list(
       summary          = summary,
-      pooled_estimates = summary$pooled.estimates,
+      pooled.estimates = summary$pooled.estimates,
       consistent_genes = consistent_genes
     )
     
