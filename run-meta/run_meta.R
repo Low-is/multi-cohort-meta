@@ -172,13 +172,26 @@ gse8586_es <- effect.sizes(meta_list$GSE8586)
 gse32472_es <- effect.sizes(meta_list$GSE32472)
 gse188944_es <- effect.sizes(meta_list$GSE188944)
 gse225881_es <- effect.sizes(meta_list$GSE225881)
-gse108754_es <- effect.sizes(meta_list$GSE225881)
-gse108756_es <- effect.sizes(meta_list$GSE225881)
+gse108754_es <- effect.sizes(meta_list$GSE108754)
+gse108756_es <- effect.sizes(meta_list$GSE108756)
 gse219156_es <- effect.sizes(meta_list$GSE219156)                                    
 gse106910_es <- effect.sizes(meta_list$GSE106910)
 gse125873_es <- effect.sizes(meta_list$GSE125873)
 gse220135_es <- effect.sizes(meta_list$GSE220135)
-  
+
+                                     
+list.of.effects <- list(GSE8586 = gse8586_es,
+                        GSE32472 = gse32472_es,
+                        GSE188944 = gse188944_es,
+                        GSE225881 = gse225881_es,
+                        GSE108754 = gse108754_es,
+                        GSE108756 = gse108756_es,
+                        GSE219156 = gse219156_es,
+                        GSE106910 = gse106910_es,
+                        GSE125873 = gse125873_es,
+                        GSE220135 = gse220135_es)
+
+test <- combine.effect.sizes(list.of.effects)  
 
 #combined_pData <- c(dna_pData, rna_pData)
 
