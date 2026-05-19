@@ -141,6 +141,8 @@ meta_results <- function(list_of_studies) {
       dplyr::mutate(
         FDR = p.adjust(p.value, method = "BH")
       )
+
+    FDR <- summary$pooled.estimates$FDR
     
 
     
@@ -175,15 +177,25 @@ meta_results <- function(list_of_studies) {
     }
 
     fp_data <- summary$pooled.estimates[consistent_genes, ] %>%
-      dplyr::mutate(
-          logOR = summary,
-          SE = se.summary,
-          OR = exp(logOR),
-          lower = exp(logOR - 1.96 * SE),
-          upper = exp(logOR + 1.96 * SE),
-          FDR = round(FDR, 3)
-      )
-
+      #dplyr::mutate(
+          #logOR = summary,
+          #SE = se.summary,
+          #OR = exp(logOR),
+          #lower = exp(logOR - 1.96 * SE),
+          #upper = exp(logOR + 1.96 * SE),
+          #FDR = round(FDR, 3)
+      #)
+                                                     
+    fp_data <- data.frame(
+        logOR = pool,
+        SE = se.pool,
+        OR = exp(logOR),
+        lower = exp(logOR - 1.96 * SE),
+        upper = exp(logOR + 1.96 * SE),
+        FDR = round(FDR, 3)
+    )
+    
+                                                     
     fp_data <- fp_data %>%
       dplyr::mutate(
           Gene = consistent_genes,
