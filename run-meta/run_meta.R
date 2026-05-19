@@ -121,7 +121,7 @@ meta_res <- generate_list_for_meta_analysis(
 
 message("Meta-analysis completed!")
 
-
+message("Plotting foresplots...")
 consistent_genes <- meta_res$meta$consistent_genes
 meta_res_df <- meta_res$meta$pooled.estimates
 meta_res_df <- meta_res_df[consistent_genes, ]                                    
@@ -199,3 +199,4 @@ forestplot(
                 arrows = FALSE)
 
 dev.off()
+message("Will find saved forestplots in run-meta/output folder")
