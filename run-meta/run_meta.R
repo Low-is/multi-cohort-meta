@@ -167,6 +167,17 @@ meta_list <- list(
     keys = rownames(rna_matrices[["GSE220135"]][common_genes, ]),  
     class = factor(as.numeric(ifelse(rna_pData[["GSE220135"]]$condition == "Control", 0, 1), levels = c(0, 1))))
 )
+
+gse8586_es <- effect.sizes(meta_list$GSE8586)
+gse32472_es <- effect.sizes(meta_list$GSE32472)
+gse188944_es <- effect.sizes(meta_list$GSE188944)
+gse225881_es <- effect.sizes(meta_list$GSE225881)
+gse108754_es <- effect.sizes(meta_list$GSE225881)
+gse108756_es <- effect.sizes(meta_list$GSE225881)
+gse219156_es <- effect.sizes(meta_list$GSE219156)                                    
+gse106910_es <- effect.sizes(meta_list$GSE106910)
+gse125873_es <- effect.sizes(meta_list$GSE125873)
+gse220135_es <- effect.sizes(meta_list$GSE220135)
   
 
 #combined_pData <- c(dna_pData, rna_pData)
