@@ -143,7 +143,7 @@ meta_results <- function(list_of_studies) {
       )
 
     FDR <- summary$pooled.estimates$FDR
-    
+    logOR <- pool
 
     
     consistent_genes <- c()
@@ -176,7 +176,7 @@ meta_results <- function(list_of_studies) {
       }
     }
 
-    fp_data <- summary$pooled.estimates[consistent_genes, ] %>%
+    #fp_data <- summary$pooled.estimates[consistent_genes, ] %>%
       #dplyr::mutate(
           #logOR = summary,
           #SE = se.summary,
