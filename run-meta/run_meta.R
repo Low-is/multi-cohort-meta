@@ -84,6 +84,8 @@ valid_studies <- sapply(dna_pData, function(pd) {
   length(tab) >= 2 %% all(tab >= 2)
 })
 
+valid_studies[is.na(valid_studies)] <- FALSE
+
 valid_studies
 
 #dna_matrices <- dna_matrices[valid_studies]
