@@ -191,8 +191,43 @@ list.of.effects <- list(GSE8586 = gse8586_es,
                         GSE125873 = gse125873_es,
                         GSE220135 = gse220135_es)
 
-test <- combine.effect.sizes(list.of.effects)  
+summary <- combine.effect.sizes(list.of.effects)  
 
+summary$g <- summary$g[!apply(is.na(summary$g) | is.infinite(summary$g), 1, any), ]
+summary$se.g <- summary$se.g[!apply(is.na(summary$se.g) | is.infinite(summary$se.g), 1, any), ]
+g_genes <- rownames(summary$g)
+    
+summary$pooled.estimates$genes <- rownames(summary$pooled.estimates)
+summary$pooled.estimates <- summary$pooled.estimates %>%
+                                     dplyr::filter(genes %in% g_genes)
+    
+summary$pooled.estimates <- summary$pooled.estimates %>%
+                                     dplyr::filter(!apply(is.na(.) | is.infinite(as.matrix(.)), 1, any))
+    
+summary$pooled.estimates <- as.data.frame(lapply(summary$pooled.estimates, function(x) ifelse(x == 0, 1e-200, x)))
+rownames(summary$pooled.estimates) <- g_genes
+
+# Extracting individual estimates                                                 
+g <- summary$g
+se.g <- summary$se.g
+
+# Extracting pooled estimates
+pool    <- summary$pooled.estimates[, "summary"]
+names(pool) <- rownames(g)
+    
+se.pool <- summary$pooled.estimates[, "se.summary"]
+names(se.pool) <- rownames(g)
+
+ # Label for forestplots                                               
+x.label <- "Standardized Mean Difference (log2 scale)"
+    
+# Adding FDR corrected p-values
+summary$pooled.estimates <- summary$pooled.estimates %>%
+                                                 dplyr::mutate(
+                                                   FDR = p.adjust(p.value, method = "BH")
+                                                 )
+                                                     
+summary$pooled.estimates
 #combined_pData <- c(dna_pData, rna_pData)
 
 #pData <- names(c(dna_matrices, rna_matrices))
