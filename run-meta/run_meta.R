@@ -88,8 +88,11 @@ valid_studies[is.na(valid_studies)] <- FALSE
 
 valid_studies
 
-#dna_matrices <- dna_matrices[valid_studies]
-#dna_pData <- dna_pData[valid_studies]
+dna_matrices <- dna_matrices[valid_studies]
+dna_pData <- dna_pData[valid_studies]
+
+names(dna_matrices)
+names(dna_pData)
 
 
 
