@@ -91,10 +91,7 @@ valid_studies[is.na(valid_studies)] <- FALSE
 dna_matrices <- dna_matrices[valid_studies]
 dna_pData <- dna_pData[valid_studies]
 
-
-which(sapply(dna_matrices, is.null))
-which(sapply(dna_pData, is.null))
-
+names(c(dna_matrices, rna_matrices))
                                                                                                  
 # Find common genes across all studies being used for meta-analysis
 #message("Searching for common genes...")
@@ -108,6 +105,7 @@ which(sapply(dna_pData, is.null))
 
 
 #message("Starting meta-analysis...")
+  
 
 #combined_pData <- c(dna_pData, rna_pData)
 
