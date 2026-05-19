@@ -137,7 +137,7 @@ fp_data <- meta_res %>%
                                      
 fp_data <- fp_data %>%
   mutate(
-    Gene = factor(rownames(meta_res), levels = gene_order),
+    Gene = rownames(meta_res),
     CI = sprintf("%.2f - %.2f", lower, upper),
     OR_txt = sprintf("%.2f", OR)
   ) %>%
@@ -192,8 +192,8 @@ forestplot(
     FDR = c("", "FDR")
   ) |>
   fp_set_zebra_style("#EFEFEF") |>
-  fp_set_favors(low = "Likely No Sepsis",
-                high = "Likely Sepsis",
+  fp_set_favors(low = "Control",
+                high = "Case",
                 txt_gp = gpar(cex = 1.5),
                 arrows = FALSE)
 
