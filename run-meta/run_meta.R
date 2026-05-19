@@ -86,26 +86,21 @@ valid_studies <- sapply(dna_pData, function(pd) {
 
 valid_studies[is.na(valid_studies)] <- FALSE
 
-valid_studies
 
 dna_matrices <- dna_matrices[valid_studies]
 dna_pData <- dna_pData[valid_studies]
 
-names(dna_matrices)
-names(dna_pData)
-
-
 
                                                                                                  
 # Find common genes across all studies being used for meta-analysis
-#message("Searching for common genes...")
-#common_genes <- find_common_genes(DNA = config$analysis$modalities$DNA,
-                                  #RNA = config$analysis$modalities$RNA,
-                                  #list_of_dna_mtx = dna_matrices,
-                                  #list_of_rna_mtx = rna_matrices,
-                                  #use_DEG = config$analysis$use_DEG
-                                 #)
-#message(sprintf("%d common genes detected!", length(common_genes)))
+message("Searching for common genes...")
+common_genes <- find_common_genes(DNA = config$analysis$modalities$DNA,
+                                  RNA = config$analysis$modalities$RNA,
+                                  list_of_dna_mtx = dna_matrices,
+                                  list_of_rna_mtx = rna_matrices,
+                                  use_DEG = config$analysis$use_DEG
+                                 )
+message(sprintf("%d common genes detected!", length(common_genes)))
 
 
 #message("Starting meta-analysis...")
