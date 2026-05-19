@@ -122,6 +122,80 @@ meta_res <- generate_list_for_meta_analysis(
 message("Meta-analysis completed!")
 
 
+consistent_genes <- meta_res$meta$consistent_genes
+meta_res_df <- meta_res$meta$pooled.estimates
+meta_res_df <- meta_res_df[consistent_genes, ]                                    
 
-meta_res <- meta_res$meta$pooled.estimates
-meta_res
+fp_data <- meta_res_df %>%
+  mutate(
+    logOR = summary,
+    SE    = se.summary,
+    OR    = exp(logOR),
+    lower = exp(logOR - 1.96 * SE),
+    upper = exp(logOR + 1.96 * SE),
+    FDR = round(FDR, 3)
+  )
+
+fp_data <- fp_data %>%
+  mutate(
+    Gene = rownames(meta_res_df),
+    CI = sprintf("%.2f - %.2f", lower, upper),
+    OR_txt = sprintf("%.2f", OR)
+  ) %>%
+arrange(desc(OR), Gene)
+
+label_mat <- cbind(
+  as.character(fp_data$Gene),
+  fp_data$OR_txt,
+  fp_data$CI,
+  fp_data$FDR
+)
+colnames(label_mat) <- c("Gene", "OR", "CI", "FDR")
+
+png("run-meta/output/forestplot.png",
+    width = 10,
+    height = 14,
+    units = "in",
+    res = 800)
+
+forestplot(
+  labeltext = label_mat,
+  mean  = fp_data$OR,
+  lower = fp_data$lower,
+  upper = fp_data$upper,
+  
+  boxsize = 0.4,
+  clip = c(0.1, 10),
+  xticks = c(0.1, 0.5, 1, 2, 5, 10),
+  
+  xlog = TRUE,
+  zero = 1,
+  
+  graphwidth = unit(0.5, "npc"),
+  
+  colgap = unit(6, "mm"),
+  lineheight = unit(6, "mm"),
+  
+  col = fpColors(
+    box = "royalblue",
+    line = "darkblue",
+    summary = "royalblue"
+  ),
+  txt_gp = fpTxtGp(
+    ticks = gpar(cex = 1.3),
+    xlab = gpar(cex = 1.5)
+  )
+) |>
+  fp_add_header(
+    Gene   = c("", "Gene"),
+    OR     = c("", "OR"),
+    CI     = c("", "95% CI"),
+    FDR = c("", "FDR")
+  ) |>
+  fp_set_zebra_style("#EFEFEF") |>
+  fp_set_favors(low = "Control",
+                high = "Case",
+                txt_gp = gpar(cex = 1.5),
+                arrows = FALSE)
+
+dev.off()
