@@ -84,10 +84,12 @@ valid_studies <- sapply(dna_pData, function(pd) {
   length(tab) >= 2 %% all(tab >= 2)
 })
 
-dna_matrices <- dna_matrices[valid_studies]
-dna_pData <- dna_pData[valid_studies]
+valid_studies
 
-lapply(dna_pData, function(x) x$condition)
+#dna_matrices <- dna_matrices[valid_studies]
+#dna_pData <- dna_pData[valid_studies]
+
+
 
                                                                                                  
 # Find common genes across all studies being used for meta-analysis
