@@ -30,12 +30,11 @@ Rscript meta/setup.R # only need to run this once!
 ```
 # Bash
 
-cd miner
-python main.py
+cd miner # Move inside python miner folder
+python main.py # Run automated search
 
-cd ..
-# Process expression matrices
-RScript meta/expr_pipeline.R # Takes ~15 mintutes to run
+cd .. # Return back project root folder
+RScript meta/expr_pipeline.R # Takes ~10-15 mintutes to run
 
 # Process pData
 RScript meta/extract_pData.R
