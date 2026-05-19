@@ -104,84 +104,91 @@ find_common_genes <- function(
 ############################################
 
 meta_results <- function(list_of_studies) {
-    
-    list_of_es <- lapply(list_of_studies, function(study) {
-      effect.sizes(study)
-    })
-    
-    summary <- combine.effect.sizes(list_of_es)
-    
-    summary$g <- summary$g[!apply(is.na(summary$g) | is.infinite(summary$g), 1, any), ]
-    summary$se.g <- summary$se.g[!apply(is.na(summary$se.g) | is.infinite(summary$se.g), 1, any), ]
-    g_genes <- rownames(summary$g)
-    
-    summary$pooled.estimates$genes <- rownames(summary$pooled.estimates)
-    summary$pooled.estimates <- summary$pooled.estimates %>%
-      dplyr::filter(genes %in% g_genes)
-    
-    summary$pooled.estimates <- summary$pooled.estimates %>%
-      dplyr::filter(!apply(is.na(.) | is.infinite(as.matrix(.)), 1, any))
-    
-    summary$pooled.estimates <- as.data.frame(lapply(summary$pooled.estimates, function(x) ifelse(x == 0, 1e-200, x)))
-    rownames(summary$pooled.estimates) <- g_genes
-    
-    g <- summary$g
-    se.g <- summary$se.g
-    
-    pool    <- summary$pooled.estimates[, "summary"]
-    names(pool) <- rownames(g)
-    
-    se.pool <- summary$pooled.estimates[, "se.summary"]
-    names(se.pool) <- rownames(g)
-    
-    x.label <- "Standardized Mean Difference (log2 scale)"
-    
-    # Adding FDR corrected p-values
-    summary$pooled.estimates <- summary$pooled.estimates %>%
-      dplyr::mutate(
-        FDR = p.adjust(p.value, method = "BH")
-      )
-    
-    consistent_genes <- c()
-    
-    for (gene in rownames(g)) {
-      
-      g_gene  <- g[gene, ]
-      se_gene <- se.g[gene, ]
-      
-      pooled   <- pool[gene]
-      se_pooled <- se.pool[gene]
-      
-      # 95% CI
-      lower_CI <- pooled - 1.96 * se_pooled
-      upper_CI <- pooled + 1.96 * se_pooled
-      
-      # Criterion 1: pooled effect must be ≥ |0.5|
-      strong_effect <- abs(pooled) >= 0.5
-      
-      # Criterion 2: CI does NOT cross zero
-      ci_significant <- (lower_CI > 0) || (upper_CI < 0)
-      
-      # Criterion 3 (optional): All study effects trend same direction
-      # (keep this if you want it, or remove if not needed)
-      consistent_direction <- (all(g_gene > 0)) || (all(g_gene < 0))
-      
-      # Final rule
-      if (strong_effect && ci_significant && consistent_direction) {
-        consistent_genes <- c(consistent_genes, gene)
-      }
-    }
-    
-    # Flatten results for easier access
-    meta_flat <- list(
-      summary          = summary,
-      pooled_estimates = summary$pooled.estimates,
-      consistent_genes = consistent_genes
-    )
-    
-    return(meta_flat)
+  stopifnot(is.list(list_of_studies), length(list_of_studies) > 0)
+
+  list_of_es <- lapply(list_of_studies, function(study) {
+    effect.sizes(study)
+  })
+
+  summary <- combine.effect.sizes(list_of_es)
+
+  if (is.null(summary) || !is.list(summary)) {
+    stop("combine.effect.sizes() did not return a valid result.")
+  }
+  if (is.null(summary$g) || is.null(summary$se.g) || is.null(summary$pooled.estimates)) {
+    stop("Expected components g, se.g, and pooled.estimates are missing from summary.")
   }
 
+  g <- as.data.frame(summary$g)
+  se.g <- as.data.frame(summary$se.g)
+  pooled <- as.data.frame(summary$pooled.estimates)
+
+  g <- g[!apply(g, 1, function(x) any(is.na(x) | is.infinite(x))), , drop = FALSE]
+  se.g <- se.g[rownames(g), , drop = FALSE]
+
+  if (!"p.value" %in% names(pooled)) {
+    stop("pooled.estimates must contain a p.value column.")
+  }
+
+  pooled$genes <- rownames(pooled)
+  pooled <- pooled[pooled$genes %in% rownames(g), , drop = FALSE]
+
+  pooled <- pooled[!apply(pooled, 1, function(x) any(is.na(x) | is.infinite(x))), , drop = FALSE]
+
+  if (nrow(pooled) == 0L || nrow(g) == 0L) {
+    stop("No valid genes remain after filtering.")
+  }
+
+  pooled <- as.data.frame(lapply(pooled, function(x) {
+    if (is.numeric(x)) {
+      x[x == 0] <- 1e-200
+    }
+    x
+  }))
+
+  rownames(pooled) <- pooled$genes
+
+  pooled$FDR <- p.adjust(pooled$p.value, method = "BH")
+
+  pool <- pooled[, "summary"]
+  names(pool) <- rownames(pooled)
+
+  se.pool <- pooled[, "se.summary"]
+  names(se.pool) <- rownames(pooled)
+
+  consistent_genes <- character(0)
+
+  for (gene in rownames(g)) {
+    g_gene <- as.numeric(g[gene, , drop = TRUE])
+    pooled_est <- as.numeric(pool[gene])
+    se_pooled <- as.numeric(se.pool[gene])
+
+    if (any(is.na(c(pooled_est, se_pooled))) || any(is.infinite(c(pooled_est, se_pooled)))) {
+      next
+    }
+
+    lower_CI <- pooled_est - 1.96 * se_pooled
+    upper_CI <- pooled_est + 1.96 * se_pooled
+
+    strong_effect <- abs(pooled_est) >= 0.5
+    ci_significant <- (lower_CI > 0) || (upper_CI < 0)
+    consistent_direction <- all(g_gene > 0, na.rm = TRUE) || all(g_gene < 0, na.rm = TRUE)
+
+    if (isTRUE(strong_effect && ci_significant && consistent_direction)) {
+      consistent_genes <- c(consistent_genes, gene)
+    }
+  }
+
+  summary$g <- g
+  summary$se.g <- se.g
+  summary$pooled.estimates <- pooled
+
+  list(
+    summary = summary,
+    pooled_estimates = pooled,
+    consistent_genes = consistent_genes
+  )
+}
 ############################################
 # ---Meta-analysis function--- 
 ############################################
