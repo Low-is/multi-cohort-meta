@@ -105,6 +105,68 @@ names(c(dna_matrices, rna_matrices))
 
 
 #message("Starting meta-analysis...")
+
+meta_list <- list(
+  GSE8586 = list(
+    expr = dna_matrices[["GSE8586"]][common_genes, ],  
+    pheno = dna_pData[["GSE8586"]]$condition, 
+    keys = rownames(dna_matrices[["GSE8586"]][common_genes, ]),  
+    class = factor(as.numeric(ifelse(dna_pData[["GSE8586"]]$condition == "Control", 0, 1), levels = c(0, 1)))
+  ),
+  GSE32472 = list(
+    expr = dna_matrices[["GSE32472"]][common_genes, ],  
+    pheno = dna_pData[["GSE32472"]]$condition, 
+    keys = rownames(dna_matrices[["GSE32472"]][common_genes, ]),  
+    class = factor(as.numeric(ifelse(dna_pData[["GSE32472"]]$condition == "Control", 0, 1), levels = c(0, 1)))
+  ), 
+  GSE188944 = list(
+    expr = dna_matrices[["GSE188944"]][common_genes, ],  
+    pheno = dna_pData[["GSE188944"]]$condition, 
+    keys = rownames(dna_matrices[["GSE188944"]][common_genes, ]),  
+    class = factor(as.numeric(ifelse(dna_pData[["GSE188944"]]$condition == "Control", 0, 1), levels = c(0, 1)))
+  ),
+  GSE225881 = list(
+    expr = dna_matrices[["GSE225881"]][common_genes, ],  
+    pheno = dna_pData[["GSE225881"]]$condition, 
+    keys = rownames(dna_matrices[["GSE225881"]][common_genes, ]),  
+    class = factor(as.numeric(ifelse(dna_pData[["GSE225881"]]$condition == "Control", 0, 1), levels = c(0, 1)))
+  ),
+  GSE108754 = list(
+    expr = dna_matrices[["GSE108754"]][common_genes, ],  
+    pheno = dna_pData[["GSE108754"]]$condition, 
+    keys = rownames(dna_matrices[["GSE108754"]][common_genes, ]),  
+    class = factor(as.numeric(ifelse(dna_pData[["GSE108754"]]$condition == "Control", 0, 1), levels = c(0, 1)))
+  ),
+  GSE108756 = list(
+    expr = dna_matrices[["GSE108756"]][common_genes, ],  
+    pheno = dna_pData[["GSE108756"]]$condition, 
+    keys = rownames(dna_matrices[["GSE108756"]][common_genes, ]),  
+    class = factor(as.numeric(ifelse(dna_pData[["GSE108756"]]$condition == "Control", 0, 1), levels = c(0, 1)))
+  ),
+  GSE219156 = list(
+    expr = rna_matrices[["GSE219156"]][common_genes, ],  
+    pheno = rna_pData[["GSE219156"]]$condition, 
+    keys = rownames(rna_matrices[["GSE219156"]][common_genes, ]),  
+    class = factor(as.numeric(ifelse(rna_pData[["GSE219156"]]$condition == "Control", 0, 1), levels = c(0, 1)))
+  ),
+  GSE106910 = list(
+    expr = rna_matrices[["GSE106910"]][common_genes, ],  
+    pheno = rna_pData[["GSE106910"]]$condition, 
+    keys = rownames(rna_matrices[["GSE106910"]][common_genes, ]),  
+    class = factor(as.numeric(ifelse(rna_pData[["GSE106910"]]$condition == "Control", 0, 1), levels = c(0, 1)))
+  ),
+  GSE125873 = list(
+    expr = rna_matrices[["GSE125873"]][common_genes, ],  
+    pheno = rna_pData[["GSE125873"]]$condition, 
+    keys = rownames(rna_matrices[["GSE125873"]][common_genes, ]),  
+    class = factor(as.numeric(ifelse(rna_pData[["GSE125873"]]$condition == "Control", 0, 1), levels = c(0, 1)))
+  ),
+  GSE220135 = list(
+    expr = rna_matrices[["GSE220135"]][common_genes, ],  
+    pheno = rna_pData[["GSE220135"]]$condition, 
+    keys = rownames(rna_matrices[["GSE220135"]][common_genes, ]),  
+    class = factor(as.numeric(ifelse(rna_pData[["GSE220135"]]$condition == "Control", 0, 1), levels = c(0, 1))))
+)
   
 
 #combined_pData <- c(dna_pData, rna_pData)
