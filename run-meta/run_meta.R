@@ -123,5 +123,5 @@ message("Meta-analysis completed!")
 
 
 
-meta_res <- meta_res$pooled.estimates
+meta_res <- meta_res$meta$pooled.estimates
 meta_res
