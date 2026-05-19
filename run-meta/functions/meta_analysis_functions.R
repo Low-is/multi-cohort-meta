@@ -241,7 +241,7 @@ meta_results <- function(list_of_studies) {
         fp_set_zebra_style("#EFEFEF") |>
         fp_set_favors(low = "Likely No BPD",
                      high = "Likely BPD",
-                     txt_gp = gapr(cex = 1.5),
+                     txt_gp = gpar(cex = 1.5),
                      arrows = FALSE)
     dev.off()
     
