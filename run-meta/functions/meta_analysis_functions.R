@@ -141,14 +141,6 @@ meta_results <- function(list_of_studies) {
       dplyr::mutate(
         FDR = p.adjust(p.value, method = "BH")
       )
-
-    FDR <- summary$pooled.estimates$FDR
-    logOR <- pool
-    SE <- se.pool
-    OR <- exp(logOR)
-    lower <- exp(logOR - 1.96 * SE)
-    upper <- exp(logOR + 1.96 * SE)
-
     
     consistent_genes <- c()
     
@@ -179,87 +171,6 @@ meta_results <- function(list_of_studies) {
         consistent_genes <- c(consistent_genes, gene)
       }
     }
-
-    #fp_data <- summary$pooled.estimates[consistent_genes, ] %>%
-      #dplyr::mutate(
-          #logOR = summary,
-          #SE = se.summary,
-          #OR = exp(logOR),
-          #lower = exp(logOR - 1.96 * SE),
-          #upper = exp(logOR + 1.96 * SE),
-          #FDR = round(FDR, 3)
-      #)
-                                                     
-    fp_data <- data.frame(
-        logOR = logOR,
-        SE = SE,
-        OR = OR,
-        lower = lower,
-        upper = upper,
-        FDR = round(FDR, 3)
-    )
-    
-                                                     
-    fp_data <- fp_data %>%
-      dplyr::mutate(
-          Gene = consistent_genes,
-          CI = sprintf("%.2f - %.2f", lower, upper),
-          OR_txt = sprintf("%.2f", OR)
-      ) %>%
-      dplyr::arrange(desc(OR), Gene)
-
-    label_mat <- cbind(
-        as.character(fp_data$Gene),
-        fp_data$OR_txt,
-        fp_data$CI,
-        fp_data$FDR
-    )
-    colnames(label_mat) <- c("Gene", "OR", "CI", "FDR")
-    png("run-meta/output/fp.png",
-       width = 10,
-       height = 14,
-       units = "in",
-       res = 800)
-    forestplot(
-        labeltext = label_mat,
-        mean = fp_data$OR,
-        lower = fp_data$lower,
-        upper = fp_data$upper,
-
-        boxsize = 0.4,
-        clip = c(0.1, 10),
-        xticks = c(0.1, 0.5, 1, 2, 5, 10),
-
-        xlog = TRUE,
-        zero = 1,
-
-        graphwidth = unit(0.5, "npc"),
-
-        colgap = unit(6, "mm"),
-        lineheight = unit(6, "mm"),
-
-        col = fpColors(
-            box = "royalblue",
-            line = "darkblue",
-            summary = "royalblue"
-        ),
-        txt_gp = fpTxtGp(
-            ticks = gpar(cex = 1.3),
-            xlab = gpar(cex = 1.5)
-        )
-    ) |>
-        fp_add_header(
-            Gene = c("", "Gene"),
-            OR = c("", "OR"),
-            CI = c("", "95% CI"),
-            FDR = c("", "FDR")
-        ) |>
-        fp_set_zebra_style("#EFEFEF") |>
-        fp_set_favors(low = "Likely No BPD",
-                     high = "Likely BPD",
-                     txt_gp = gpar(cex = 1.5),
-                     arrows = FALSE)
-    dev.off()
     
     # Flatten results for easier access
     meta_flat <- list(
