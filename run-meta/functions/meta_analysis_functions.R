@@ -270,64 +270,122 @@ generate_list_for_meta_analysis <- function(
     list_of_rna_mtx = NULL,
     list_of_pData = NULL,
     study = NULL,
-    common_genes = NULL
-) {
-
-  list_of_studies <- list()
-
-  if (is.null(common_genes)) {
-    message("➡️ No gene list provided. Automatically detecting common genes...")
-
-    if (DNA && !RNA) {
-      common_genes <- find_common_genes(DNA = TRUE, list_of_dna_mtx = list_of_dna_mtx)
-    } else if (RNA && !DNA) {
-      common_genes <- find_common_genes(RNA = TRUE, list_of_rna_mtx = list_of_rna_mtx)
+    common_genes = NULL   # <-- NEW ARGUMENT
+  ) {
+    
+    list_of_studies <- list()
+    
+    # -------------------------------------------------------
+    # STEP 1: Determine which genes to use
+    # -------------------------------------------------------
+    if (is.null(common_genes)) {
+      message("➡️ No gene list provided. Automatically detecting common genes...")
+      
+      if (DNA && !RNA) {
+        common_genes <- find_common_genes(
+          DNA = TRUE,
+          list_of_dna_mtx = list_of_dna_mtx
+        )
+        
+      } else if (RNA && !DNA) {
+        common_genes <- find_common_genes(
+          RNA = TRUE,
+          list_of_rna_mtx = list_of_rna_mtx
+        )
+        
+      } else if (DNA && RNA) {
+        common_genes <- find_common_genes(
+          DNA = TRUE, list_of_dna_mtx = list_of_dna_mtx,
+          RNA = TRUE, list_of_rna_mtx = list_of_rna_mtx
+        )
+      }
+      
+      message("✔️ Common genes found: ", length(common_genes))
+      
     } else {
-      common_genes <- find_common_genes(
-        DNA = TRUE, list_of_dna_mtx = list_of_dna_mtx,
-        RNA = TRUE, list_of_rna_mtx = list_of_rna_mtx
-      )
+      message("✔️ Using user-supplied gene list (", length(common_genes), " genes)")
     }
-  }
-
-
-  sanitize_expr <- function(mat) {
-    mat <- mat[apply(mat, 1, function(x) all(is.finite(x))), , drop = FALSE]
-    mat <- mat[apply(mat, 1, var) > 0, , drop = FALSE]
-    mat
-  }
-
-
-  for (i in seq_along(study)) {
-    mtx <- c(list_of_dna_mtx, list_of_rna_mtx)[[i]]
-    p   <- list_of_pData[[i]]
-
-    genes_in_mtx <- intersect(common_genes, rownames(mtx))
-
-    expr <- mtx[genes_in_mtx, , drop = FALSE]
-    expr <- sanitize_expr(expr)
-
-    list_of_studies[[study[i]]] <- list(
-      expr  = expr,
-      pheno = p$condition,
-      keys  = rownames(expr),
-      class = as.numeric(ifelse(p$condition == levels(p$condition)[1], 0, 1))
+    
+    
+    # -------------------------------------------------------
+    # STEP 2: Build study list
+    # -------------------------------------------------------
+    if (DNA && !RNA) {
+      for (i in seq_along(study)) {
+        name <- study[i]
+        mtx  <- list_of_dna_mtx[[i]]
+        p    <- list_of_pData[[i]]
+        
+        genes_in_mtx <- intersect(common_genes, rownames(mtx))
+        if (length(genes_in_mtx) < length(common_genes)) {
+          warning(name, ": Some genes not found in matrix and were dropped.")
+        }
+        
+        list_of_studies[[name]] <- list(
+          expr  = mtx[genes_in_mtx, , drop = FALSE],
+          pheno = p$condition,
+          keys  = genes_in_mtx,
+          class = as.numeric(ifelse(p$condition == levels(p$condition)[1], 0, 1))
+        )
+      }
+    }
+    
+    
+    if (RNA && !DNA) {
+      for (i in seq_along(study)) {
+        name <- study[i]
+        mtx  <- list_of_rna_mtx[[i]]
+        p    <- list_of_pData[[i]]
+        
+        genes_in_mtx <- intersect(common_genes, rownames(mtx))
+        if (length(genes_in_mtx) < length(common_genes)) {
+          warning(name, ": Some genes not found in matrix and were dropped.")
+        }
+        
+        list_of_studies[[name]] <- list(
+          expr  = mtx[genes_in_mtx, , drop = FALSE],
+          pheno = p$condition,
+          keys  = genes_in_mtx,
+          class = as.numeric(ifelse(p$condition == levels(p$condition)[1], 0, 1))
+        )
+      }
+    }
+    
+    
+    if (DNA && RNA) {
+      list_of_mtx <- c(list_of_dna_mtx, list_of_rna_mtx)
+      
+      for (i in seq_along(study)) {
+        name <- study[i]
+        mtx  <- list_of_mtx[[i]]
+        p    <- list_of_pData[[i]]
+        
+        genes_in_mtx <- intersect(common_genes, rownames(mtx))
+        if (length(genes_in_mtx) < length(common_genes)) {
+          warning(name, ": Some genes not found in matrix and were dropped.")
+        }
+        
+        list_of_studies[[name]] <- list(
+          expr  = mtx[genes_in_mtx, , drop = FALSE],
+          pheno = p$condition,
+          keys  = genes_in_mtx,
+          class = as.numeric(ifelse(p$condition == levels(p$condition)[1], 0, 1))
+        )
+      }
+    }
+    
+    
+    # -------------------------------------------------------
+    # STEP 3: Return studies + meta results
+    # -------------------------------------------------------
+    structure(
+      list(
+        studies = list_of_studies,
+        meta = meta_results(list_of_studies)
+      ),
+      class = "MetaAnalysis"
     )
-
   }
-
-  meta <- meta_results(list_of_studies)
-
-  structure(
-    list(
-      studies       = list_of_studies,
-      robust_genes  = meta$robust_genes,
-      pooled        = meta$pooled_estimates,
-      meta          = meta
-    ),
-    class = "MetaAnalysis"
-  )
-}
 
 ############################################
 # ---Meta-analysis function wrapper--- 
