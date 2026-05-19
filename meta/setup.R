@@ -24,7 +24,8 @@ install.packages(c(
   "jsonlite",
   "data.table",
   "dplyr",
-  "yaml"
+  "yaml",
+  "rmeta"
 ))
 
 untar("meta/COCONUT_1.0.2.tar.gz", exdir = "meta/COCONUT")
