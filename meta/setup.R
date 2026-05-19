@@ -25,7 +25,8 @@ install.packages(c(
   "data.table",
   "dplyr",
   "yaml",
-  "rmeta"
+  "rmeta",
+  "forestplot"
 ))
 
 untar("meta/COCONUT_1.0.2.tar.gz", exdir = "meta/COCONUT")
