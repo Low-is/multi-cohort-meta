@@ -171,7 +171,7 @@ forestplot(
   xlog = config$analysis$forestplot$xlog,
   zero = config$analysis$forestplot$zero,
   
-  graphwidth = config$analysis$forestplot$graphwidth,
+  graphwidth = unit(config$analysis$forestplot$graphwidth, "npc"),
   
   colgap = unit(6, "mm"),
   lineheight = unit(6, "mm"),
