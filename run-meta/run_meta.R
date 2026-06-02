@@ -164,14 +164,14 @@ forestplot(
   lower = fp_data$lower,
   upper = fp_data$upper,
   
-  boxsize = 0.4,
-  clip = c(0.1, 10),
-  xticks = c(0.1, 0.5, 1, 2, 5, 10),
+  boxsize = config$analysis$forestplot$boxsize,
+  clip = config$analysis$forestplot$clip,
+  xticks = config$analysis$forestplot$xticks,
   
-  xlog = TRUE,
-  zero = 1,
+  xlog = config$analysis$forestplot$xlog,
+  zero = config$analysis$forestplot$zero,
   
-  graphwidth = unit(0.5, "npc"),
+  graphwidth = config$analysis$forestplot$graphwidth,
   
   colgap = unit(6, "mm"),
   lineheight = unit(6, "mm"),
