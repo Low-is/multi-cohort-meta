@@ -183,7 +183,7 @@ forestplot(
   ),
   txt_gp = fpTxtGp(
     ticks = gpar(cex = config$analysis$forestplot$text_gp$ticks$cex),
-    xlab = gpar(cex = conifg$analysis$forestplot$text_gp$xlab$cex)
+    xlab = gpar(cex = config$analysis$forestplot$text_gp$xlab$cex)
   )
 ) |>
   fp_add_header(
