@@ -165,8 +165,8 @@ forestplot(
   upper = fp_data$upper,
   
   boxsize = config$analysis$forestplot$boxsize,
-  clip = config$analysis$forestplot$clip,
-  xticks = config$analysis$forestplot$xticks,
+  clip = as.numeric(config$analysis$forestplot$clip),
+  xticks = as.numeric(config$analysis$forestplot$xticks),
   
   xlog = config$analysis$forestplot$xlog,
   zero = config$analysis$forestplot$zero,
