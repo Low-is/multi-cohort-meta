@@ -173,17 +173,17 @@ forestplot(
   
   graphwidth = unit(config$analysis$forestplot$graphwidth, "npc"),
   
-  colgap = unit(6, "mm"),
-  lineheight = unit(6, "mm"),
+  colgap = unit(config$analysis$forestplot$colgap, "mm"),
+  lineheight = unit(config$analysis$forestplot$lineheight, "mm"),
   
   col = fpColors(
-    box = "royalblue",
-    line = "darkblue",
-    summary = "royalblue"
+    box = config$analysis$forestplot$colors$box,
+    line = config$analysis$forestplot$colors$line,
+    summary = config$analysis$forestplot$colors$summary
   ),
   txt_gp = fpTxtGp(
-    ticks = gpar(cex = 1.3),
-    xlab = gpar(cex = 1.5)
+    ticks = gpar(cex = config$analysis$forestplot$text_gp$ticks$cex),
+    xlab = gpar(cex = conifg$analysis$forestplot$text_gp$xlab$cex)
   )
 ) |>
   fp_add_header(
