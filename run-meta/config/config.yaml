@@ -48,4 +48,6 @@ forestplot:
       text_gp: 1.5
       arrows: FALSE
 limma:
-  genes: NULL
+  genes: 
+    all: NULL
+    meta_genes: readRDS("run-meta/output/consistent_genes.rds")
