@@ -120,12 +120,14 @@ meta_res <- generate_list_for_meta_analysis(
 )
 
 message("Meta-analysis completed!")
-
-message("Plotting foresplots...")
+message("Saving meta results in run-meta/output folder...")
 consistent_genes <- meta_res$meta$consistent_genes
 meta_res_df <- meta_res$meta$pooled.estimates
-meta_res_df <- meta_res_df[consistent_genes, ]                                    
+meta_res_df <- meta_res_df[consistent_genes, ] 
+write.csv(meta_res_df, "run-meta/output/meta_results.csv")
 
+                                
+message("Plotting foresplots...")
 fp_data <- meta_res_df %>%
   mutate(
     logOR = summary,
