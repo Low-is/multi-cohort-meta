@@ -40,3 +40,5 @@ analysis:
         cex: 1.3
       xlab:
         cex: 1.5
+
+    zebrastyle: "#EFEFEF"
