@@ -1,6 +1,8 @@
 library(dplyr)
 library(limma)
 library(yaml)
+library(AnnotationDbi)
+library(org.Hs.eg.db)
 source("run-meta/functions/meta_analysis_functions.R")
 
 
