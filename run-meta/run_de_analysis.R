@@ -1,7 +1,12 @@
 library(dplyr)
 library(limma)
+library(yaml)
 source("run-meta/functions/meta_analysis_functions.R")
 
+
+# Loading config file
+config <- read_yaml("run-meta/config/config.yaml")
+gene_config <- config$limma$genes
 
 # Loading expression matrices
 message("Loading expression data...")
@@ -16,11 +21,15 @@ rna_pData <- readRDS("meta/pdata/rna_pData_with_condition.rds")
 message("pData loaded!")
 
 # Loading meta genes
-meta_genes <- readRDS("run-meta/output/consistent_genes.rds")
+meta_genes <- readRDS(gene_config$meta_genes)
+# Or if leaving genes_of_interest NULL
+all_genes <- gene_config$all
 
 # Limma
 message("Running DE analysis with limma...")
 DE_res_dna <- run_limma_DE_list(dna_matrices,
                                dna_pData,
-                               genes_of_interest = )
+                               genes_of_interest = all_genes)
 message("Analysis finished!")
+message("Saving limma results...")
+write.csv(DE_res_dna, "run-meta/output/limma_res.csv")
