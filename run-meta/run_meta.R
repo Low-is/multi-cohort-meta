@@ -195,7 +195,7 @@ forestplot(
   fp_set_zebra_style(config$foresplot$zebrastyle) |>
   fp_set_favors(low = config$forestplot$set_favors$low,
                 high = config$forestplot$set_favors$high,
-                txt_gp = gpar(cex = config$forestplot$set_favors$text_gp),
+                txt_gp = gpar(cex = 1.5),
                 arrows = config$forestplot$set_favors$arrows)
 
 dev.off()
