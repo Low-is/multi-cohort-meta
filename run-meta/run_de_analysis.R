@@ -32,8 +32,8 @@ names(dna_pData)
 # Limma
 #message("Running DE analysis with limma...")
 #DE_res_dna <- run_limma_DE_list(dna_matrices,
-                               dna_pData,
-                               genes_of_interest = all_genes)
+                               #dna_pData,
+                               #genes_of_interest = all_genes)
 #message("Analysis finished!")
 #message("Saving limma results...")
 #write.csv(DE_res_dna, "run-meta/output/limma_res.csv")
