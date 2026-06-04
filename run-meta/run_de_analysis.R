@@ -15,7 +15,12 @@ dna_pData <- readRDS("meta/pdata/dna_pData_with_condition.rds")
 rna_pData <- readRDS("meta/pdata/rna_pData_with_condition.rds")
 message("pData loaded!")
 
+# Loading meta genes
+meta_genes <- readRDS("run-meta/output/consistent_genes.rds")
+
 # Limma
 message("Running DE analysis with limma...")
-DE_res_dna <- run_limma_DE_list()
+DE_res_dna <- run_limma_DE_list(dna_matrices,
+                               dna_pData,
+                               genes_of_interest = )
 message("Analysis finished!")
