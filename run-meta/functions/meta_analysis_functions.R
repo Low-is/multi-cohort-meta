@@ -988,7 +988,7 @@ run_limma_DE <- function(expr_mat, pdata, condition_col = "condition",
   #  Manually add Significance column
   #-------------------------------
   tt$Significance <- "Non-significant"
-  tt$Significance[tt$P.Value <= sig_p] <- "Significant"
+  tt$Significance[tt$adj.P.Val <= sig_p] <- "Significant"
   
   #-------------------------------
   #  Manually add Entrez IDs
