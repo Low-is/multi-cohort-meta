@@ -11,7 +11,7 @@ analysis:
     dna_gse_file: "miner/outputs/dna_gse_ids.json"
     rna_gse_file: "miner/outputs/rna_gse_ids.json"
 
-  forestplot:
+forestplot:
     boxsize: 0.4
     clip:
       - 0.1
