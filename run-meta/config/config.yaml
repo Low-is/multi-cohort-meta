@@ -50,4 +50,4 @@ forestplot:
 limma:
   genes: 
     all: NULL
-    meta_genes: readRDS("run-meta/output/consistent_genes.rds")
+    meta_genes: "run-meta/output/consistent_genes.rds"
