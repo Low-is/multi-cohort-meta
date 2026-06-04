@@ -164,26 +164,26 @@ forestplot(
   lower = fp_data$lower,
   upper = fp_data$upper,
   
-  boxsize = config$analysis$forestplot$boxsize,
-  clip = as.numeric(config$analysis$forestplot$clip),
-  xticks = as.numeric(config$analysis$forestplot$xticks),
+  boxsize = config$forestplot$boxsize,
+  clip = as.numeric(config$forestplot$clip),
+  xticks = as.numeric(config$forestplot$xticks),
   
-  xlog = config$analysis$forestplot$xlog,
-  zero = config$analysis$forestplot$zero,
+  xlog = config$forestplot$xlog,
+  zero = config$forestplot$zero,
   
-  graphwidth = unit(config$analysis$forestplot$graphwidth, "npc"),
+  graphwidth = unit(config$forestplot$graphwidth, "npc"),
   
-  colgap = unit(config$analysis$forestplot$colgap, "mm"),
-  lineheight = unit(config$analysis$forestplot$lineheight, "mm"),
+  colgap = unit(config$forestplot$colgap, "mm"),
+  lineheight = unit(config$forestplot$lineheight, "mm"),
   
   col = fpColors(
-    box = config$analysis$forestplot$colors$box,
-    line = config$analysis$forestplot$colors$line,
-    summary = config$analysis$forestplot$colors$summary
+    box = config$forestplot$colors$box,
+    line = config$forestplot$colors$line,
+    summary = config$forestplot$colors$summary
   ),
   txt_gp = fpTxtGp(
-    ticks = gpar(cex = config$analysis$forestplot$text_gp$ticks$cex),
-    xlab = gpar(cex = config$analysis$forestplot$text_gp$xlab$cex)
+    ticks = gpar(cex = config$forestplot$text_gp$ticks$cex),
+    xlab = gpar(cex = config$forestplot$text_gp$xlab$cex)
   )
 ) |>
   fp_add_header(
@@ -192,7 +192,7 @@ forestplot(
     CI     = c("", "95% CI"),
     FDR = c("", "FDR")
   ) |>
-  fp_set_zebra_style("#EFEFEF") |>
+  fp_set_zebra_style(config$foresplot$zebrastyle) |>
   fp_set_favors(low = "Control",
                 high = "Case",
                 txt_gp = gpar(cex = 1.5),
