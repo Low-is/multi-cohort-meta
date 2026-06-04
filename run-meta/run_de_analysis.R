@@ -27,6 +27,8 @@ meta_genes <- readRDS(gene_config$meta_genes)
 # Or if leaving genes_of_interest NULL
 all_genes <- gene_config$all
 
+
+# Need to apply dna_matrices filtering step like in "run_meta.R"
 length(dna_pData)
 length(dna_matrices)
 
