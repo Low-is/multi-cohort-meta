@@ -42,3 +42,8 @@ forestplot:
         cex: 1.5
 
     zebrastyle: "#EFEFEF"
+    set_favors:
+      low: "Control"
+      high: "Case"
+      text_gp: 1.5
+      arrows: FALSE
