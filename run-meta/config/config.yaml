@@ -47,3 +47,5 @@ forestplot:
       high: "Case"
       text_gp: 1.5
       arrows: FALSE
+limma:
+  genes: NULL
