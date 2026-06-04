@@ -27,7 +27,7 @@ meta_genes <- readRDS(gene_config$meta_genes)
 # Or if leaving genes_of_interest NULL
 all_genes <- gene_config$all
 
-names(dna_pData)
+lapply(dna_pData, function(x) x$gsm)
 
 # Limma
 #message("Running DE analysis with limma...")
