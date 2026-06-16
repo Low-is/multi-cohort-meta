@@ -7,7 +7,7 @@ dna_archive_search:
   database: gds
   retmax: 500
   query: >
-    (bronchopulmonary dysplasia OR BPD) AND
+    (sepsis OR Sepsis) AND
     ("Expression profiling by array" OR microarray OR "gene expression profiling") AND
     Homo sapiens[Organism] AND
     (neonate OR newborn OR infant OR preterm OR premature OR "extremely low gestational age")
@@ -19,7 +19,7 @@ rna_archive_search:
   database: gds
   retmax: 500
   query: >
-    (bronchopulmonary dysplasia OR BPD) AND
+    (sepsis OR Sepsis) AND
     (RNA-seq OR RNAseq OR "Expression profiling by high throughput sequencing") AND
     Homo sapiens[Organism] AND
     (neonate OR newborn OR infant OR preterm OR premature OR "extremely low gestational age")
@@ -32,7 +32,7 @@ dna_weekly_search:
   retmax: 500
   reldate: 730
   query: >
-    (bronchopulmonary dysplasia OR BPD) AND
+    (sepsis OR Sepsis) AND
     ("Expression profiling by array" OR microarray OR "gene expression profiling") AND
     Homo sapiens[Organism] AND
     (neonate OR newborn OR infant OR preterm OR premature OR "extremely low gestational age")
@@ -45,7 +45,7 @@ rna_weekly_search:
   retmax: 500
   reldate: 730
   query: >
-    (bronchopulmonary dysplasia OR BPD) AND
+    (sepsis OR Sepsis) AND
     (RNA-seq OR RNAseq OR "Expression profiling by high throughput sequencing") AND
     Homo sapiens[Organism] AND
     (neonate OR newborn OR infant OR preterm OR premature OR "extremely low gestational age")
