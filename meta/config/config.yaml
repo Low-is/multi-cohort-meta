@@ -6,20 +6,27 @@ case_patterns:
   - "bpd case"
   - "bronchopulmonary dysplasia"
   - sepsis
+  - "clinical sepsis"
+  - "Confirmed late-onset sepsis"
   - septic
   - disease
   - treated
   - tumor
+  - Inf
 
 control_patterns:
   - control
   - healthy
   - normal
   - untreated
+  - uninfected
+  - "uninfected chorio"
   - nobpd
   - nosepsis
   - nonbpd
   - none
+  - "Possible late-onset sepsis"
+  - "No late-onset sepsis"
   - "no_bpd"
   - "bpd_control"
   - "no bpd"
@@ -28,6 +35,9 @@ control_patterns:
   - "no sepsis"
   - "non-septic"
   - "no lung disease"
+  - Sus
+  - NEC
+  - Vir
 
 remove_pattern:
   - mirna
