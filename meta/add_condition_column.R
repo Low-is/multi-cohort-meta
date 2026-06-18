@@ -55,7 +55,7 @@ dna_matrices <- dna_matrices[names(dna_pData_cond)]
 rna_matrices <- rna_matrices[names(rna_pData_cond)]
 
 message("Getting names for rna matrices...")
-names(rna_matrices)
+head(rna_matrices[["GSE138712"]]$expr)
 
                                                                                            
 message("Getting norm RNA counts...")
