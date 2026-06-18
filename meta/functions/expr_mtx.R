@@ -308,7 +308,7 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
       # ---- RESTRICT TO BULK RNA-SEQ ONLY ----
       h5_files <- list.files(
         extract_dir,
-        pattern = "\\.h5$|cell_metadata.*\\.csv\\.gz$|compiled_counts.*\\.csv\\.gz$",
+        pattern = "\\.h5$|cell_metadata.*\\.csv\\.gz$|compiled_counts.*\\.csv\\.gz$|(barcodes\\.tsv(\\.gz)?$|features\\.tsv(\\.gz)?$|matrix\\.mtx(\\.gz)?$)",
         full.names = TRUE,
         recursive = TRUE
       )
