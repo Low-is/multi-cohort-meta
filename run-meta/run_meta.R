@@ -127,6 +127,14 @@ meta_res_df <- meta_res_df[consistent_genes, ]
 write.csv(meta_res_df, "run-meta/output/meta_results.csv")
 saveRDS(consistent_genes, "run-meta/output/consistent_genes.rds")
 
+
+message("Showing dimensions for DNA...")
+lapply(dna_matrices, function(x) dim(x))
+
+
+message("Showing dimensions for RNA...")
+lapply(rna_matrices, function(x) dim(x))
+
                                 
 message("Plotting foresplots...")
 fp_data <- meta_res_df %>%
@@ -203,12 +211,3 @@ forestplot(
 
 dev.off()
 message("Will find saved forestplots in run-meta/output folder")
-
-
-
-message("Showing dimensions for DNA...")
-lapply(dna_matrices, function(x) dim(x))
-
-
-message("Showing dimensions for RNA...")
-lapply(rna_matrices, function(x) dim(x))
