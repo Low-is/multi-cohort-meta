@@ -129,11 +129,11 @@ saveRDS(consistent_genes, "run-meta/output/consistent_genes.rds")
 
 
 message("Showing dimensions for DNA...")
-lapply(dna_matrices, function(x) dim(x))
+names(dna_matrices)
 
 
 message("Showing dimensions for RNA...")
-lapply(rna_matrices, function(x) dim(x))
+names(rna_matrices)
 
                                 
 message("Plotting foresplots...")
