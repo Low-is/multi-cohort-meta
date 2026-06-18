@@ -49,7 +49,7 @@ message("Matrices loaded!")
 
 
 message("Getting structure of rna_matrices...")
-lapply(rna_matrices, function(x) str(x))
+str(rna_matrices[["GSE138712"]])
 
                                      
 # Need to add code that filters matrices to match dimmensions of pData         
