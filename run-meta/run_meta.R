@@ -203,3 +203,12 @@ forestplot(
 
 dev.off()
 message("Will find saved forestplots in run-meta/output folder")
+
+
+
+message("Showing dimensions for DNA...")
+lapply(dna_matrices, function(x) dim(x))
+
+
+message("Showing dimensions for RNA...")
+lapply(rna_matrices, function(x) dim(x))
