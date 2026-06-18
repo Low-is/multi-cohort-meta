@@ -127,14 +127,6 @@ meta_res_df <- meta_res_df[consistent_genes, ]
 write.csv(meta_res_df, "run-meta/output/meta_results.csv")
 saveRDS(consistent_genes, "run-meta/output/consistent_genes.rds")
 
-
-message("Showing dimensions for DNA...")
-names(dna_matrices)
-
-
-message("Showing dimensions for RNA...")
-names(rna_matrices)
-
                                 
 message("Plotting foresplots...")
 fp_data <- meta_res_df %>%
