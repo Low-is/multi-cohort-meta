@@ -26,12 +26,13 @@ message("Studies loaded!")
 # Loading expression matrices
 message("Loading expression matrices...")
 dna_matrices <-  readRDS("meta/matrices/dna_matrices.rds")
-dna_matrices <- dna_matrices[!sapply(dna_matrices, is.null)]
-
 
 message("Getting names of matrices...")
 names(dna_matrices)
-names(rna_matrices)
+
+
+dna_matrices <- dna_matrices[!sapply(dna_matrices, is.null)]
+
 
 # Function to get rid of methylation experiements
 is_meth <- function(genes) {
