@@ -53,11 +53,9 @@ message("Matrices loaded!")
 # Need to add code that filters matrices to match dimmensions of pData         
 # Filtering list
 dna_matrices <- dna_matrices[names(dna_pData_cond)] 
-#rna_matrices <- rna_matrices[names(rna_pData_cond)]
+rna_matrices <- rna_matrices[which(names(rna_pData_cond)%in%names(rna_matrices)]
 names(rna_matrices)
 names(rna_pData_cond)
-
-lapply(rna_pData_cond, function(x) head(x))  
 
                                                                                            
 message("Getting norm RNA counts...")
