@@ -56,9 +56,9 @@ dna_matrices <- dna_matrices[names(dna_pData_cond)]
 rna_matrices <- rna_matrices[names(rna_pData_cond)]
 
                                      
-which(names(rna_matrices)%in%names(rna_pData_cond))                                    
-#names(rna_matrices)
-#names(rna_pData_cond)
+rna_ind <- which(names(rna_matrices)%in%names(rna_pData_cond))                                    
+names(rna_matrices[[rna_ind]])
+names(rna_pData_cond[[rna_ind]])
 
                                                                                            
 message("Getting norm RNA counts...")
