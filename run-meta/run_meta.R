@@ -125,7 +125,8 @@ consistent_genes <- meta_res$meta$consistent_genes
 meta_res_df <- meta_res$meta$pooled.estimates
 meta_res_df <- meta_res_df[consistent_genes, ] 
 
-meta_res_df <- meta_res_df[which(meta_res_df$FDR <= 0.05), ]
+which(meta_res_df$FDR <= 0.05)
+                                     
 write.csv(meta_res_df, "run-meta/output/meta_results.csv")
 saveRDS(consistent_genes, "run-meta/output/consistent_genes.rds")
 
