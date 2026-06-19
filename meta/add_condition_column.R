@@ -57,6 +57,8 @@ dna_matrices <- dna_matrices[names(dna_pData_cond)]
 names(rna_matrices)
 names(rna_pData_cond)
 
+lapply(rna_pData_cond, function(x) head(x))
+
                                                                                            
 message("Getting norm RNA counts...")
 norm_rna_mtxs <- get_norm_RNA_counts(rna_matrices, pData = rna_pData_cond)
