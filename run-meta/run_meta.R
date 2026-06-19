@@ -47,6 +47,11 @@ rna_pData <- readRDS("meta/pdata/rna_pData_with_condition.rds")
 message("pData loaded!")
 
 
+message("Getting names of matrices...")
+names(dna_matrices)
+names(rna_matrices)
+
+
 # ----------------------------
 # NORMALIZATION (GLOBAL SAFE)
 # ----------------------------
@@ -92,9 +97,6 @@ valid_studies[is.na(valid_studies)] <- FALSE
 dna_matrices <- dna_matrices[valid_studies]
 dna_pData <- dna_pData[valid_studies]
 
-message("Getting names of matrices...")
-names(dna_matrices)
-names(rna_matrices)
                                                                                         
 # Find common genes across all studies being used for meta-analysis
 message("Searching for common genes...")
