@@ -26,11 +26,6 @@ message("Studies loaded!")
 # Loading expression matrices
 message("Loading expression matrices...")
 dna_matrices <-  readRDS("meta/matrices/dna_matrices.rds")
-
-message("Getting names of matrices...")
-names(dna_matrices)
-
-
 dna_matrices <- dna_matrices[!sapply(dna_matrices, is.null)]
 
 
