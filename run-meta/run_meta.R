@@ -46,6 +46,14 @@ message("Loading pData...")
 dna_pData <- readRDS("meta/pdata/dna_pData_with_condition.rds")
 rna_pData <- readRDS("meta/pdata/rna_pData_with_condition.rds")
 message("pData loaded!")
+
+message("Getting matrix names...")
+names(dna_matrices)
+names(rna_matrices)
+
+message("Getting pData names...")
+names(dna_pData)
+names(rna_pData)
                                      
 
 
