@@ -390,13 +390,23 @@ apply_condition_to_list <- function(pdata_list, case_patterns, control_patterns)
       
       row_vals <- normalize(as.character(df[i, col]))
       
-      case_hits <- sapply(case_patterns, function(p) {
-        grepl(paste0("\\b", normalize(p), "\\b"), row_vals)
-      })
       
-      control_hits <- sapply(control_patterns, function(p) {
-        grepl(paste0("\\b", normalize(p), "\\b"), row_vals)
+            case_hits <- sapply(case_patterns, function(p) {
+        grepl(paste0("^", normalize(p)), row_vals)
       })
+
+            #case_hits <- sapply(case_patterns, function(p) {
+        #grepl(paste0("\\b", normalize(p), "\\b"), row_vals)
+      #})
+      
+      #control_hits <- sapply(control_patterns, function(p) {
+        #grepl(paste0("\\b", normalize(p), "\\b"), row_vals)
+     # })
+
+      control_hits <- sapply(control_patterns, function(p) {
+         grepl(paste0("^", normalize(p)), row_vals)
+      })
+
       
       case_hit <- any(case_hits)
       control_hit <- any(control_hits)
