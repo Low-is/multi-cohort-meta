@@ -7,7 +7,7 @@ case_patterns:
   - "bronchopulmonary dysplasia"
   - sepsis
   - "clinical sepsis"
-  - "Confirmed late-onset sepsis"
+  - Confirmed
   - septic
   - disease
   - treated
@@ -25,8 +25,8 @@ control_patterns:
   - nosepsis
   - nonbpd
   - none
-  - "Possible late-onset sepsis"
-  - "No late-onset sepsis"
+  - "ossible
+  - No
   - "no_bpd"
   - "bpd_control"
   - "no bpd"
