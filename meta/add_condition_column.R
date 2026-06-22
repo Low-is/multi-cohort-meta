@@ -55,6 +55,8 @@ message("Matrices loaded!")
 dna_matrices <- dna_matrices[names(dna_pData_cond)] 
 rna_matrices <- rna_matrices[names(rna_pData_cond)]
 
+names(rna_matrices)
+names(rna_pData_cond)
 
                                                                                            
 message("Getting norm RNA counts...")
