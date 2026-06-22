@@ -368,6 +368,27 @@ apply_condition_to_list <- function(pdata_list, case_patterns, control_patterns)
     message("Processing: ", study)
     
     col <- detect_condition_column(df, case_patterns, control_patterns)
+
+    # ----------------------------
+    # FALLBACK CHECK (QUALITY GATE)
+    # ----------------------------
+   if (!is.null(col) && "title" %in% names(df)) {
+
+    col_vals <- df[[col]]
+
+    na_rate <- mean(is.na(col_vals) | col_vals == "", na.rm = TRUE)
+
+    # If selected column is too sparse → switch to title
+    if (na_rate >= 0.25) {
+
+      message(sprintf(
+        "Low-quality condition column detected (%s, NA rate=%.2f) in %s → switching to title",
+        col, na_rate, study
+      ))
+
+      col <- "title"
+    }
+  }
     
     if (is.null(col)) {
       warning("No condition column detected: ", study)
