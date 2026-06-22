@@ -35,6 +35,7 @@ control_patterns:
   - "no sepsis"
   - "non-septic"
   - "no lung disease"
+  - Con
   - Sus
   - NEC
   - Vir
