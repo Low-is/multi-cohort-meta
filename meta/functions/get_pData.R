@@ -412,14 +412,14 @@ apply_condition_to_list <- function(pdata_list, case_patterns, control_patterns)
       row_vals <- normalize(as.character(df[i, col]))
       
       
-            case_hits <- sapply(case_patterns, function(p) {
-        grepl(paste0("^", normalize(p)), row_vals)
-      })  # the ^ logic is forcing start-or-string matching, which breaks the sepsis logic. 
+            #case_hits <- sapply(case_patterns, function(p) {
+        #grepl(paste0("^", normalize(p)), row_vals)
+      #})  # the ^ logic is forcing start-or-string matching, which breaks the sepsis logic. 
 
       # Add new logic 6-21-2026
-            #case_hits <- sapply(case_patterns, function(p) {
-        #grepl(normalize(p), row_vals, fixed = TRUE)
-      #})
+            case_hits <- sapply(case_patterns, function(p) {
+        grepl(normalize(p), row_vals, fixed = TRUE)
+      })
 
             #case_hits <- sapply(case_patterns, function(p) {
         #grepl(paste0("\\b", normalize(p), "\\b"), row_vals)
@@ -429,14 +429,14 @@ apply_condition_to_list <- function(pdata_list, case_patterns, control_patterns)
         #grepl(paste0("\\b", normalize(p), "\\b"), row_vals)
       #})
 
-      control_hits <- sapply(control_patterns, function(p) {
-         grepl(paste0("^", normalize(p)), row_vals)
-      })
+      #control_hits <- sapply(control_patterns, function(p) {
+         #grepl(paste0("^", normalize(p)), row_vals)
+      #})
 
     # Add new logic 6-21-2026
-      #control_hits <- sapply(control_patterns, function(p) {
-        #grepl(normalize(p), row_vals, fixed = TRUE)
-      #})
+      control_hits <- sapply(control_patterns, function(p) {
+        grepl(normalize(p), row_vals, fixed = TRUE)
+      })
 
       
       case_hit <- any(case_hits)
