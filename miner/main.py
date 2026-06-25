@@ -34,8 +34,8 @@ def main():
     # =========================
     # DNA SEARCHES
     # =========================
-    archive_dna_ids = set(run_search(config["dna_archive_search"], config["email"]))
-    recent_dna_ids  = set(run_search(config["dna_weekly_search"], config["email"]))
+    #archive_dna_ids = set(run_search(config["dna_archive_search"], config["email"]))
+    #recent_dna_ids  = set(run_search(config["dna_weekly_search"], config["email"]))
     # Updated on 6-25-2026
     archive_dna = run_search(config["dna_archive_search"], config["email"])
     recent_dna  = run_search(config["dna_weekly_search"], config["email"])
