@@ -44,16 +44,33 @@ def run_search(search_cfg, email):
     # -------------------------
     # PARSE RESULTS
     # -------------------------
-    gse_list = []
-
-    if isinstance(summaries, dict) and "DocumentSummarySet" in summaries:
-        docs = summaries["DocumentSummarySet"]["DocumentSummary"]
-    else:
+    
+    # Made changes 6-25-2026
+    if isinstance(summaries, list):
         docs = summaries
+    else:
+        docs = summaries.get("DocumentSummarySet", {}).get("DocumentSummary", [])
 
+    gse_list = []
     for doc in docs:
-        acc = doc.get("Accession", "")
-        if acc.startswith("GSE"):
-            gse_list.append(acc)
+        acc = doc.get("Accession", "") or doc.get("accession", "")
+        if not str(acc).startswith("GSE"):
+            continue
+
+        gse_list.append({
+            "gse": acc,
+            "title": doc.get("title", "") or doc.get("Title", ""),
+            "summary": doc.get("summary", "") or doc.get("Summary", "")
+        })
+
+    #if isinstance(summaries, dict) and "DocumentSummarySet" in summaries:
+        #docs = summaries["DocumentSummarySet"]["DocumentSummary"]
+    #else:
+        #docs = summaries
+
+    #for doc in docs:
+        #acc = doc.get("Accession", "")
+        #if acc.startswith("GSE"):
+            #gse_list.append(acc)
 
     return gse_list
