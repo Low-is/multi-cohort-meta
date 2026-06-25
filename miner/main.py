@@ -36,18 +36,34 @@ def main():
     # =========================
     archive_dna_ids = set(run_search(config["dna_archive_search"], config["email"]))
     recent_dna_ids  = set(run_search(config["dna_weekly_search"], config["email"]))
+    # Updated on 6-25-2026
+    archive_dna = run_search(config["dna_archive_search"], config["email"])
+    recent_dna  = run_search(config["dna_weekly_search"], config["email"])
 
     # =========================
     # RNA SEARCHES
     # =========================
-    archive_rna_ids = set(run_search(config["rna_archive_search"], config["email"]))
-    recent_rna_ids  = set(run_search(config["rna_weekly_search"], config["email"]))
+    #archive_rna_ids = set(run_search(config["rna_archive_search"], config["email"]))
+    #recent_rna_ids  = set(run_search(config["rna_weekly_search"], config["email"]))
+    
+    # Updated 6-25-2026
+    archive_rna = run_search(config["rna_archive_search"], config["email"])
+    recent_rna  = run_search(config["rna_weekly_search"], config["email"])
 
     # =========================
     # COMBINE ALL STUDIES
     # =========================
-    archive_ids = archive_dna_ids.union(archive_rna_ids)
-    recent_ids  = recent_dna_ids.union(recent_rna_ids)
+    #archive_ids = archive_dna_ids.union(archive_rna_ids)
+    #recent_ids  = recent_dna_ids.union(recent_rna_ids)
+    # Updated 6-25-2026
+    archive_ids = {
+        x["gse"] for x in archive_dna + archive_rna
+    }
+
+   recent_ids = {
+       x["gse"] for x in recent_dna + recent_rna
+   }
+    
 
     # -----------------------
     # LOAD EXISTING ARCHIVE
@@ -82,8 +98,18 @@ def main():
     dna_detected = archive_dna_ids.union(recent_dna_ids)
     rna_detected = archive_rna_ids.union(recent_rna_ids)
 
-    dna_all = full_archive.intersection(dna_detected)
-    rna_all = full_archive.intersection(rna_detected)
+    #dna_all = full_archive.intersection(dna_detected)
+    #rna_all = full_archive.intersection(rna_detected)
+    # Updated 6-25-2026
+    dna_all = {
+        x["gse"] for x in archive_dna + recent_dna
+        if x["gse"] in full_archive
+    }
+
+   rna_all = {
+       x["gse"] for x in archive_rna + recent_rna
+       if x["gse"] in full_archive
+   }
 
     # -----------------------
     # EXPORT JSON FOR R (NAMED LISTS)
