@@ -56,11 +56,13 @@ dna_matrices <- dna_matrices[names(dna_pData_cond)]
 rna_matrices <- rna_matrices[names(rna_pData_cond)]
 
 names(rna_matrices) # this only has GSE138712... so rna pData needs to be filtered based on rna matrices
- # this has"GSE138712" "GSE236099"
+names(rna_pData_cond) # this has"GSE138712" "GSE236099"
 
-rna_pData_cond <- rna_pData_cond[names(rna_matrices)]
+rna_pData_cond <- rna_pData_cond[names(rna_matrices)] 
+# Need to remove NAs
+rna_matrices <- 
 
-names(rna_pData_cond)
+
 
 
                                                                                            
