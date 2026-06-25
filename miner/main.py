@@ -56,14 +56,13 @@ def main():
     #archive_ids = archive_dna_ids.union(archive_rna_ids)
     #recent_ids  = recent_dna_ids.union(recent_rna_ids)
     # Updated 6-25-2026
-    archive_ids = {
-        x["gse"] for x in archive_dna + archive_rna
-    }
+archive_ids = {
+    x["gse"] for x in archive_dna + archive_rna
+}
 
-   recent_ids = {
-       x["gse"] for x in recent_dna + recent_rna
-   }
-    
+recent_ids = {
+    x["gse"] for x in recent_dna + recent_rna
+}
 
     # -----------------------
     # LOAD EXISTING ARCHIVE
