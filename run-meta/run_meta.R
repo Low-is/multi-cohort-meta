@@ -104,9 +104,7 @@ dna_pData <- dna_pData[valid_studies]
 
 
 # Filter out rna matrices... 6-21-2026
-message("Checking RNA...")
-lapply(rna_matrices, function(x) head(x))
-lapply(rna_pData, function(x) head(x))
+
                                                                                         
 # Find common genes across all studies being used for meta-analysis
 message("Searching for common genes...")
