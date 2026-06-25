@@ -55,16 +55,12 @@ message("Matrices loaded!")
 dna_matrices <- dna_matrices[names(dna_pData_cond)] 
 rna_matrices <- rna_matrices[names(rna_pData_cond)]
 
-names(rna_matrices) # this only has GSE138712... so rna pData needs to be filtered based on rna matrices
-names(rna_pData_cond) # this has"GSE138712" "GSE236099"
-
+# Filtering out rna pdata based on rna matrices
 rna_pData_cond <- rna_pData_cond[names(rna_matrices)] 
 
 # Need to remove NAs
 rna_matrices <- rna_matrices[!is.na(names(rna_matrices))]
 rna_pData_cond <- rna_pData_cond[!is.na(names(rna_pData_cond))]
-
-
 
 
                                                                                            
