@@ -31,52 +31,54 @@ def main():
 
     print("🔍 Running GEO search...")
 
-    # =========================
-    # DNA SEARCHES
-    # =========================
-    #archive_dna_ids = set(run_search(config["dna_archive_search"], config["email"]))
-    #recent_dna_ids  = set(run_search(config["dna_weekly_search"], config["email"]))
-    # Updated on 6-25-2026
+    # =========================================================
+    # DNA SEARCHES (UPDATED 6-25-2026)
+    # =========================================================
     archive_dna = run_search(config["dna_archive_search"], config["email"])
     recent_dna  = run_search(config["dna_weekly_search"], config["email"])
 
-    # =========================
-    # RNA SEARCHES
-    # =========================
-    #archive_rna_ids = set(run_search(config["rna_archive_search"], config["email"]))
-    #recent_rna_ids  = set(run_search(config["rna_weekly_search"], config["email"]))
-    
-    # Updated 6-25-2026
+    # OLD CODE (COMMENTED OUT - PREVIOUS PIPELINE)
+    # archive_dna_ids = set(run_search(config["dna_archive_search"], config["email"]))
+    # recent_dna_ids  = set(run_search(config["dna_weekly_search"], config["email"]))
+
+    # =========================================================
+    # RNA SEARCHES (UPDATED 6-25-2026)
+    # =========================================================
     archive_rna = run_search(config["rna_archive_search"], config["email"])
     recent_rna  = run_search(config["rna_weekly_search"], config["email"])
 
-    # =========================
-    # COMBINE ALL STUDIES
-    # =========================
-    #archive_ids = archive_dna_ids.union(archive_rna_ids)
-    #recent_ids  = recent_dna_ids.union(recent_rna_ids)
-    # Updated 6-25-2026
-archive_ids = {
-    x["gse"] for x in archive_dna + archive_rna
-}
+    # OLD CODE (COMMENTED OUT - PREVIOUS PIPELINE)
+    # archive_rna_ids = set(run_search(config["rna_archive_search"], config["email"]))
+    # recent_rna_ids  = set(run_search(config["rna_weekly_search"], config["email"]))
 
-recent_ids = {
-    x["gse"] for x in recent_dna + recent_rna
-}
+    # =========================================================
+    # COMBINE ALL STUDIES (UPDATED 6-25-2026)
+    # =========================================================
+    archive_ids = {
+        x["gse"] for x in archive_dna + archive_rna
+    }
 
-# -----------------------
-# LOAD EXISTING ARCHIVE
-# -----------------------
-existing_ids = load_seen_ids()
+    recent_ids = {
+        x["gse"] for x in recent_dna + recent_rna
+    }
 
-# -----------------------
-# UPDATE FULL ARCHIVE
-# -----------------------
-full_archive = existing_ids.union(archive_ids).union(recent_ids)
+    # OLD CODE (COMMENTED OUT - PREVIOUS PIPELINE)
+    # archive_ids = archive_dna_ids.union(archive_rna_ids)
+    # recent_ids  = recent_dna_ids.union(recent_rna_ids)
+
+    # -----------------------
+    # LOAD EXISTING ARCHIVE
+    # -----------------------
+    existing_ids = load_seen_ids()
+
+    # -----------------------
+    # UPDATE FULL ARCHIVE
+    # -----------------------
+    full_archive = existing_ids.union(archive_ids).union(recent_ids)
     save_seen_ids(full_archive)
 
     # -----------------------
-    # BUILD REPORT (UNCHANGED)
+    # BUILD REPORT
     # -----------------------
     rows = []
 
@@ -91,27 +93,27 @@ full_archive = existing_ids.union(archive_ids).union(recent_ids)
 
     save_report(rows)
 
-    # =========================
-    # BUILD TRUE DNA / RNA SETS FROM FULL ARCHIVE
-    # =========================
-    dna_detected = archive_dna_ids.union(recent_dna_ids)
-    rna_detected = archive_rna_ids.union(recent_rna_ids)
-
-    #dna_all = full_archive.intersection(dna_detected)
-    #rna_all = full_archive.intersection(rna_detected)
-    # Updated 6-25-2026
+    # =========================================================
+    # BUILD TRUE DNA / RNA SETS
+    # =========================================================
     dna_all = {
         x["gse"] for x in archive_dna + recent_dna
         if x["gse"] in full_archive
     }
 
-   rna_all = {
-       x["gse"] for x in archive_rna + recent_rna
-       if x["gse"] in full_archive
-   }
+    rna_all = {
+        x["gse"] for x in archive_rna + recent_rna
+        if x["gse"] in full_archive
+    }
+
+    # OLD CODE (COMMENTED OUT - PREVIOUS PIPELINE)
+    # dna_detected = archive_dna_ids.union(recent_dna_ids)
+    # rna_detected = archive_rna_ids.union(recent_rna_ids)
+    # dna_all = full_archive.intersection(dna_detected)
+    # rna_all = full_archive.intersection(rna_detected)
 
     # -----------------------
-    # EXPORT JSON FOR R (NAMED LISTS)
+    # EXPORT JSON FOR R
     # -----------------------
     os.makedirs("outputs", exist_ok=True)
 
