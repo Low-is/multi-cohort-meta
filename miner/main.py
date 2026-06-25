@@ -64,15 +64,15 @@ recent_ids = {
     x["gse"] for x in recent_dna + recent_rna
 }
 
-    # -----------------------
-    # LOAD EXISTING ARCHIVE
-    # -----------------------
-    existing_ids = load_seen_ids()
+# -----------------------
+# LOAD EXISTING ARCHIVE
+# -----------------------
+existing_ids = load_seen_ids()
 
-    # -----------------------
-    # UPDATE FULL ARCHIVE
-    # -----------------------
-    full_archive = existing_ids.union(archive_ids).union(recent_ids)
+# -----------------------
+# UPDATE FULL ARCHIVE
+# -----------------------
+full_archive = existing_ids.union(archive_ids).union(recent_ids)
     save_seen_ids(full_archive)
 
     # -----------------------
