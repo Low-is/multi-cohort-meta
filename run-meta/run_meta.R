@@ -53,6 +53,7 @@ names(rna_matrices)
 
 message("Getting pData names...")
 names(dna_pData)
+lapply(dna_pData, function(x) x$condition)
 names(rna_pData)
                                      
 
