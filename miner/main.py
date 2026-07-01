@@ -45,7 +45,8 @@ def keep_platform(study, config):
 
     # DNA microarray
    is_microarray = (
-       "expression profiling by array" in text or "microarray" in text
+       "expression profiling by array" in text or 
+       "microarray" in text
    )
 
   # Bulk RNA-seq
