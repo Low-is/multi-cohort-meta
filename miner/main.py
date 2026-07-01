@@ -22,8 +22,29 @@ def normalize(text):
     
 def keep_study(study):
     
-    title = normalize(study.get("title", ""))
+    title = normalize(study.get("title", "") 
+    
     return "sepsis" in title
+
+
+def keep_platform(study, config):
+
+    dna_keys = [normalize(k) for k in config["dna_keys"]]
+    rna_keys = [normalize(k) for k in config["rna_keys"]]
+    exclude_keys = [normalize(k) for k in config["exclude_keys"]]
+
+    text = normalize(study.get("summary", "") + " " + study.get("type", ""))
+
+    if any(k in text for k in exclude_keys):
+        return False
+
+    if any(k in text for k in dna_keys):
+        return True
+
+    if any(k in text for k in rna_keys):
+        return True
+
+   return False
 
 # -----------------------
 # SAVE REPORT (ALL DATA + STATUS)
