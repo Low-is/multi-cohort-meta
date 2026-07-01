@@ -35,24 +35,21 @@ def keep_platform(study, config):
     )
 
     exclude_keys = [normalize(k) for k in config["exclude_keys"]]
+    dna_keys = [normalize(k) for k in config["dna_keys"]]
+    rna_keys = [normalize(k) for k in config["rna_keys"]]
 
     # hard exclusion
     if any(k in text for k in exclude_keys):
         return False
 
     # STRICT PLATFORM DETECTION
-    is_microarray = (
-        "expression profiling by array" in text or
-        "microarray" in text
-    )
+    if any(k in text for k in dna_keys):
+        return True
 
-    is_rnaseq = (
-        "rna seq" in text or
-        "rna sequencing" in text or
-        "expression profiling by high throughput sequencing" in text
-    )
+    if any(k in text for k in rna_keys):
+        return True
 
-    return is_microarray or is_rnaseq
+    return False
     
 
 # -----------------------
