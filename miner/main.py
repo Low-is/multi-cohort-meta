@@ -23,25 +23,7 @@ def normalize(text):
 def keep_study(study, config):
     
     title = normalize(study.get("title", ""))
-    text = normalize(
-        study.get("summary", "")
-    )
-
-    if "sepsis" not in title:
-        return False
-   
-    # hard exclusion first
-    if any(k in text for k in config["exclude_keys"]):
-        return False
-
-    # DNA microarray
-    if any(k in text for k in config["dna_keys"]):
-        return True
-
-    # bulk RNA-seq
-    if any(k in text for k in config["rna_keys"]):
-        return True
-    return False
+    return "sepsis" in title
 
 # -----------------------
 # SAVE REPORT (ALL DATA + STATUS)
@@ -87,11 +69,11 @@ def main():
     # =========================================================
     # APPLY FILTER (TITLE + SUMMARY ONLY) | added 7-1-2026
     # =========================================================
-    archive_dna = [x for x in archive_dna if keep_study(x, config)]
-    recent_dna  = [x for x in recent_dna if keep_study(x, config)]
+    archive_dna = [x for x in archive_dna if keep_study(x)]
+    recent_dna  = [x for x in recent_dna if keep_study(x]
 
-    archive_rna = [x for x in archive_rna if keep_study(x, config)]
-    recent_rna  = [x for x in recent_rna if keep_study(x, config)]
+    archive_rna = [x for x in archive_rna if keep_study(x)]
+    recent_rna  = [x for x in recent_rna if keep_study(x)]
     
 
     # =========================================================
