@@ -74,6 +74,7 @@ rna_keys:
 # EXCLUDE KEYS
 # -----------------------
 exclude_keys:
+  - other
   - "single cell"
   - "single nucleus"
   - "methylation profiling by genome tiling array"
