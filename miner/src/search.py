@@ -60,7 +60,8 @@ def run_search(search_cfg, email):
         gse_list.append({
             "gse": acc,
             "title": doc.get("title", "") or doc.get("Title", ""),
-            "summary": doc.get("summary", "") or doc.get("Summary", "")
+            "summary": doc.get("summary", "") or doc.get("Summary", ""),
+            "type": doc.get("type", "") or doc.get("Type", "")
         })
 
     #if isinstance(summaries, dict) and "DocumentSummarySet" in summaries:
