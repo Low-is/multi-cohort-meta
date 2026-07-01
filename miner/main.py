@@ -30,7 +30,7 @@ def keep_study(study):
 
 def keep_platform(study, config):
 
-    text = normalize(study.get("type", "") + " " + study.get("overall_design", ""))
+    text = normalize(study.get("type", ""))
 
     exclude_keys = [normalize(k) for k in config["exclude_keys"]]
     dna_keys = [normalize(k) for k in config["dna_keys"]]
