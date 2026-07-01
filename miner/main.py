@@ -22,7 +22,7 @@ def normalize(text):
     
 def keep_study(study):
     
-    title = normalize(study.get("title", "") 
+    title = normalize(study.get("title", "")) 
     
     return "sepsis" in title
 
