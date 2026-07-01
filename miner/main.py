@@ -28,28 +28,26 @@ def keep_study(study):
     return "sepsis" in title
 
 
-#def keep_platform(study, config):
+def keep_platform(study, config):
 
-    #text = normalize(
-        #study.get("summary", "") + " " + study.get("type", "")
-    #)
+    text = normalize(study.get("type", ""))
 
-    #exclude_keys = [normalize(k) for k in config["exclude_keys"]]
-    #dna_keys = [normalize(k) for k in config["dna_keys"]]
-    #rna_keys = [normalize(k) for k in config["rna_keys"]]
+    exclude_keys = [normalize(k) for k in config["exclude_keys"]]
+    dna_keys = [normalize(k) for k in config["dna_keys"]]
+    rna_keys = [normalize(k) for k in config["rna_keys"]]
 
     # hard exclusion
-    #if any(k in text for k in exclude_keys):
-        #return False
+    if any(k in text for k in exclude_keys):
+        return False
 
     # STRICT PLATFORM DETECTION
-    #if any(k in text for k in dna_keys):
-        #return True
+    if any(k in text for k in dna_keys):
+        return True
 
-    #if any(k in text for k in rna_keys):
-        #return True
+    if any(k in text for k in rna_keys):
+        return True
 
-    #return False
+    return False
     
 
 # -----------------------
