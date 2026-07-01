@@ -19,7 +19,8 @@ def normalize(text):
     text = re.sub(r"[^\w\s]", " ", text)
     text = re.sub(r"\s+", " ", text)
     return text.strip()
-    
+
+
 def keep_study(study):
     
     title = normalize(study.get("title", "")) 
@@ -29,22 +30,29 @@ def keep_study(study):
 
 def keep_platform(study, config):
 
+    text = normalize(
+        study.get("summary", "") + " " +
+        study.get("type", "")
+    )
+
     dna_keys = [normalize(k) for k in config["dna_keys"]]
     rna_keys = [normalize(k) for k in config["rna_keys"]]
     exclude_keys = [normalize(k) for k in config["exclude_keys"]]
 
-    text = normalize(study.get("summary", "") + " " + study.get("type", ""))
-
+    # Remove unwanted technologies
     if any(k in text for k in exclude_keys):
         return False
 
+    # DNA microarray
     if any(k in text for k in dna_keys):
         return True
 
+    # Bulk RNA-seq
     if any(k in text for k in rna_keys):
         return True
 
-   return False
+    return False
+    
 
 # -----------------------
 # SAVE REPORT (ALL DATA + STATUS)
