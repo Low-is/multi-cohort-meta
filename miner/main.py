@@ -44,13 +44,10 @@ def keep_platform(study, config):
         return False
 
     # DNA microarray
-   is_microarray = ("expression profiling by array" in text or 
-       "microarray" in text)
+   is_microarray = ("expression profiling by array" in text or "microarray" in text)
 
   # Bulk RNA-seq
-  is_rnaseq = ("rna seq" in text or
-      "rna seqeuncing" in text or
-      "expression profiling by high throughput sequencing" in text)
+  is_rnaseq = ("rna seq" in text or "rna seqeuncing" in text or "expression profiling by high throughput sequencing" in text)
 
   return is_microarray or is_rnaseq
     
