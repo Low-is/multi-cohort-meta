@@ -25,6 +25,9 @@ def keep_study(study, config):
     text = normalize(
         study.get("title", "") + " " + study.get("summary", "") + " " + study.get("type", "")
     )
+
+    if "sepsis" not in title:
+        return False
    
     # hard exclusion first
     if any(k in text for k in config["exclude_keys"]):
