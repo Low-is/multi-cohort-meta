@@ -44,14 +44,18 @@ def keep_platform(study, config):
         return False
 
     # DNA microarray
-    if any(k in text for k in dna_keys):
-        return True
+   is_microarray = (
+       "expression profiling by array" in text or "microarray" in text
+   )
 
-    # Bulk RNA-seq
-    if any(k in text for k in rna_keys):
-        return True
+  # Bulk RNA-seq
+  is_rnaseq = (
+      "rna seq" in text or
+      "rna seqeuncing" in text or
+      "expression profiling by high throughput sequencing" in text
+  )
 
-    return False
+  return is_microarray or is_rnaseq
     
 
 # -----------------------
