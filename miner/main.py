@@ -29,18 +29,33 @@ def keep_study(study):
 
 
 def keep_platform(study, config):
+    text = normalize(" ".join([
+        " ".join(study.get("title", [])),
+        " ".join(study.get("summary", [])),
+        " ".join(study.get("overall_design", [])),
+        " ".join(study.get("type", [])),
+        " ".join(study.get("platform_id", [])),
+    ]))
 
-    text = normalize(study.get("type", ""))
+    exclude_keys = [normalize(k) for k in config["exclude_keys"]] + [
+        "methylation",
+        "bisulfite",
+        "single cell",
+        "scrna seq",
+        "sc rna seq",
+        "snrna seq",
+        "single nucleus",
+        "10x",
+        "cell ranger",
+        "cellranger",
+    ]
 
-    exclude_keys = [k for k in config["exclude_keys"]]
-    dna_keys = [k for k in config["dna_keys"]]
-    rna_keys = [k for k in config["rna_keys"]]
+    dna_keys = [normalize(k) for k in config["dna_keys"]]
+    rna_keys = [normalize(k) for k in config["rna_keys"]]
 
-    # hard exclusion
     if any(k in text for k in exclude_keys):
         return False
 
-    # STRICT PLATFORM DETECTION
     if any(k in text for k in dna_keys):
         return True
 
@@ -48,6 +63,28 @@ def keep_platform(study, config):
         return True
 
     return False
+
+
+#def keep_platform(study, config):
+
+    #text = normalize(study.get("type", ""))
+
+    #exclude_keys = [k for k in config["exclude_keys"]]
+    #dna_keys = [k for k in config["dna_keys"]]
+    #rna_keys = [k for k in config["rna_keys"]]
+
+    # hard exclusion
+    #if any(k in text for k in exclude_keys):
+        #return False
+
+    # STRICT PLATFORM DETECTION
+    #if any(k in text for k in dna_keys):
+        #return True
+
+    #if any(k in text for k in rna_keys):
+        #return True
+
+    #return False
     
 
 # -----------------------
