@@ -49,3 +49,42 @@ rna_weekly_search:
     (RNA-seq OR RNAseq OR "Expression profiling by high throughput sequencing") AND
     Homo sapiens[Organism] AND
     (neonate OR newborn OR infant OR preterm OR premature OR "extremely low gestational age")
+
+
+# -----------------------
+# DNA KEYS
+# -----------------------
+dna_keys:
+  - "dna microarray"
+  - "gene expression microarray"
+  - affymetrix
+  - agilent
+  - beadchip
+
+# -----------------------
+# RNA KEYS
+# -----------------------
+rna_keys:
+  - "rna seq"
+  - rnaseq
+  - "rna sequencing"
+  - "bulk rna"
+  - "transcriptome sequencing"
+  
+# -----------------------
+# EXCLUDE KEYS
+# -----------------------
+exclude_keys
+  - "single cell"
+  - "single nucleus"
+  - scrna
+  - spatial
+  - visium
+  - 10x
+  - methylation
+  - epigenetic
+  - bisulfite
+  - "chip seq"
+  - atac
+  - mirna
+  - proteomics
