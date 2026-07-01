@@ -20,7 +20,7 @@ def normalize(text):
     text = re.sub(r"\s+", " ", text)
     return text.strip()
     
-def keep_study(study):
+def keep_study(study, config):
     
     text = normalize(
         study.get("title", "") + " " + study.get("summary", "")
@@ -83,11 +83,11 @@ def main():
     # =========================================================
     # APPLY FILTER (TITLE + SUMMARY ONLY) | added 7-1-2026
     # =========================================================
-    archive_dna = [x for x in archive_dna if keep_study(x)]
-    recent_dna  = [x for x in recent_dna if keep_study(x)]
+    archive_dna = [x for x in archive_dna if keep_study(x, config)]
+    recent_dna  = [x for x in recent_dna if keep_study(x, config)]
 
-    archive_rna = [x for x in archive_rna if keep_study(x)]
-    recent_rna  = [x for x in recent_rna if keep_study(x)]
+    archive_rna = [x for x in archive_rna if keep_study(x, config)]
+    recent_rna  = [x for x in recent_rna if keep_study(x, config)]
     
 
     # =========================================================
