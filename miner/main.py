@@ -46,7 +46,7 @@ def keep_platform(study, config):
     if any(k in text for k in exclude_keys):
         return False
 
-    return False
+    return True
     
     
 
