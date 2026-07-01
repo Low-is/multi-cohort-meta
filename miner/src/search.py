@@ -61,7 +61,8 @@ def run_search(search_cfg, email):
             "gse": acc,
             "title": doc.get("title", "") or doc.get("Title", ""),
             "summary": doc.get("summary", "") or doc.get("Summary", ""),
-            "type": doc.get("type", "") or doc.get("Type", "")
+            "type": doc.get("type", "") or doc.get("Type", ""),
+            "overall_design": doc.get("overall_design", "") or doc.get("Overall_Design", "")
         })
 
     #if isinstance(summaries, dict) and "DocumentSummarySet" in summaries:
