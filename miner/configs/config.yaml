@@ -81,6 +81,7 @@ rna_keys:
 exclude_keys:
   - "single cell"
   - "single nucleus"
+  - "methylation profiling by genome tiling array"
   - scrna
   - spatial
   - visium
