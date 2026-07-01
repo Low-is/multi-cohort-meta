@@ -55,10 +55,9 @@ rna_weekly_search:
 # DNA KEYS
 # -----------------------
 dna_keys:
-  - microarray
-  - "gene expression microarray"
-  - "gene expression profiling"
   - "expression profiling by array"
+  - affymetrix
+  - agilent
 
 # -----------------------
 # RNA KEYS
@@ -66,9 +65,7 @@ dna_keys:
 rna_keys:
   - "expression profiling by high throughput sequencing"
   - "rna seq"
-  - rnaseq
   - "rna sequencing"
-  - "bulk rna"
   
 # -----------------------
 # EXCLUDE KEYS
