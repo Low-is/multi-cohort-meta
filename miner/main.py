@@ -23,7 +23,7 @@ def normalize(text):
 def keep_study(study, config):
     
     text = normalize(
-        study.get("title", "") + " " + study.get("summary", "")
+        study.get("title", "") + " " + study.get("summary", "") + " " + study.get("type", "")
     )
    
     # hard exclusion first
