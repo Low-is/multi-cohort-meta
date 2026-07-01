@@ -29,13 +29,7 @@ def keep_study(study):
 
 
 def keep_platform(study, config):
-    text = normalize(" ".join([
-        " ".join(study.get("title", [])),
-        " ".join(study.get("summary", [])),
-        " ".join(study.get("overall_design", [])),
-        " ".join(study.get("type", [])),
-        " ".join(study.get("platform_id", [])),
-    ]))
+    text = normalize(study.get("summary", "") + " " + study.get("type", ""))
 
     exclude_keys = [normalize(k) for k in config["exclude_keys"]] + [
         "methylation",
