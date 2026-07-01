@@ -1,6 +1,7 @@
 # orchestrates workflow
 import json
 import os
+import re
 import yaml
 import csv
 from src.search import run_search
@@ -9,6 +10,34 @@ from src.storage import load_seen_ids, save_seen_ids
 ARCHIVE_PATH = "data/gse_ids.csv"
 REPORT_PATH = "outputs/weekly_report.csv"
 
+# -----------------------
+# FILTER RESULTS
+# -----------------------
+def normalize(text):
+    text = text.lower()
+    text = text.replace("-", " ")
+    text = re.sub(r"[^\w\s]", " ", text)
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
+    
+def keep_study(study):
+    
+    text = normalize(
+        study.get("title", "") + " " + study.get("summary", "")
+    )
+   
+    # hard exclusion first
+    if any(k in text for k in config["exclude_keys"]):
+        return False
+
+    # DNA microarray
+    if any(k in text for k in config["dna_keys"]):
+        return True
+
+    # bulk RNA-seq
+    if any(k in text for k in config["rna_keys"]):
+        return True
+    return False
 
 # -----------------------
 # SAVE REPORT (ALL DATA + STATUS)
@@ -50,6 +79,16 @@ def main():
     # OLD CODE (COMMENTED OUT - PREVIOUS PIPELINE)
     # archive_rna_ids = set(run_search(config["rna_archive_search"], config["email"]))
     # recent_rna_ids  = set(run_search(config["rna_weekly_search"], config["email"]))
+
+    # =========================================================
+    # APPLY FILTER (TITLE + SUMMARY ONLY) | added 7-1-2026
+    # =========================================================
+    archive_dna = [x for x in archive_dna if keep_study(x)]
+    recent_dna  = [x for x in recent_dna if keep_study(x)]
+
+    archive_rna = [x for x in archive_rna if keep_study(x)]
+    recent_rna  = [x for x in recent_rna if keep_study(x)]
+    
 
     # =========================================================
     # COMBINE ALL STUDIES (UPDATED 6-25-2026)
