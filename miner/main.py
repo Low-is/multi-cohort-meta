@@ -20,7 +20,7 @@ def normalize(text):
     text = re.sub(r"\s+", " ", text)
     return text.strip()
     
-def keep_study(study, config):
+def keep_study(study):
     
     title = normalize(study.get("title", ""))
     return "sepsis" in title
