@@ -98,15 +98,15 @@ def main():
     recent_dna  = [x for x in recent_dna if keep_study(x)]
 
     # Platform Filter
-    archive_dna = [x for x in archive_dna if keep_platform(x, config)]
-    recent_dna = [x for x in recent_dna if keep_platform(x, config)]
+    #archive_dna = [x for x in archive_dna if keep_platform(x, config)]
+    #recent_dna = [x for x in recent_dna if keep_platform(x, config)]
 
     archive_rna = [x for x in archive_rna if keep_study(x)]
     recent_rna  = [x for x in recent_rna if keep_study(x)]
 
     # Platform Filter
-    archive_rna = [x for x in archive_rna if keep_platform(x, config)]
-    recent_rna = [x for x in recent_rna if keep_platform(x, config)]
+    #archive_rna = [x for x in archive_rna if keep_platform(x, config)]
+    #recent_rna = [x for x in recent_rna if keep_platform(x, config)]
     
 
     # =========================================================
