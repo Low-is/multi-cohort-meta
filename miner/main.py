@@ -28,28 +28,28 @@ def keep_study(study):
     return "sepsis" in title
 
 
-def keep_platform(study, config):
+#def keep_platform(study, config):
 
-    text = normalize(
-        study.get("summary", "") + " " + study.get("type", "")
-    )
+    #text = normalize(
+        #study.get("summary", "") + " " + study.get("type", "")
+    #)
 
-    exclude_keys = [normalize(k) for k in config["exclude_keys"]]
-    dna_keys = [normalize(k) for k in config["dna_keys"]]
-    rna_keys = [normalize(k) for k in config["rna_keys"]]
+    #exclude_keys = [normalize(k) for k in config["exclude_keys"]]
+    #dna_keys = [normalize(k) for k in config["dna_keys"]]
+    #rna_keys = [normalize(k) for k in config["rna_keys"]]
 
     # hard exclusion
-    if any(k in text for k in exclude_keys):
-        return False
+    #if any(k in text for k in exclude_keys):
+        #return False
 
     # STRICT PLATFORM DETECTION
-    if any(k in text for k in dna_keys):
-        return True
+    #if any(k in text for k in dna_keys):
+        #return True
 
-    if any(k in text for k in rna_keys):
-        return True
+    #if any(k in text for k in rna_keys):
+        #return True
 
-    return False
+    #return False
     
 
 # -----------------------
@@ -100,15 +100,15 @@ def main():
     recent_dna  = [x for x in recent_dna if keep_study(x)]
 
     # Platform Filter
-    archive_dna = [x for x in archive_dna if keep_platform(x, config)]
-    recent_dna = [x for x in recent_dna if keep_platform(x, config)]
+    #archive_dna = [x for x in archive_dna if keep_platform(x, config)]
+    #recent_dna = [x for x in recent_dna if keep_platform(x, config)]
 
     archive_rna = [x for x in archive_rna if keep_study(x)]
     recent_rna  = [x for x in recent_rna if keep_study(x)]
 
     # Platform Filter
-    archive_rna = [x for x in archive_rna if keep_platform(x, config)]
-    recent_rna = [x for x in recent_rna if keep_platform(x, config)]
+    #archive_rna = [x for x in archive_rna if keep_platform(x, config)]
+    #recent_rna = [x for x in recent_rna if keep_platform(x, config)]
     
 
     # =========================================================
