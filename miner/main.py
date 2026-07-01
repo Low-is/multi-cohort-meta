@@ -31,8 +31,7 @@ def keep_study(study):
 def keep_platform(study, config):
 
     text = normalize(
-        study.get("summary", "") + " " +
-        study.get("type", "")
+        study.get("summary", "")
     )
 
     exclude_keys = [normalize(k) for k in config["exclude_keys"]]
