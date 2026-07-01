@@ -32,9 +32,9 @@ def keep_platform(study, config):
 
     text = normalize(study.get("type", ""))
 
-    exclude_keys = [normalize(k) for k in config["exclude_keys"]]
-    dna_keys = [normalize(k) for k in config["dna_keys"]]
-    rna_keys = [normalize(k) for k in config["rna_keys"]]
+    exclude_keys = [k for k in config["exclude_keys"]]
+    dna_keys = [k for k in config["dna_keys"]]
+    rna_keys = [k for k in config["rna_keys"]]
 
     # hard exclusion
     if any(k in text for k in exclude_keys):
