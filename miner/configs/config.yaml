@@ -57,6 +57,7 @@ rna_weekly_search:
 dna_keys:
   - "dna microarray"
   - "gene expression microarray"
+  - "expression profiling by array"
   - affymetrix
   - agilent
   - beadchip
