@@ -22,8 +22,9 @@ def normalize(text):
     
 def keep_study(study, config):
     
+    title = normalize(study.get("title", ""))
     text = normalize(
-        study.get("title", "") + " " + study.get("summary", "") + " " + study.get("type", "")
+        study.get("summary", "") + " " + study.get("type", "")
     )
 
     if "sepsis" not in title:
