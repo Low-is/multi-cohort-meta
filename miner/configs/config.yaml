@@ -72,3 +72,4 @@ rna_keys:
 # -----------------------
 exclude_keys:
   - other
+  - methylation
